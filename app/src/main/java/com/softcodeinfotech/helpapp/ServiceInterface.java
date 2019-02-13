@@ -1,6 +1,7 @@
 package com.softcodeinfotech.helpapp;
 
 
+import com.facebook.internal.ImageResponse;
 import com.softcodeinfotech.helpapp.beanresponse.AddHelpListResponse;
 import com.softcodeinfotech.helpapp.beanresponse.GetforgotpassResponse;
 import com.softcodeinfotech.helpapp.beanresponse.GetmobileverifyResponse;
@@ -13,7 +14,7 @@ import com.softcodeinfotech.helpapp.response.GetIndividualUserResponse;
 import com.softcodeinfotech.helpapp.response.GethelplistResponse;
 import com.softcodeinfotech.helpapp.response.HelpDataInsertResponse;
 import com.softcodeinfotech.helpapp.response.HelpHistoryResponse;
-import com.softcodeinfotech.helpapp.response.ImageResponse;
+
 import com.softcodeinfotech.helpapp.response.PasswordResponse;
 import com.softcodeinfotech.helpapp.response.PasswordUpdateResponse;
 import com.softcodeinfotech.helpapp.response.ProfileResponse;
@@ -225,9 +226,9 @@ public interface ServiceInterface {
             @Part("help_category_id") RequestBody help_category_id,
             @Part("state") RequestBody state,
             @Part("image\"; filename=\".jpg\" ") RequestBody file,
-            @Part("address") RequestBody address,
-            @Part("latitude") RequestBody latitude,
-            @Part("longitude") RequestBody longitude
+            @Part("address") String address,
+            @Part("latitude") String latitude,
+            @Part("longitude") String longitude
 
 
     );

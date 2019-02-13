@@ -4,14 +4,17 @@ package com.softcodeinfotech.helpapp.ui;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.GridLayoutAnimationController;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -52,7 +55,7 @@ public class AllHelpFragment extends Fragment {
 
     String TAG = "MainActivity";
     private RecyclerView replaceRecyler;
-    private ArrayList<GetHelpListModel> mHelpDetailsList = new ArrayList<GetHelpListModel>();
+    private ArrayList<GethelplistResponse.Information> mHelpDetailsList = new ArrayList<GethelplistResponse.Information>();
     private GetHelpListAdapter getHelpListAdapter;
 
 
@@ -97,18 +100,24 @@ public class AllHelpFragment extends Fragment {
 
 
         // replaceRecyler = (RecyclerView) findViewById(R.id.recyclerView);
-        LinearLayoutManager mLayoutManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        StaggeredGridLayoutManager mLayoutManger = new StaggeredGridLayoutManager(2 , StaggeredGridLayoutManager.VERTICAL);
         replaceRecyler.setLayoutManager(mLayoutManger);
         replaceRecyler.setItemAnimator(new DefaultItemAnimator());
 
         getHelpListAdapter = new GetHelpListAdapter(getContext(), mHelpDetailsList, GetScreenWidth());
         replaceRecyler.setAdapter(getHelpListAdapter);
         replaceRecyler.setItemAnimator(new DefaultItemAnimator());
-       getHelpListReq();
+
 
 
         return view;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getHelpListReq();
     }
 
     private void getHelpListReq() {
@@ -118,7 +127,10 @@ public class AllHelpFragment extends Fragment {
             public void onResponse(Call<GethelplistResponse> call, Response<GethelplistResponse> response) {
                 if (response.body().getStatus().equals(1)) {
                     pBar.setVisibility(View.GONE);
-                    for (int i = 0; i < response.body().getInformation().size(); i++) {
+
+                    mHelpDetailsList.addAll(response.body().getInformation());
+
+                    /*for (int i = 0; i < response.body().getInformation().size(); i++) {
                         mHelpDetailsList.add(new GetHelpListModel(response.body().getInformation().get(i).getHelpTitle(),
                                 String.valueOf(response.body().getInformation().get(i).getTimestamp()),
                                 response.body().getInformation().get(i).getHelpDescription()
@@ -126,7 +138,7 @@ public class AllHelpFragment extends Fragment {
                                 response.body().getInformation().get(i).getStatus()
                                 , response.body().getInformation().get(i).getState(),
                                 String.valueOf(response.body().getInformation().get(i).getUserId())));
-                    }
+                    }*/
                     getHelpListAdapter.notifyDataSetChanged();
                 }
             }

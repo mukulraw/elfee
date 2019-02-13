@@ -64,8 +64,8 @@ public class AddHelpActivity extends AppCompatActivity {
     Retrofit retrofit;
     ServiceInterface serviceInterface;
     //location
-    String lati, longi;
-    String address;
+    String lati = "0", longi = "0";
+    String address = "";
 
     //imageview
     ImageView imageView;
@@ -91,7 +91,13 @@ public class AddHelpActivity extends AppCompatActivity {
         longi = intent.getStringExtra("longi");
 
         Toast.makeText(this, "" + lati + "" + longi, Toast.LENGTH_SHORT).show();
-        getAddress(AddHelpActivity.this, Double.parseDouble(lati), Double.parseDouble(longi));
+        try {
+            getAddress(AddHelpActivity.this, Double.parseDouble(lati), Double.parseDouble(longi));
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
         currentAddress.setText(address);
         mCurrentAddress = currentAddress.getText().toString().trim();
 
@@ -255,8 +261,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
     // convert aa param into plain text
     public RequestBody convertPlainString(String data) {
-        RequestBody plainString = RequestBody.create(MediaType.parse("text/plain"), data);
-        return plainString;
+        return RequestBody.create(MediaType.parse("text/plain"), data);
     }
 
     //
@@ -327,7 +332,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
         Call<AddHelpListResponse> call = serviceInterface.help_DataInsert(convertPlainString(mUserid),
                 convertPlainString(mTitle), convertPlainString(mDesc), convertPlainString(mCatId), convertPlainString(mState), requestFile,
-                convertPlainString(address), convertPlainString(lati), convertPlainString(longi));
+                address, lati, longi);
 
         call.enqueue(new Callback<AddHelpListResponse>() {
             @Override

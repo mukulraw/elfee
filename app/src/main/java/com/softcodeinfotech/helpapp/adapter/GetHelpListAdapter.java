@@ -8,8 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.softcodeinfotech.helpapp.HelpDetails;
+import com.softcodeinfotech.helpapp.response.GethelplistResponse;
 import com.softcodeinfotech.helpapp.ui.IndividualHelpActivity;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.model.GetHelpListModel;
@@ -19,11 +24,11 @@ import java.util.List;
 public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private List<GetHelpListModel> mHelpListModel;
+    private List<GethelplistResponse.Information> mHelpListModel;
     private String TAG = "HelpListAdapter";
     private int mScrenwidth;
 
-    public GetHelpListAdapter(Context mContext, List<GetHelpListModel> mHelpListModel, int mScrenwidth) {
+    public GetHelpListAdapter(Context mContext, List<GethelplistResponse.Information> mHelpListModel, int mScrenwidth) {
 
         this.mContext = mContext;
         this.mHelpListModel = mHelpListModel;
@@ -32,15 +37,18 @@ public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     public class GetHelpListAdapterHolder extends RecyclerView.ViewHolder {
-        TextView mHelpTitle, mHelpTimeStamp, mHelpDescription;
-        CardView mCardView;
+        TextView title , state , date , desc;
+        ImageView image;
+
 
         public GetHelpListAdapterHolder(@NonNull View itemView) {
             super(itemView);
-            mHelpTitle = itemView.findViewById(R.id.helpTitle);
-            mHelpTimeStamp = itemView.findViewById(R.id.helpTime);
-            mHelpDescription = itemView.findViewById(R.id.helpDesc);
-            mCardView =  itemView.findViewById(R.id.helpCardView);
+            title = itemView.findViewById(R.id.textView19);
+            state = itemView.findViewById(R.id.textView18);
+            date = itemView.findViewById(R.id.textView23);
+            desc = itemView.findViewById(R.id.textView24);
+            image = itemView.findViewById(R.id.imageView3);
+
         }
 
 
@@ -49,27 +57,51 @@ public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.help_list, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.help_list_model, viewGroup, false);
         return new GetHelpListAdapterHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-        final GetHelpListModel getHelpListModel = mHelpListModel.get(i);
+        final GethelplistResponse.Information item = mHelpListModel.get(i);
 
 
-        ((GetHelpListAdapterHolder) viewHolder).mHelpTitle.setText(getHelpListModel.getHelpTitle());
-        ((GetHelpListAdapterHolder) viewHolder).mHelpDescription.setText(getHelpListModel.getHelpDescription());
-        ((GetHelpListAdapterHolder) viewHolder).mHelpTimeStamp.setText(getHelpListModel.getHelpTimeStamp());
+        ((GetHelpListAdapterHolder) viewHolder).title.setText(item.getHelpTitle());
+        ((GetHelpListAdapterHolder) viewHolder).desc.setText(item.getHelpDescription());
+        ((GetHelpListAdapterHolder) viewHolder).date.setText(item.getTimestamp());
+        ((GetHelpListAdapterHolder) viewHolder).state.setText(item.getState());
 
-        ((GetHelpListAdapterHolder) viewHolder).mCardView.setOnClickListener(new View.OnClickListener() {
+
+        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
+
+        ImageLoader loader = ImageLoader.getInstance();
+        loader.displayImage(item.getImage() , ((GetHelpListAdapterHolder) viewHolder).image , options);
+
+
+        ((GetHelpListAdapterHolder) viewHolder).itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String user_id = getHelpListModel.getUserId();
+                /*String user_id = String.valueOf(getHelpListModel.getUserId());
                 Intent intent = new Intent(mContext,IndividualHelpActivity.class);
                 intent.putExtra("user_id", user_id);
                  mContext.startActivity(intent);
+*/
+
+                Intent intent = new Intent(mContext , HelpDetails.class);
+                intent.putExtra("title" , item.getHelpTitle());
+                intent.putExtra("desc" , item.getHelpDescription());
+                intent.putExtra("time" , item.getTimestamp());
+                intent.putExtra("state" , item.getState());
+                intent.putExtra("address" , item.getAddress());
+                intent.putExtra("lat" , item.getLat());
+                intent.putExtra("lng" , item.getLng());
+                intent.putExtra("image" , item.getImage());
+                intent.putExtra("uid" , String.valueOf(item.getUserId()));
+                mContext.startActivity(intent);
+
+
+
 
                // Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show();
               //  Toast.makeText(mContext, ""+user_id, Toast.LENGTH_SHORT).show();

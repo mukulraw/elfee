@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -58,7 +59,7 @@ dependencies {
 //
 
     //firebase
-    implementation 'com.google.firebase:firebase-auth:16.0.1'
+    implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
 
     //facebook
@@ -68,6 +69,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services:12.0.1'
     implementation 'com.google.android.gms:play-services-maps:15.0.0'*/
     implementation 'com.google.android.gms:play-services-location:16.0.0'
+
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 
 
     com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true

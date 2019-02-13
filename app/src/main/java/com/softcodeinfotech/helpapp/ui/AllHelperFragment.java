@@ -104,12 +104,18 @@ public class AllHelperFragment extends Fragment {
         recycler_allhelper.setItemAnimator(new DefaultItemAnimator());
 
         profilestatus = "1";
-        getDataReq();
+
 
 
 
         return view;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDataReq();
     }
 
     private void getDataReq() {

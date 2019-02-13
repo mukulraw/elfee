@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/blur" />
+        app:srcCompat="@drawable/blur2" />
 
     <TextView
         android:id="@+id/textView6"

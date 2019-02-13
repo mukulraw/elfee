@@ -25,12 +25,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.login.Login;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -64,13 +66,13 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawer;
     ImageButton toggle;
     TextView profile, kyc, orders;
-    BottomNavigationView bottom;
+    //BottomNavigationView bottom;
     TextView toolbar;
     TextView account, myHistory;
     ImageButton settings;
     ImageView image;
     TextView dName, dEmail;
-    FloatingActionButton fabButton;
+    ImageButton fabButton;
 
     //RecylerView
     ProgressBar pBar;
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity {
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private String latitude,longitude;
+
+    LinearLayout helps , helpers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,6 +250,9 @@ public class MainActivity extends AppCompatActivity {
 
                     Toast.makeText(MainActivity.this, "Login First Than Add Help..", Toast.LENGTH_LONG).show();
 
+                    Intent intent = new Intent(MainActivity.this , LoginActivity.class);
+                    startActivity(intent);
+
                 } else {
                     Intent addHelpIntent = new Intent(MainActivity.this, AddHelpActivity.class);
                     addHelpIntent.putExtra("lati",latitude);
@@ -266,8 +273,43 @@ public class MainActivity extends AppCompatActivity {
         drawer.closeDrawer(GravityCompat.START);
 
 
+        helps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toolbar.setText("Help Me");
+                //  Toast.makeText(MainActivity.this, "help me", Toast.LENGTH_SHORT).show();
+                // return true;
+                // break;
 
-        bottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                FragmentManager fm1 = getSupportFragmentManager();
+                FragmentTransaction ft1 = fm1.beginTransaction();
+                AllHelpFragment allHelpFragment=new AllHelpFragment();
+                ft1.replace(R.id.replace, allHelpFragment);
+                ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                //ft.addToBackStack(null);
+                ft1.commit();
+                drawer.closeDrawer(GravityCompat.START);
+
+            }
+        });
+
+
+        helpers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toolbar.setText("Helpers List");
+                FragmentManager fm2 = getSupportFragmentManager();
+                FragmentTransaction ft2 = fm2.beginTransaction();
+                AllHelperFragment allHelperFragment = new AllHelperFragment();
+                ft2.replace(R.id.replace, allHelperFragment);
+                ft2.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                //ft.addToBackStack(null);
+                ft2.commit();
+                drawer.closeDrawer(GravityCompat.START);
+            }
+        });
+
+        /*bottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
@@ -292,10 +334,10 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.helpersList:
                         toolbar.setText("Helpers List");
-                      /*  Intent intent = new Intent(MainActivity.this, AllHelperActivity.class);
+                      *//*  Intent intent = new Intent(MainActivity.this, AllHelperActivity.class);
                         startActivity(intent);
                         //  Toast.makeText(MainActivity.this, "Helpers List", Toast.LENGTH_SHORT).show();
-                        break;*/
+                        break;*//*
 
 
                         FragmentManager fm2 = getSupportFragmentManager();
@@ -312,7 +354,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
+*/
     }
 
     private void getHelpListReq() {
@@ -351,13 +393,16 @@ public class MainActivity extends AppCompatActivity {
         toggle = findViewById(R.id.imageButton4);
         profile = findViewById(R.id.textView58);
         orders = findViewById(R.id.textView61);
-        bottom = findViewById(R.id.bottomNavigationView);
+        //bottom = findViewById(R.id.bottomNavigationView);
         toolbar = findViewById(R.id.textView27);
         kyc = findViewById(R.id.textView59);
         account = findViewById(R.id.textView62);
         myHistory = findViewById(R.id.textView60);
         // settings = findViewById(R.id.imageButton6);
         fabButton = findViewById(R.id.floatingActionButton3);
+
+        helps = findViewById(R.id.button10);
+        helpers = findViewById(R.id.button11);
 
         //drawer design
         image = findViewById(R.id.imageView1);

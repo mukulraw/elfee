@@ -80,6 +80,18 @@ public class GethelplistResponse {
         @SerializedName("user_id")
         @Expose
         private Integer userId;
+        @SerializedName("address")
+        @Expose
+        private String address;
+        @SerializedName("lat")
+        @Expose
+        private String lat;
+        @SerializedName("lng")
+        @Expose
+        private String lng;
+        @SerializedName("image")
+        @Expose
+        private String image;
 
         public String getHelpTitle() {
             return helpTitle;
@@ -87,11 +99,6 @@ public class GethelplistResponse {
 
         public void setHelpTitle(String helpTitle) {
             this.helpTitle = helpTitle;
-        }
-
-        public Information withHelpTitle(String helpTitle) {
-            this.helpTitle = helpTitle;
-            return this;
         }
 
         public String getHelpDescription() {
@@ -102,22 +109,12 @@ public class GethelplistResponse {
             this.helpDescription = helpDescription;
         }
 
-        public Information withHelpDescription(String helpDescription) {
-            this.helpDescription = helpDescription;
-            return this;
-        }
-
         public Integer getHelpCategoryId() {
             return helpCategoryId;
         }
 
         public void setHelpCategoryId(Integer helpCategoryId) {
             this.helpCategoryId = helpCategoryId;
-        }
-
-        public Information withHelpCategoryId(Integer helpCategoryId) {
-            this.helpCategoryId = helpCategoryId;
-            return this;
         }
 
         public String getTimestamp() {
@@ -128,22 +125,12 @@ public class GethelplistResponse {
             this.timestamp = timestamp;
         }
 
-        public Information withTimestamp(String timestamp) {
-            this.timestamp = timestamp;
-            return this;
-        }
-
         public String getStatus() {
             return status;
         }
 
         public void setStatus(String status) {
             this.status = status;
-        }
-
-        public Information withStatus(String status) {
-            this.status = status;
-            return this;
         }
 
         public String getState() {
@@ -154,11 +141,6 @@ public class GethelplistResponse {
             this.state = state;
         }
 
-        public Information withState(String state) {
-            this.state = state;
-            return this;
-        }
-
         public Integer getUserId() {
             return userId;
         }
@@ -167,9 +149,36 @@ public class GethelplistResponse {
             this.userId = userId;
         }
 
-        public Information withUserId(Integer userId) {
-            this.userId = userId;
-            return this;
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
+        }
+
+        public String getLat() {
+            return lat;
+        }
+
+        public void setLat(String lat) {
+            this.lat = lat;
+        }
+
+        public String getLng() {
+            return lng;
+        }
+
+        public void setLng(String lng) {
+            this.lng = lng;
+        }
+
+        public String getImage() {
+            return image;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
         }
 
     }

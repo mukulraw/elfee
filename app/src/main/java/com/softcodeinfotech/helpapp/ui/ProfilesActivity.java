@@ -146,9 +146,9 @@ public class ProfilesActivity extends AppCompatActivity {
 
                     Log.i("uid",response.body().getInformation().getUId().toString());
 
-                    Intent intent = new Intent(ProfilesActivity.this, SetProfileImageActivity.class);
+                    /*Intent intent = new Intent(ProfilesActivity.this, SetProfileImageActivity.class);
                     startActivity(intent);
-                    finish();
+                    finish();*/
 
                 }
             }
