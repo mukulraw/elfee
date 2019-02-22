@@ -92,6 +92,9 @@ public class GethelplistResponse {
         @SerializedName("image")
         @Expose
         private String image;
+        @SerializedName("phone")
+        @Expose
+        private String phone;
 
         public String getHelpTitle() {
             return helpTitle;
@@ -181,5 +184,12 @@ public class GethelplistResponse {
             this.image = image;
         }
 
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
     }
 }

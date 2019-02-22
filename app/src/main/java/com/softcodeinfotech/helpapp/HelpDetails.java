@@ -1,10 +1,14 @@
 package com.softcodeinfotech.helpapp;
 
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.text.Html;
 import android.view.View;
 import android.view.Window;
@@ -13,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -31,12 +36,12 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class HelpDetails extends AppCompatActivity {
 
     TextView title , state , date , desc ,address;
+
     ImageView image;
 
+    String tit , des , tim , sta , add , lt , ln , ima , uid , ph;
 
-    String tit , des , tim , sta , add , lt , ln , ima , uid;
-
-    ImageButton profile , chat;
+    ImageButton profile , chat , call , whatsapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,7 @@ public class HelpDetails extends AppCompatActivity {
         ln = getIntent().getStringExtra("lng");
         ima = getIntent().getStringExtra("image");
         uid = getIntent().getStringExtra("uid");
+        ph = getIntent().getStringExtra("phone");
 
         title = findViewById(R.id.textView19);
         state = findViewById(R.id.textView18);
@@ -62,6 +68,8 @@ public class HelpDetails extends AppCompatActivity {
 
         profile = findViewById(R.id.imageButton8);
         chat = findViewById(R.id.imageButton7);
+        call = findViewById(R.id.imageButton2);
+        whatsapp = findViewById(R.id.imageButton9);
 
         title.setText(tit);
         state.setText(sta);
@@ -69,9 +77,41 @@ public class HelpDetails extends AppCompatActivity {
         desc.setText(Html.fromHtml("Details: </br>" + des));
         address.setText(Html.fromHtml("Address:  " + add));
 
+
+
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).resetViewBeforeLoading(false).build();
         ImageLoader loader = ImageLoader.getInstance();
         loader.displayImage(ima , image , options);
+
+
+        call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                try {
+
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + ph));
+                    startActivity(intent);
+
+
+
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        whatsapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                openWhatsApp();
+            }
+        });
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,4 +184,38 @@ public class HelpDetails extends AppCompatActivity {
         });
 
     }
+
+
+
+    private void openWhatsApp() {
+        String smsNumber = "ph";
+        boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
+        if (isWhatsappInstalled) {
+
+            Intent sendIntent = new Intent("android.intent.action.MAIN");
+            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
+            sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(ph) + "@s.whatsapp.net");//phone number without "+" prefix
+
+            startActivity(sendIntent);
+        } else {
+            Uri uri = Uri.parse("market://details?id=com.whatsapp");
+            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+            Toast.makeText(this, "WhatsApp not Installed",
+                    Toast.LENGTH_SHORT).show();
+            startActivity(goToMarket);
+        }
+    }
+
+    private boolean whatsappInstalledOrNot(String uri) {
+        PackageManager pm = getPackageManager();
+        boolean app_installed = false;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        } catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+        }
+        return app_installed;
+    }
+
 }

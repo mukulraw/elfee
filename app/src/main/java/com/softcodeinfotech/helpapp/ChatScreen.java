@@ -37,13 +37,21 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class ChatScreen extends AppCompatActivity {
 
     Toolbar toolbar;
+
     RecyclerView grid;
+
     LinearLayoutManager manager;
+
     String id, name, image, chat;
+
     ChatAdapter adapter;
+
     List<Datum> list;
+
     ProgressBar progress;
+
     EditText comment;
+
     FloatingActionButton send;
 
     @Override

@@ -78,6 +78,7 @@ public class SplashActivity extends AppCompatActivity {
 
 
     private void requestPermission() {
+
         Dexter.withActivity(this)
                 .withPermissions(
                         Manifest.permission.READ_EXTERNAL_STORAGE,

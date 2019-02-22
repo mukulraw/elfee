@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     DrawerLayout drawer;
     ImageButton toggle;
-    TextView profile, kyc, orders;
+    TextView profile, kyc, orders , logout;
     //BottomNavigationView bottom;
     //TextView toolbar;
     TextView account, myHistory;
@@ -399,6 +399,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharePreferenceUtils.getInstance().deletePref();
+                SharePreferenceUtils.getInstance().saveString(Constant.USER_profilestatus, "1");
+                Intent signuploginIntent = new Intent(MainActivity.this, SignupLoginActivity.class);
+                startActivity(signuploginIntent);
+                finishAffinity();
+            }
+        });
+
+
         /*bottom.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -486,6 +498,7 @@ public class MainActivity extends AppCompatActivity {
         toggle = findViewById(R.id.imageButton4);
         profile = findViewById(R.id.textView58);
         orders = findViewById(R.id.textView61);
+        logout = findViewById(R.id.textView63);
         //bottom = findViewById(R.id.bottomNavigationView);
         //toolbar = findViewById(R.id.textView27);
         kyc = findViewById(R.id.textView59);

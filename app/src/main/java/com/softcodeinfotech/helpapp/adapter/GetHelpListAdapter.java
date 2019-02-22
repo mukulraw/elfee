@@ -107,6 +107,8 @@ public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 intent.putExtra("lng" , item.getLng());
                 intent.putExtra("image" , item.getImage());
                 intent.putExtra("uid" , String.valueOf(item.getUserId()));
+
+                intent.putExtra("phone", item.getPhone());
                 mContext.startActivity(intent);
 
 

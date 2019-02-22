@@ -44,9 +44,7 @@
         <activity
             android:name=".ui.ProfilesActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.SetProfileImageActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".ui.MyProfileActivity"
             android:screenOrientation="portrait" />
@@ -80,6 +78,9 @@
         <activity
             android:name=".ui.HelpersProfileActivity"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".ui.EditProfile"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

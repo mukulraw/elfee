@@ -223,6 +223,24 @@ public interface ServiceInterface {
             // @Part("profilestatus") RequestBody profilestatus
     );
 
+
+    @Multipart
+    @POST("helpapp/api/profile_update.php")
+    Call<ProfileResponse> profile(
+
+            @Part("email") String email,
+            @Part("name") String name,
+            @Part("age") String age,
+            @Part("gender") String gender,
+            @Part("mobile") String mobile,
+            @Part("aadhar") String aadhar,
+            @Part("address") String address,
+            @Part("state") String state,
+            @Part("pin") String pin
+            // @Part("profilestatus") RequestBody profilestatus
+    );
+
+
     @Multipart
     @POST("helpapp/help_datainsert.php")
     Call<AddHelpListResponse> help_DataInsert(

@@ -101,39 +101,53 @@
     </android.support.v4.widget.NestedScrollView>
 
 
-
     <ImageButton
         android:id="@+id/imageButton2"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/ic_call"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton7"
         app:layout_constraintHorizontal_bias="0.5"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@drawable/ic_wassap_logo_button" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/imageButton7"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/ic_speech_bubble"
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton2"
+        android:background="@drawable/ic_comments"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton8"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imageButton2" />
+
+
 
     <ImageButton
         android:id="@+id/imageButton8"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton7"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/ic_us"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageButton9"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/imageButton7" />
+
+
+    <ImageButton
+        android:id="@+id/imageButton9"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/ic_whatsapp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageButton7"
-        android:background="@drawable/ic_user2" />
+        app:layout_constraintStart_toEndOf="@+id/imageButton8" />
 
 
 </android.support.constraint.ConstraintLayout>

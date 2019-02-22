@@ -67,6 +67,8 @@ import static com.facebook.appevents.UserDataStore.EMAIL;
 
 
 public class SignupActivity extends AppCompatActivity {
+
+
     EditText mobile, password, username;
     Button submit;
     ImageButton back;
@@ -175,7 +177,6 @@ public class SignupActivity extends AppCompatActivity {
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         // Build a GoogleSignInClient with the options specified by gso.
@@ -310,7 +311,7 @@ public class SignupActivity extends AppCompatActivity {
         pBar = findViewById(R.id.progressBar2);
         back = findViewById(R.id.imageButton3);
 
-        //
+
         gmail = findViewById(R.id.imageView7);
         facebook = findViewById(R.id.login_button);
     }

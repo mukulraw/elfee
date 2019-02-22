@@ -148,6 +148,32 @@
         app:layout_constraintTop_toBottomOf="@+id/textView61"
         app:layout_constraintVertical_bias="0.0" />
 
+
+
+
+        <TextView
+            android:id="@+id/textView63"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_settings"
+            android:drawablePadding="18dp"
+            android:gravity="center_vertical"
+            android:padding="18dp"
+            android:text="Logout"
+            android:textSize="16sp"
+            android:typeface="monospace"
+            app:layout_constraintBottom_toTopOf="@+id/view8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView62"
+            app:layout_constraintVertical_bias="0.0" />
+
+
+
+
+
+
+
         <LinearLayout
             android:id="@+id/view8"
             android:layout_width="0dp"

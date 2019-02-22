@@ -98,6 +98,8 @@
         app:layout_constraintTop_toTopOf="@+id/view10"
         app:srcCompat="@drawable/bgp" />
 
+
+
     <TextView
         android:id="@+id/textView63"
         android:layout_width="wrap_content"
@@ -151,6 +153,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView65" />
+
+    <TextView
+        android:id="@+id/textView33"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="EditProfile"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintStart_toEndOf="@+id/view10" />
 
 
 </android.support.constraint.ConstraintLayout>
