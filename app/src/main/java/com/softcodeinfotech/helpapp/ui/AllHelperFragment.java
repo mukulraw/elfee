@@ -55,6 +55,7 @@ public class AllHelperFragment extends Fragment {
     private ArrayList<GetAllHelperListModel> mHelperDetailsList = new ArrayList<GetAllHelperListModel>();
     private GetAllHelperListAdapter getAllHelperListAdapter;
 
+    String cat , lat , lng , rad;
 
     public AllHelperFragment() {
         // Required empty public constructor
@@ -66,6 +67,12 @@ public class AllHelperFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
          View view = inflater.inflate(R.layout.fragment_all_helper, container, false);
+
+
+         cat = getArguments().getString("cat");
+         lat = getArguments().getString("lat");
+         lng = getArguments().getString("lng");
+         rad = getArguments().getString("rad");
 
         back = view.findViewById(R.id.imageButton);
         pBar = view.findViewById(R.id.progressBar6);

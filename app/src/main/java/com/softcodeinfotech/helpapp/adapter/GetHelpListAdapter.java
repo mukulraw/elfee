@@ -54,6 +54,14 @@ public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     }
 
+
+    public void setData(List<GethelplistResponse.Information> list)
+    {
+        this.mHelpListModel = list;
+        notifyDataSetChanged();
+    }
+
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -63,6 +71,7 @@ public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+        viewHolder.setIsRecyclable(false);
         final GethelplistResponse.Information item = mHelpListModel.get(i);
 
 
@@ -72,7 +81,7 @@ public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ((GetHelpListAdapterHolder) viewHolder).state.setText(item.getState());
 
 
-        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
+        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).showImageForEmptyUri(R.drawable.blur2).build();
 
         ImageLoader loader = ImageLoader.getInstance();
         loader.displayImage(item.getImage() , ((GetHelpListAdapterHolder) viewHolder).image , options);

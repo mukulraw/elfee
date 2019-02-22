@@ -118,9 +118,9 @@
     <TextView
         android:id="@+id/textView61"
         android:layout_width="0dp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="wrap_content"
-        android:text="My Orders"
+        android:text="My Messages"
         android:typeface="monospace"
         android:textSize="16sp"
         android:gravity="center_vertical"
@@ -165,7 +165,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:padding="10dp"
-                android:text="HELP BUDDY"
+                android:text="ELFEE"
                 android:textColor="#ffffff"
                 android:textSize="20sp"
                 android:typeface="monospace" />

@@ -110,6 +110,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton7"
         app:layout_constraintHorizontal_bias="0.5"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         android:background="@drawable/ic_wassap_logo_button" />
 
@@ -117,11 +118,12 @@
         android:id="@+id/imageButton7"
         android:layout_width="45dp"
         android:layout_height="45dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/ic_speech_bubble"
         app:layout_constraintBottom_toBottomOf="@+id/imageButton2"
         app:layout_constraintEnd_toStartOf="@+id/imageButton8"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageButton2"
-        android:background="@drawable/ic_speech_bubble" />
+        app:layout_constraintStart_toEndOf="@+id/imageButton2" />
 
     <ImageButton
         android:id="@+id/imageButton8"

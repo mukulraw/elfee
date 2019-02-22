@@ -13,20 +13,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
+        <include
             android:id="@+id/textView27"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:text="Home"
+            layout="@layout/header_layout"
             android:textColor="#000000"
             android:textSize="20sp"
             android:textStyle="bold"
             android:typeface="monospace"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageButton4"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -99,29 +99,35 @@
 
         <include
             android:id="@+id/bottomNavigationView"
-            android:layout_width="0dp"
             layout="@layout/bottom_menu"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="#ffffff"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-             />
+            app:layout_constraintTop_toBottomOf="parent" />
 
-        <ImageButton
+        <TextView
             android:id="@+id/floatingActionButton3"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
+            android:text="ADD HELP"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:paddingTop="10dp"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
             android:background="@drawable/orange_round_background"
-            android:src="@drawable/ic_add_black_24dp"
+            android:drawableStart="@drawable/ic_add_black_24dp"
             android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/imageView5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.501"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:drawablePadding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ProgressBar
             android:id="@+id/pBar"

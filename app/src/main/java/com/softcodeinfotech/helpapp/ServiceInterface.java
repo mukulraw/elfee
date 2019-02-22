@@ -2,6 +2,7 @@ package com.softcodeinfotech.helpapp;
 
 
 import com.facebook.internal.ImageResponse;
+import com.softcodeinfotech.helpapp.allMessagePOJO.allMessageBean;
 import com.softcodeinfotech.helpapp.beanresponse.AddHelpListResponse;
 import com.softcodeinfotech.helpapp.beanresponse.GetforgotpassResponse;
 import com.softcodeinfotech.helpapp.beanresponse.GetmobileverifyResponse;
@@ -20,6 +21,8 @@ import com.softcodeinfotech.helpapp.response.PasswordUpdateResponse;
 import com.softcodeinfotech.helpapp.response.ProfileResponse;
 import com.softcodeinfotech.helpapp.response.ProfileupdateResponse;
 import com.softcodeinfotech.helpapp.response.SigninResponse;
+import com.softcodeinfotech.helpapp.sendMessagePOJO.sendMessageBean;
+import com.softcodeinfotech.helpapp.singleMessagePOJO.singleMessageBean;
 
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -150,9 +153,12 @@ public interface ServiceInterface {
 
     //get help List on main Activity
     @Multipart
-    @POST("helpapp/get_help_list.php")
+    @POST("helpapp/get_helplist.php")
     Call<GethelplistResponse> getHelpLitstItem(
-            @Part("state") RequestBody state
+            @Part("catId") String state,
+            @Part("latitude") String latitude,
+            @Part("longitude") String longitude,
+            @Part("radius") String radius
     );
 
     //get all helper List
@@ -226,11 +232,34 @@ public interface ServiceInterface {
             @Part("help_category_id") RequestBody help_category_id,
             @Part("state") RequestBody state,
             @Part("image\"; filename=\".jpg\" ") RequestBody file,
-            @Part("address") String address,
-            @Part("latitude") String latitude,
-            @Part("longitude") String longitude
+            @Part("address") RequestBody address,
+            @Part("latitude") RequestBody latitude,
+            @Part("longitude") RequestBody longitude
 
 
     );
+
+    @Multipart
+    @POST("helpapp/all_message.php")
+    Call<allMessageBean> allMessageList(
+            @Part("userId") String userId
+    );
+
+    @Multipart
+    @POST("helpapp/send_message.php")
+    Call<sendMessageBean> sendMessage(
+            @Part("userId") String userId,
+            @Part("friendId") String friendId,
+            @Part("message") String message
+    );
+
+    @Multipart
+    @POST("helpapp/single_user_message.php")
+    Call<singleMessageBean> singleChatList(
+            @Part("userId") String userId,
+            @Part("friendId") String friendId,
+            @Part("chatId") String chatId
+    );
+
 
 }

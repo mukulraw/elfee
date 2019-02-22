@@ -23,10 +23,13 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,23 +44,29 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.softcodeinfotech.helpapp.MessageActivity;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.adapter.GetHelpListAdapter;
 import com.softcodeinfotech.helpapp.model.GetHelpListModel;
+import com.softcodeinfotech.helpapp.response.GetCategoryResponse;
 import com.softcodeinfotech.helpapp.response.GethelplistResponse;
 import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,18 +76,31 @@ public class MainActivity extends AppCompatActivity {
     ImageButton toggle;
     TextView profile, kyc, orders;
     //BottomNavigationView bottom;
-    TextView toolbar;
+    //TextView toolbar;
     TextView account, myHistory;
     ImageButton settings;
     ImageView image;
     TextView dName, dEmail;
-    ImageButton fabButton;
+    TextView fabButton;
 
     //RecylerView
     ProgressBar pBar;
 
+    Spinner location;
+
+    Spinner category;
+
     Retrofit retrofit;
     ServiceInterface serviceInterface;
+
+
+    List<String> catName;
+    List<String> catId;
+
+    List<String> locName;
+    List<String> locId;
+
+    String cat , rad;
 
     String TAG = "MainActivity";
     private RecyclerView replaceRecyler;
@@ -98,6 +120,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        catName = new ArrayList<>();
+        catId = new ArrayList<>();
+
+        locName = new ArrayList<>();
+        locId = new ArrayList<>();
+
+        locName.add("2 KM");
+        locName.add("5 KM");
+        locName.add("10 KM");
+        locName.add("20 KM");
+        locName.add("50 KM");
+
+        locId.add("2");
+        locId.add("5");
+        locId.add("10");
+        locId.add("20");
+        locId.add("50");
+
         setUpWidget();
 
         email = SharePreferenceUtils.getInstance().getString(Constant.USER_email);
@@ -141,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                     {
                         latitude=String.valueOf(location.getLatitude());
                         longitude=String.valueOf(location.getLongitude());
-                        Toast.makeText(MainActivity.this, "latitude="+latitude+"longitude="+longitude, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, "latitude="+latitude+"longitude="+longitude, Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -263,20 +304,61 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        FragmentManager fm1 = getSupportFragmentManager();
-        FragmentTransaction ft1 = fm1.beginTransaction();
-        AllHelpFragment allHelpFragment=new AllHelpFragment();
-        ft1.replace(R.id.replace, allHelpFragment);
-        ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-        //ft.addToBackStack(null);
-        ft1.commit();
-        drawer.closeDrawer(GravityCompat.START);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .build();
+
+        serviceInterface = retrofit.create(ServiceInterface.class);
+
+
+        getCategoryReq();
+
+
+        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                cat = catId.get(position);
+
+                FragmentManager fm1 = getSupportFragmentManager();
+                FragmentTransaction ft1 = fm1.beginTransaction();
+                AllHelpFragment allHelpFragment=new AllHelpFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("cat" , cat);
+                bundle.putString("lat" , latitude);
+                bundle.putString("lng" , longitude);
+                bundle.putString("rad" , rad);
+                allHelpFragment.setArguments(bundle);
+                ft1.replace(R.id.replace, allHelpFragment);
+                ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                //ft.addToBackStack(null);
+                ft1.commit();
+                drawer.closeDrawer(GravityCompat.START);
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
 
         helps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toolbar.setText("Help Me");
+                //toolbar.setText("Help Me");
                 //  Toast.makeText(MainActivity.this, "help me", Toast.LENGTH_SHORT).show();
                 // return true;
                 // break;
@@ -297,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
         helpers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toolbar.setText("Helpers List");
+                //toolbar.setText("Helpers List");
                 FragmentManager fm2 = getSupportFragmentManager();
                 FragmentTransaction ft2 = fm2.beginTransaction();
                 AllHelperFragment allHelperFragment = new AllHelperFragment();
@@ -306,6 +388,14 @@ public class MainActivity extends AppCompatActivity {
                 //ft.addToBackStack(null);
                 ft2.commit();
                 drawer.closeDrawer(GravityCompat.START);
+            }
+        });
+
+        orders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this , MessageActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -355,37 +445,40 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 */
-    }
 
-    private void getHelpListReq() {
-        Call<GethelplistResponse> call = serviceInterface.getHelpLitstItem(convertPlainString(state));
-        call.enqueue(new Callback<GethelplistResponse>() {
+        location.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onResponse(Call<GethelplistResponse> call, Response<GethelplistResponse> response) {
-                if (response.body().getStatus().equals(1)) {
-                    pBar.setVisibility(View.GONE);
-                    for (int i = 0; i < response.body().getInformation().size(); i++) {
-                        mHelpDetailsList.add(new GetHelpListModel(response.body().getInformation().get(i).getHelpTitle(),
-                                String.valueOf(response.body().getInformation().get(i).getTimestamp()),
-                                response.body().getInformation().get(i).getHelpDescription()
-                                , String.valueOf(response.body().getInformation().get(i).getHelpCategoryId()),
-                                response.body().getInformation().get(i).getStatus()
-                                , response.body().getInformation().get(i).getState(),
-                                String.valueOf(response.body().getInformation().get(i).getUserId())));
-                    }
-                    getHelpListAdapter.notifyDataSetChanged();
-                }
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                rad = locId.get(position);
+                FragmentManager fm1 = getSupportFragmentManager();
+                FragmentTransaction ft1 = fm1.beginTransaction();
+                AllHelpFragment allHelpFragment=new AllHelpFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("cat" , cat);
+                bundle.putString("lat" , latitude);
+                bundle.putString("lng" , longitude);
+                bundle.putString("rad" , rad);
+                allHelpFragment.setArguments(bundle);
+                ft1.replace(R.id.replace, allHelpFragment);
+                ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                //ft.addToBackStack(null);
+                ft1.commit();
+                drawer.closeDrawer(GravityCompat.START);
+
+
+
             }
 
             @Override
-            public void onFailure(Call<GethelplistResponse> call, Throwable t) {
-                pBar.setVisibility(View.GONE);
-                Toast.makeText(MainActivity.this, "" + t.toString(), Toast.LENGTH_SHORT).show();
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
 
     }
+
+
 
     private void setUpWidget() {
         ///
@@ -394,7 +487,7 @@ public class MainActivity extends AppCompatActivity {
         profile = findViewById(R.id.textView58);
         orders = findViewById(R.id.textView61);
         //bottom = findViewById(R.id.bottomNavigationView);
-        toolbar = findViewById(R.id.textView27);
+        //toolbar = findViewById(R.id.textView27);
         kyc = findViewById(R.id.textView59);
         account = findViewById(R.id.textView62);
         myHistory = findViewById(R.id.textView60);
@@ -408,6 +501,9 @@ public class MainActivity extends AppCompatActivity {
         image = findViewById(R.id.imageView1);
         dName = findViewById(R.id.textView55);
         dEmail = findViewById(R.id.textView56);
+
+        category = findViewById(R.id.textView30);
+        location = findViewById(R.id.textView31);
 
         //recyler
         replaceRecyler = findViewById(R.id.replaceRecycler);
@@ -490,4 +586,48 @@ public class MainActivity extends AppCompatActivity {
     private void stopLocationUpdates() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
+
+    private void getCategoryReq() {
+        String securecode = "1234";
+        Call<GetCategoryResponse> call = serviceInterface.getCategory(convertPlainString(securecode));
+        call.enqueue(new Callback<GetCategoryResponse>() {
+            @Override
+            public void onResponse(Call<GetCategoryResponse> call, Response<GetCategoryResponse> response) {
+                if (response.body() != null && response.body().getStatus().equals(1)) {
+                    for (int i = 0; i < response.body().getInformation().size(); i++) {
+                        catId.add(String.valueOf(response.body().getInformation().get(i).getCategoryId()));
+                        catName.add(response.body().getInformation().get(i).getCategoryName());
+                    }
+
+
+                    rad = "2";
+                    //category.setText(catName.get(0));
+
+                    ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(MainActivity.this,
+                            android.R.layout.simple_spinner_item, locName);//setting the country_array to spinner
+                    // string value
+                    adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    location.setAdapter(adapter1);
+
+
+
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
+                            android.R.layout.simple_spinner_item, catName);//setting the country_array to spinner
+                    // string value
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    category.setAdapter(adapter);
+                } else {
+                    Toast.makeText(MainActivity.this, "not inserted", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GetCategoryResponse> call, Throwable t) {
+
+            }
+        });
+
+
+    }
+
 }

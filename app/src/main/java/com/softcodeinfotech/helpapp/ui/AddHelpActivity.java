@@ -117,9 +117,9 @@ public class AddHelpActivity extends AppCompatActivity {
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.BASE_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
-                .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
 
         serviceInterface = retrofit.create(ServiceInterface.class);
@@ -332,7 +332,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
         Call<AddHelpListResponse> call = serviceInterface.help_DataInsert(convertPlainString(mUserid),
                 convertPlainString(mTitle), convertPlainString(mDesc), convertPlainString(mCatId), convertPlainString(mState), requestFile,
-                address, lati, longi);
+                convertPlainString(address), convertPlainString(lati), convertPlainString(longi));
 
         call.enqueue(new Callback<AddHelpListResponse>() {
             @Override

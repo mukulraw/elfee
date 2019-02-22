@@ -37,6 +37,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static android.content.Context.WINDOW_SERVICE;
 
@@ -49,6 +50,10 @@ public class AllHelpFragment extends Fragment {
 
     //RecylerView
     ProgressBar pBar;
+
+
+    String cat , lat , lng , rad;
+
 
     Retrofit retrofit;
     ServiceInterface serviceInterface;
@@ -70,6 +75,13 @@ public class AllHelpFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_all_help, container, false);
 
+
+        cat = getArguments().getString("cat");
+        lat = getArguments().getString("lat");
+        lng = getArguments().getString("lng");
+        rad = getArguments().getString("rad");
+
+
         replaceRecyler =view.findViewById(R.id.replaceRecycler);
         pBar = view.findViewById(R.id.progressBar6);
 
@@ -89,6 +101,7 @@ public class AllHelpFragment extends Fragment {
         Gson gson = new GsonBuilder().create();
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.BASE_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         serviceInterface = retrofit.create(ServiceInterface.class);
@@ -121,16 +134,22 @@ public class AllHelpFragment extends Fragment {
     }
 
     private void getHelpListReq() {
-        Call<GethelplistResponse> call = serviceInterface.getHelpLitstItem(convertPlainString(state));
+
+        Log.d("cat" , cat);
+
+        Call<GethelplistResponse> call = serviceInterface.getHelpLitstItem(cat , lat , lng , rad);
         call.enqueue(new Callback<GethelplistResponse>() {
             @Override
             public void onResponse(Call<GethelplistResponse> call, Response<GethelplistResponse> response) {
                 if (response.body().getStatus().equals(1)) {
                     pBar.setVisibility(View.GONE);
 
+                    getHelpListAdapter.setData(response.body().getInformation());
+
+                    /*
                     mHelpDetailsList.addAll(response.body().getInformation());
 
-                    /*for (int i = 0; i < response.body().getInformation().size(); i++) {
+                    *//*for (int i = 0; i < response.body().getInformation().size(); i++) {
                         mHelpDetailsList.add(new GetHelpListModel(response.body().getInformation().get(i).getHelpTitle(),
                                 String.valueOf(response.body().getInformation().get(i).getTimestamp()),
                                 response.body().getInformation().get(i).getHelpDescription()
@@ -138,8 +157,8 @@ public class AllHelpFragment extends Fragment {
                                 response.body().getInformation().get(i).getStatus()
                                 , response.body().getInformation().get(i).getState(),
                                 String.valueOf(response.body().getInformation().get(i).getUserId())));
-                    }*/
-                    getHelpListAdapter.notifyDataSetChanged();
+                    }*//*
+                    getHelpListAdapter.notifyDataSetChanged();*/
                 }
             }
 

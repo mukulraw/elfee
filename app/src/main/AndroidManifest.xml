@@ -14,14 +14,17 @@
         android:allowBackup="false"
         android:fullBackupContent="false"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/ellfyicon"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
         tools:replace="allowBackup,supportsRtl">
-        <activity android:name=".HelpDetails"></activity>
+        <activity android:name=".ChatScreen"></activity>
+        <activity android:name=".MessageActivity" />
+        <activity android:name=".HelpDetails" />
         <activity android:name=".ui.MainActivity" />
         <activity
             android:name=".ui.SignupActivity"
