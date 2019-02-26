@@ -64,6 +64,9 @@ public class GetCategoryResponse {
         @SerializedName("category_name")
         @Expose
         private String categoryName;
+        @SerializedName("image")
+        @Expose
+        private String image;
 
         public Integer getCategoryId() {
             return categoryId;
@@ -71,11 +74,6 @@ public class GetCategoryResponse {
 
         public void setCategoryId(Integer categoryId) {
             this.categoryId = categoryId;
-        }
-
-        public Information withCategoryId(Integer categoryId) {
-            this.categoryId = categoryId;
-            return this;
         }
 
         public String getCategoryName() {
@@ -86,9 +84,12 @@ public class GetCategoryResponse {
             this.categoryName = categoryName;
         }
 
-        public Information withCategoryName(String categoryName) {
-            this.categoryName = categoryName;
-            return this;
+        public String getImage() {
+            return image;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
         }
 
     }

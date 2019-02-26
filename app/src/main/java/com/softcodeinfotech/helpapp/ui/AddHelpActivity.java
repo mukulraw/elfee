@@ -1,5 +1,6 @@
 package com.softcodeinfotech.helpapp.ui;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -7,11 +8,20 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,8 +30,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.beanresponse.AddHelpListResponse;
@@ -53,11 +66,11 @@ public class AddHelpActivity extends AppCompatActivity {
     private static final int IMAGE_PICKER = 1;
     ImageButton back;
     ProgressBar pBar;
-    Spinner spinCategory;
+    TextView spinCategory;
     EditText title, desc, currentAddress;
     Button submit;
 
-    String mUserid, mTitle, mDesc, mCatId, mState, item, mCurrentAddress;
+    String mUserid, mTitle, mDesc, mCatId, mState, item2, mCurrentAddress;
 
     ArrayList<String> catId = new ArrayList<>();
     ArrayList<String> catName = new ArrayList<>();
@@ -125,11 +138,11 @@ public class AddHelpActivity extends AppCompatActivity {
         serviceInterface = retrofit.create(ServiceInterface.class);
 
 
-        getCategoryReq();
+        //getCategoryReq();
 
 
         //if you want to set any action you can do in this listener
-        spinCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*spinCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int position, long id) {
@@ -141,6 +154,47 @@ public class AddHelpActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        });*/
+
+        spinCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final Dialog dialog = new Dialog(AddHelpActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(true);
+                dialog.setContentView(R.layout.dialog_layout);
+                dialog.show();
+
+
+                final RecyclerView grid = dialog.findViewById(R.id.grid);
+                final GridLayoutManager manager = new GridLayoutManager(AddHelpActivity.this , 3);
+
+                String securecode = "1234";
+                Call<GetCategoryResponse> call = serviceInterface.getCategory(convertPlainString(securecode));
+                call.enqueue(new Callback<GetCategoryResponse>() {
+                    @Override
+                    public void onResponse(Call<GetCategoryResponse> call, Response<GetCategoryResponse> response) {
+                        if (response.body() != null && response.body().getStatus().equals(1)) {
+
+
+                            CategoryAdapter adapter = new CategoryAdapter(AddHelpActivity.this , response.body().getInformation() , dialog);
+                            grid.setAdapter(adapter);
+                            grid.setLayoutManager(manager);
+
+
+                        } else {
+                            Toast.makeText(AddHelpActivity.this, "not inserted", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetCategoryResponse> call, Throwable t) {
+
+                    }
+                });
+
             }
         });
 
@@ -210,32 +264,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
 
     private void getCategoryReq() {
-        String securecode = "1234";
-        Call<GetCategoryResponse> call = serviceInterface.getCategory(convertPlainString(securecode));
-        call.enqueue(new Callback<GetCategoryResponse>() {
-            @Override
-            public void onResponse(Call<GetCategoryResponse> call, Response<GetCategoryResponse> response) {
-                if (response.body() != null && response.body().getStatus().equals(1)) {
-                    for (int i = 0; i < response.body().getInformation().size(); i++) {
-                        catId.add(String.valueOf(response.body().getInformation().get(i).getCategoryId()));
-                        catName.add(response.body().getInformation().get(i).getCategoryName());
-                    }
 
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(AddHelpActivity.this,
-                            android.R.layout.simple_spinner_item, catName);//setting the country_array to spinner
-                    // string value
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinCategory.setAdapter(adapter);
-                } else {
-                    Toast.makeText(AddHelpActivity.this, "not inserted", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<GetCategoryResponse> call, Throwable t) {
-
-            }
-        });
 
 
     }
@@ -373,6 +402,75 @@ public class AddHelpActivity extends AppCompatActivity {
         String result = cursor.getString(column_index);
         cursor.close();
         return result;
+    }
+
+    class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder>
+    {
+
+        Context context;
+        List<GetCategoryResponse.Information> list = new ArrayList<>();
+        Dialog dialog;
+
+        public CategoryAdapter(Context context , List<GetCategoryResponse.Information> list , Dialog dialog)
+        {
+            this.context = context;
+            this.list = list;
+            this.dialog = dialog;
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.spinner_layout , viewGroup , false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+
+            final GetCategoryResponse.Information item = list.get(i);
+
+            viewHolder.text.setText(item.getCategoryName());
+
+            DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
+            ImageLoader loader = ImageLoader.getInstance();
+            loader.displayImage(Constant.BASE_URL + "helpapp/admin/upload/streams/" + item.getImage() , viewHolder.image , options);
+
+
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    mCatId = String.valueOf(item.getCategoryId());
+                    //item = String.valueOf(arg0.getItemAtPosition(position));
+
+                    spinCategory.setText(item.getCategoryName());
+
+                    dialog.dismiss();
+
+                }
+            });
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder
+        {
+
+            ImageView image;
+            TextView text;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                image = itemView.findViewById(R.id.imageView11);
+                text = itemView.findViewById(R.id.textView34);
+            }
+        }
     }
 
 }

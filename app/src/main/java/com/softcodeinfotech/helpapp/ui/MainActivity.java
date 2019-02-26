@@ -1,9 +1,12 @@
 package com.softcodeinfotech.helpapp.ui;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.media.Image;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -16,12 +19,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,6 +51,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.softcodeinfotech.helpapp.MessageActivity;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
@@ -88,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
     Spinner location;
 
-    Spinner category;
+    TextView category;
 
     Retrofit retrofit;
     ServiceInterface serviceInterface;
@@ -323,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
         getCategoryReq();
 
 
-        category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
@@ -351,8 +360,50 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
 
+
+        category.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final Dialog dialog = new Dialog(MainActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(true);
+                dialog.setContentView(R.layout.dialog_layout);
+                dialog.show();
+
+
+                final RecyclerView grid = dialog.findViewById(R.id.grid);
+                final GridLayoutManager manager = new GridLayoutManager(MainActivity.this , 3);
+
+                String securecode = "1234";
+                Call<GetCategoryResponse> call = serviceInterface.getCategory(convertPlainString(securecode));
+                call.enqueue(new Callback<GetCategoryResponse>() {
+                    @Override
+                    public void onResponse(Call<GetCategoryResponse> call, Response<GetCategoryResponse> response) {
+                        if (response.body() != null && response.body().getStatus().equals(1)) {
+
+
+                            CategoryAdapter adapter = new CategoryAdapter(MainActivity.this , response.body().getInformation() , dialog);
+                            grid.setAdapter(adapter);
+                            grid.setLayoutManager(manager);
+
+
+                        } else {
+                            Toast.makeText(MainActivity.this, "not inserted", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetCategoryResponse> call, Throwable t) {
+
+                    }
+                });
+
+
+            }
+        });
 
 
         helps.setOnClickListener(new View.OnClickListener() {
@@ -612,6 +663,8 @@ public class MainActivity extends AppCompatActivity {
                         catName.add(response.body().getInformation().get(i).getCategoryName());
                     }
 
+                    category.setText(catName.get(0));
+                    cat = catId.get(0);
 
                     rad = "2";
                     //category.setText(catName.get(0));
@@ -623,12 +676,12 @@ public class MainActivity extends AppCompatActivity {
                     location.setAdapter(adapter1);
 
 
-
+/*
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
                             android.R.layout.simple_spinner_item, catName);//setting the country_array to spinner
                     // string value
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    category.setAdapter(adapter);
+                    category.setAdapter(adapter);*/
                 } else {
                     Toast.makeText(MainActivity.this, "not inserted", Toast.LENGTH_SHORT).show();
                 }
@@ -641,6 +694,89 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder>
+    {
+
+        Context context;
+        List<GetCategoryResponse.Information> list = new ArrayList<>();
+        Dialog dialog;
+
+        public CategoryAdapter(Context context , List<GetCategoryResponse.Information> list , Dialog dialog)
+        {
+            this.context = context;
+            this.list = list;
+            this.dialog = dialog;
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.spinner_layout , viewGroup , false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+
+            final GetCategoryResponse.Information item = list.get(i);
+
+            viewHolder.text.setText(item.getCategoryName());
+
+            DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
+            ImageLoader loader = ImageLoader.getInstance();
+            loader.displayImage(Constant.BASE_URL + "helpapp/admin/upload/streams/" + item.getImage() , viewHolder.image , options);
+
+
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    category.setText(item.getCategoryName());
+
+                    cat = String.valueOf(item.getCategoryId());
+
+                    FragmentManager fm1 = getSupportFragmentManager();
+                    FragmentTransaction ft1 = fm1.beginTransaction();
+                    AllHelpFragment allHelpFragment=new AllHelpFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("cat" , cat);
+                    bundle.putString("lat" , latitude);
+                    bundle.putString("lng" , longitude);
+                    bundle.putString("rad" , rad);
+                    allHelpFragment.setArguments(bundle);
+                    ft1.replace(R.id.replace, allHelpFragment);
+                    ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                    //ft.addToBackStack(null);
+                    ft1.commit();
+                    drawer.closeDrawer(GravityCompat.START);
+
+                    dialog.dismiss();
+
+                }
+            });
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return list.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder
+        {
+
+            ImageView image;
+            TextView text;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                image = itemView.findViewById(R.id.imageView11);
+                text = itemView.findViewById(R.id.textView34);
+            }
+        }
     }
 
 }

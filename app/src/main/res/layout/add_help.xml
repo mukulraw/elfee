@@ -47,10 +47,14 @@
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
 
-        <Spinner
+        <TextView
             android:id="@+id/spinCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
+            android:text="Select Category"
             android:layout_centerVertical="true" />
 
     </RelativeLayout>
