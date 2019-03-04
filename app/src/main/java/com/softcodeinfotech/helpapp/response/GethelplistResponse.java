@@ -68,6 +68,9 @@ public class GethelplistResponse {
         @SerializedName("help_category_id")
         @Expose
         private Integer helpCategoryId;
+        @SerializedName("help_category")
+        @Expose
+        private String helpCategory;
         @SerializedName("timestamp")
         @Expose
         private String timestamp;
@@ -83,12 +86,12 @@ public class GethelplistResponse {
         @SerializedName("address")
         @Expose
         private String address;
-        @SerializedName("lat")
+        @SerializedName("latitude")
         @Expose
-        private String lat;
-        @SerializedName("lng")
+        private String latitude;
+        @SerializedName("longitude")
         @Expose
-        private String lng;
+        private String longitude;
         @SerializedName("image")
         @Expose
         private String image;
@@ -118,6 +121,14 @@ public class GethelplistResponse {
 
         public void setHelpCategoryId(Integer helpCategoryId) {
             this.helpCategoryId = helpCategoryId;
+        }
+
+        public String getHelpCategory() {
+            return helpCategory;
+        }
+
+        public void setHelpCategory(String helpCategory) {
+            this.helpCategory = helpCategory;
         }
 
         public String getTimestamp() {
@@ -160,20 +171,20 @@ public class GethelplistResponse {
             this.address = address;
         }
 
-        public String getLat() {
-            return lat;
+        public String getLatitude() {
+            return latitude;
         }
 
-        public void setLat(String lat) {
-            this.lat = lat;
+        public void setLatitude(String latitude) {
+            this.latitude = latitude;
         }
 
-        public String getLng() {
-            return lng;
+        public String getLongitude() {
+            return longitude;
         }
 
-        public void setLng(String lng) {
-            this.lng = lng;
+        public void setLongitude(String longitude) {
+            this.longitude = longitude;
         }
 
         public String getImage() {

@@ -41,7 +41,7 @@ public class HelpDetails extends AppCompatActivity {
 
     String tit , des , tim , sta , add , lt , ln , ima , uid , ph;
 
-    ImageButton profile , chat , call , whatsapp;
+    Button profile , chat , call , whatsapp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public class HelpDetails extends AppCompatActivity {
         state.setText(sta);
         date.setText(tim);
         desc.setText(Html.fromHtml("Details: </br>" + des));
-        address.setText(Html.fromHtml("Address:  " + add));
+        address.setText(Html.fromHtml("City:  " + add));
 
 
 

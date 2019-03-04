@@ -101,49 +101,58 @@
     </android.support.v4.widget.NestedScrollView>
 
 
-    <ImageButton
+    <Button
         android:id="@+id/imageButton2"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="4dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/ic_call"
+        android:drawableEnd="@drawable/ic_call"
+        android:drawablePadding="10dp"
+        android:text="Call me"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton7"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageButton
+    <Button
         android:id="@+id/imageButton7"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/ic_comments"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton8"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imageButton2" />
 
 
-
-    <ImageButton
+    <Button
         android:id="@+id/imageButton8"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/ic_us"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton9"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/imageButton7" />
 
 
-    <ImageButton
+    <Button
         android:id="@+id/imageButton9"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/ic_whatsapp"
+        android:drawableEnd="@drawable/ic_whatsapp"
+        android:drawablePadding="10dp"
+        android:text="Contact me"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

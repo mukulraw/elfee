@@ -67,7 +67,8 @@ public class AddHelpActivity extends AppCompatActivity {
     ImageButton back;
     ProgressBar pBar;
     TextView spinCategory;
-    EditText title, desc, currentAddress;
+    EditText title, desc;
+            //currentAddress;
     Button submit;
 
     String mUserid, mTitle, mDesc, mCatId, mState, item2, mCurrentAddress;
@@ -82,7 +83,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
     //imageview
     ImageView imageView;
-    Button selectImage;
+    //Button selectImage;
     Uri selectedImage;
     File compressedImageFile;
 
@@ -91,7 +92,7 @@ public class AddHelpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_help);
+        setContentView(R.layout.activity_add_help);
         catId = new ArrayList<>();
         catName = new ArrayList<>();
 
@@ -103,7 +104,7 @@ public class AddHelpActivity extends AppCompatActivity {
         lati = intent.getStringExtra("lati");
         longi = intent.getStringExtra("longi");
 
-        Toast.makeText(this, "" + lati + "" + longi, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "" + lati + "" + longi, Toast.LENGTH_SHORT).show();
         try {
             getAddress(AddHelpActivity.this, Double.parseDouble(lati), Double.parseDouble(longi));
         }catch (Exception e)
@@ -111,12 +112,12 @@ public class AddHelpActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        currentAddress.setText(address);
-        mCurrentAddress = currentAddress.getText().toString().trim();
+        //currentAddress.setText(address);
+        mCurrentAddress = address;
 
 
         mUserid = SharePreferenceUtils.getInstance().getString(Constant.USER_id);
-        mState = SharePreferenceUtils.getInstance().getString(Constant.USER_state);
+        //mState = SharePreferenceUtils.getInstance().getString(Constant.USER_state);
 
         //Toast.makeText(this, ""+mUserid, Toast.LENGTH_SHORT).show();
         //Toast.makeText(this, ""+mState, Toast.LENGTH_SHORT).show();
@@ -219,7 +220,7 @@ public class AddHelpActivity extends AppCompatActivity {
             }
         });
 
-        selectImage.setOnClickListener(new View.OnClickListener() {
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 OpenGallery();
@@ -271,15 +272,15 @@ public class AddHelpActivity extends AppCompatActivity {
 
     private void setUpwidget() {
         back = findViewById(R.id.backButton);
-        pBar = findViewById(R.id.progressBar);
-        title = findViewById(R.id.title_text);
-        desc = findViewById(R.id.desc);
-        submit = findViewById(R.id.submit);
-        spinCategory = findViewById(R.id.spinCategory);
-        currentAddress = findViewById(R.id.editText5);
+        pBar = findViewById(R.id.progressBar4);
+        title = findViewById(R.id.editText7);
+        desc = findViewById(R.id.editText8);
+        submit = findViewById(R.id.button13);
+        spinCategory = findViewById(R.id.recyclerView2);
+        //currentAddress = findViewById(R.id.editText5);
         //
-        imageView = findViewById(R.id.imageView8);
-        selectImage = findViewById(R.id.selectImage);
+        imageView = findViewById(R.id.imageView12);
+        //selectImage = findViewById(R.id.selectImage);
     }
 
     private void getData() {
@@ -316,7 +317,9 @@ public class AddHelpActivity extends AppCompatActivity {
                 Log.d(TAG, "getAddress:  postalCode" + postalCode);
                 Log.d(TAG, "getAddress:  knownName" + knownName);
 
-                Toast.makeText(context, "" + address, Toast.LENGTH_SHORT).show();
+                mState = city;
+
+                //Toast.makeText(context, "" + address, Toast.LENGTH_SHORT).show();
 
 
             }
@@ -371,7 +374,8 @@ public class AddHelpActivity extends AppCompatActivity {
                     if (response.body().getStatus().equals(1)) {
                         title.setText("");
                         desc.setText("");
-                        Toast.makeText(AddHelpActivity.this, "help data added sucessfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddHelpActivity.this, "help data added successfully", Toast.LENGTH_SHORT).show();
+                        finish();
                     } else {
                         Log.e("error_in upload", "not uploaded");
 

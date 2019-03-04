@@ -76,9 +76,9 @@ public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
         ((GetHelpListAdapterHolder) viewHolder).title.setText(item.getHelpTitle());
-        ((GetHelpListAdapterHolder) viewHolder).desc.setText(item.getHelpDescription());
+        ((GetHelpListAdapterHolder) viewHolder).desc.setText(item.getState());
         ((GetHelpListAdapterHolder) viewHolder).date.setText(item.getTimestamp());
-        ((GetHelpListAdapterHolder) viewHolder).state.setText(item.getState());
+        ((GetHelpListAdapterHolder) viewHolder).state.setText(item.getHelpCategory());
 
 
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).showImageForEmptyUri(R.drawable.blur2).build();
@@ -101,10 +101,10 @@ public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 intent.putExtra("title" , item.getHelpTitle());
                 intent.putExtra("desc" , item.getHelpDescription());
                 intent.putExtra("time" , item.getTimestamp());
-                intent.putExtra("state" , item.getState());
-                intent.putExtra("address" , item.getAddress());
-                intent.putExtra("lat" , item.getLat());
-                intent.putExtra("lng" , item.getLng());
+                intent.putExtra("state" , item.getHelpCategory());
+                intent.putExtra("address" , item.getState());
+                intent.putExtra("lat" , item.getLatitude());
+                intent.putExtra("lng" , item.getLongitude());
                 intent.putExtra("image" , item.getImage());
                 intent.putExtra("uid" , String.valueOf(item.getUserId()));
 

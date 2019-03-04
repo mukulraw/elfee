@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.media.Image;
 import android.os.Build;
@@ -63,8 +65,10 @@ import com.softcodeinfotech.helpapp.response.GethelplistResponse;
 import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
@@ -92,12 +96,16 @@ public class MainActivity extends AppCompatActivity {
     TextView dName, dEmail;
     TextView fabButton;
 
+    TextView addre;
+
     //RecylerView
     ProgressBar pBar;
 
     Spinner location;
 
-    TextView category;
+    String address = "";
+
+    //TextView category;
 
     Retrofit retrofit;
     ServiceInterface serviceInterface;
@@ -136,11 +144,11 @@ public class MainActivity extends AppCompatActivity {
         locName = new ArrayList<>();
         locId = new ArrayList<>();
 
-        locName.add("2 KM");
-        locName.add("5 KM");
-        locName.add("10 KM");
-        locName.add("20 KM");
-        locName.add("50 KM");
+        locName.add("nearby 2 KM");
+        locName.add("nearby 5 KM");
+        locName.add("nearby 10 KM");
+        locName.add("nearby 20 KM");
+        locName.add("nearby 50 KM");
 
         locId.add("2");
         locId.add("5");
@@ -191,7 +199,12 @@ public class MainActivity extends AppCompatActivity {
                     {
                         latitude=String.valueOf(location.getLatitude());
                         longitude=String.valueOf(location.getLongitude());
-                        //Toast.makeText(MainActivity.this, "latitude="+latitude+"longitude="+longitude, Toast.LENGTH_SHORT).show();
+                        try {
+                            getAddress(MainActivity.this, location.getLatitude(), location.getLongitude());
+                        }catch (Exception e)
+                        {
+                            e.printStackTrace();
+                        }
                     }
 
                 }
@@ -363,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
         });*/
 
 
-        category.setOnClickListener(new View.OnClickListener() {
+        /*category.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -403,7 +416,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             }
-        });
+        });*/
 
 
         helps.setOnClickListener(new View.OnClickListener() {
@@ -546,7 +559,7 @@ public class MainActivity extends AppCompatActivity {
     private void setUpWidget() {
         ///
         drawer = findViewById(R.id.drawer);
-        toggle = findViewById(R.id.imageButton4);
+        toggle = findViewById(R.id.imageButton10);
         profile = findViewById(R.id.textView58);
         orders = findViewById(R.id.textView61);
         logout = findViewById(R.id.textView63);
@@ -566,8 +579,10 @@ public class MainActivity extends AppCompatActivity {
         dName = findViewById(R.id.textView55);
         dEmail = findViewById(R.id.textView56);
 
-        category = findViewById(R.id.textView30);
-        location = findViewById(R.id.textView31);
+        addre = findViewById(R.id.textView41);
+
+//        category = findViewById(R.id.textView30);
+        location = findViewById(R.id.spinner);
 
         //recyler
         replaceRecyler = findViewById(R.id.replaceRecycler);
@@ -663,16 +678,16 @@ public class MainActivity extends AppCompatActivity {
                         catName.add(response.body().getInformation().get(i).getCategoryName());
                     }
 
-                    category.setText(catName.get(0));
+                    //category.setText(catName.get(0));
                     cat = catId.get(0);
 
                     rad = "2";
                     //category.setText(catName.get(0));
 
                     ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(MainActivity.this,
-                            android.R.layout.simple_spinner_item, locName);//setting the country_array to spinner
+                            R.layout.spinner_item, locName);//setting the country_array to spinner
                     // string value
-                    adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    adapter1.setDropDownViewResource(R.layout.spinner_item);
                     location.setAdapter(adapter1);
 
 
@@ -734,7 +749,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    category.setText(item.getCategoryName());
+                    //category.setText(item.getCategoryName());
 
                     cat = String.valueOf(item.getCategoryId());
 
@@ -777,6 +792,40 @@ public class MainActivity extends AppCompatActivity {
                 text = itemView.findViewById(R.id.textView34);
             }
         }
+    }
+
+    public void getAddress(Context context, double LATITUDE, double LONGITUDE) {
+
+        //Set Address
+        try {
+            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null && addresses.size() > 0) {
+
+
+                address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+                String city = addresses.get(0).getLocality();
+                String state = addresses.get(0).getAdminArea();
+                String country = addresses.get(0).getCountryName();
+                String postalCode = addresses.get(0).getPostalCode();
+                String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+
+                Log.d(TAG, "getAddress:  address" + address);
+                Log.d(TAG, "getAddress:  city" + city);
+                Log.d(TAG, "getAddress:  state" + state);
+                Log.d(TAG, "getAddress:  postalCode" + postalCode);
+                Log.d(TAG, "getAddress:  knownName" + knownName);
+
+                addre.setText(city + " , " + state);
+
+                //Toast.makeText(context, "" + address, Toast.LENGTH_SHORT).show();
+
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return;
     }
 
 }
