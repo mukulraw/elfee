@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     DrawerLayout drawer;
     ImageButton toggle;
-    TextView profile, kyc, orders , logout;
+    TextView profile, kyc, orders, logout;
     //BottomNavigationView bottom;
     //TextView toolbar;
     TextView account, myHistory;
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
     List<String> locName;
     List<String> locId;
 
-    String cat , rad;
+    String cat, rad;
 
     String TAG = "MainActivity";
     private RecyclerView replaceRecyler;
@@ -129,9 +129,9 @@ public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSION_REQUEST_FINE_LOCATION = 101;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
-    private String latitude,longitude;
+    private String latitude, longitude;
 
-    LinearLayout helps , helpers;
+    LinearLayout helps, helpers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,41 +190,38 @@ public class MainActivity extends AppCompatActivity {
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    if (location!=null)
-                    {
-                        latitude=String.valueOf(location.getLatitude());
-                        longitude=String.valueOf(location.getLongitude());
+                    if (location != null) {
+                        latitude = String.valueOf(location.getLatitude());
+                        longitude = String.valueOf(location.getLongitude());
                         try {
                             getAddress(MainActivity.this, location.getLatitude(), location.getLongitude());
-                        }catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
 
                 }
             });
-        }  else {
+        } else {
             // request permissions
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_REQUEST_FINE_LOCATION);
             }
         }
 
-        locationCallback = new LocationCallback(){
+        locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 super.onLocationResult(locationResult);
                 for (Location location : locationResult.getLocations()) {
                     //Update UI with location data
                     if (location != null) {
-                        latitude=(String.valueOf(location.getLatitude()));
-                        longitude=(String.valueOf(location.getLongitude()));
+                        latitude = (String.valueOf(location.getLatitude()));
+                        longitude = (String.valueOf(location.getLongitude()));
 
 
                     }
@@ -232,8 +229,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         };
-
-
 
 
         //retrofit
@@ -260,8 +255,6 @@ public class MainActivity extends AppCompatActivity {
       //  getHelpListReq();*/
 
 
-
-
         toggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -272,36 +265,75 @@ public class MainActivity extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, MyProfileActivity.class);
-                startActivity(intent);
-                drawer.closeDrawer(GravityCompat.START);
+                if (mobile.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
 
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+
+                } else {
+
+                    Intent intent = new Intent(MainActivity.this, MyProfileActivity.class);
+                    startActivity(intent);
+                    drawer.closeDrawer(GravityCompat.START);
+
+                }
             }
         });
 
         kyc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent kycIntent = new Intent(MainActivity.this, KycActivity.class);
-                startActivity(kycIntent);
-                drawer.closeDrawer(GravityCompat.START);
+                if (mobile.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+
+                } else {
+
+                    Intent kycIntent = new Intent(MainActivity.this, KycActivity.class);
+                    startActivity(kycIntent);
+                    drawer.closeDrawer(GravityCompat.START);
+                }
             }
         });
         account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent accountIntent = new Intent(MainActivity.this, AccountActivity.class);
-                startActivity(accountIntent);
-                drawer.closeDrawer(GravityCompat.START);
+
+                if (mobile.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+
+                } else {
+
+                    Intent accountIntent = new Intent(MainActivity.this, AccountActivity.class);
+                    startActivity(accountIntent);
+                    drawer.closeDrawer(GravityCompat.START);
+                }
 
             }
         });
         myHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myhistoryIntent = new Intent(MainActivity.this, HistoryActivity.class);
-                startActivity(myhistoryIntent);
-                drawer.closeDrawer(GravityCompat.START);
+
+                if (mobile.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+
+                } else {
+
+                    Intent myhistoryIntent = new Intent(MainActivity.this, HistoryActivity.class);
+                    startActivity(myhistoryIntent);
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+
             }
         });
 
@@ -311,20 +343,19 @@ public class MainActivity extends AppCompatActivity {
 
                 if (mobile.isEmpty()) {
 
-                    Toast.makeText(MainActivity.this, "Login First Than Add Help..", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Login First Then Add Help..", Toast.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(MainActivity.this , LoginActivity.class);
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
 
                 } else {
                     Intent addHelpIntent = new Intent(MainActivity.this, AddHelpActivity.class);
-                    addHelpIntent.putExtra("lati",latitude);
-                    addHelpIntent.putExtra("longi",longitude);
+                    addHelpIntent.putExtra("lati", latitude);
+                    addHelpIntent.putExtra("longi", longitude);
                     startActivity(addHelpIntent);
                 }
             }
         });
-
 
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)
@@ -427,9 +458,10 @@ public class MainActivity extends AppCompatActivity {
                 // return true;
                 // break;
 
+
                 FragmentManager fm1 = getSupportFragmentManager();
                 FragmentTransaction ft1 = fm1.beginTransaction();
-                AllHelpFragment allHelpFragment=new AllHelpFragment();
+                AllHelpFragment allHelpFragment = new AllHelpFragment();
                 ft1.replace(R.id.replace, allHelpFragment);
                 ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                 //ft.addToBackStack(null);
@@ -458,8 +490,19 @@ public class MainActivity extends AppCompatActivity {
         orders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this , MessageActivity.class);
-                startActivity(intent);
+
+
+                if (mobile.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+
+                } else {
+                    Intent intent = new Intent(MainActivity.this, MessageActivity.class);
+                    startActivity(intent);
+
+                }
             }
         });
 
@@ -529,19 +572,18 @@ public class MainActivity extends AppCompatActivity {
                 rad = locId.get(position);
                 FragmentManager fm1 = getSupportFragmentManager();
                 FragmentTransaction ft1 = fm1.beginTransaction();
-                AllHelpFragment allHelpFragment=new AllHelpFragment();
+                AllHelpFragment allHelpFragment = new AllHelpFragment();
                 Bundle bundle = new Bundle();
-                bundle.putString("cat" , cat);
-                bundle.putString("lat" , latitude);
-                bundle.putString("lng" , longitude);
-                bundle.putString("rad" , rad);
+                bundle.putString("cat", cat);
+                bundle.putString("lat", latitude);
+                bundle.putString("lng", longitude);
+                bundle.putString("rad", rad);
                 allHelpFragment.setArguments(bundle);
                 ft1.replace(R.id.replace, allHelpFragment);
                 ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                 //ft.addToBackStack(null);
                 ft1.commit();
                 drawer.closeDrawer(GravityCompat.START);
-
 
 
             }
@@ -553,7 +595,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
 
 
     private void setUpWidget() {
@@ -711,15 +752,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder>
-    {
+    class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
         Context context;
         List<GetCategoryResponse.Information> list = new ArrayList<>();
         Dialog dialog;
 
-        public CategoryAdapter(Context context , List<GetCategoryResponse.Information> list , Dialog dialog)
-        {
+        public CategoryAdapter(Context context, List<GetCategoryResponse.Information> list, Dialog dialog) {
             this.context = context;
             this.list = list;
             this.dialog = dialog;
@@ -729,7 +768,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
-            View view = inflater.inflate(R.layout.spinner_layout , viewGroup , false);
+            View view = inflater.inflate(R.layout.spinner_layout, viewGroup, false);
             return new ViewHolder(view);
         }
 
@@ -742,7 +781,7 @@ public class MainActivity extends AppCompatActivity {
 
             DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
             ImageLoader loader = ImageLoader.getInstance();
-            loader.displayImage(Constant.BASE_URL + "helpapp/admin/upload/streams/" + item.getImage() , viewHolder.image , options);
+            loader.displayImage(Constant.BASE_URL + "helpapp/admin/upload/streams/" + item.getImage(), viewHolder.image, options);
 
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -755,12 +794,12 @@ public class MainActivity extends AppCompatActivity {
 
                     FragmentManager fm1 = getSupportFragmentManager();
                     FragmentTransaction ft1 = fm1.beginTransaction();
-                    AllHelpFragment allHelpFragment=new AllHelpFragment();
+                    AllHelpFragment allHelpFragment = new AllHelpFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("cat" , cat);
-                    bundle.putString("lat" , latitude);
-                    bundle.putString("lng" , longitude);
-                    bundle.putString("rad" , rad);
+                    bundle.putString("cat", cat);
+                    bundle.putString("lat", latitude);
+                    bundle.putString("lng", longitude);
+                    bundle.putString("rad", rad);
                     allHelpFragment.setArguments(bundle);
                     ft1.replace(R.id.replace, allHelpFragment);
                     ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
@@ -780,8 +819,7 @@ public class MainActivity extends AppCompatActivity {
             return list.size();
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder
-        {
+        class ViewHolder extends RecyclerView.ViewHolder {
 
             ImageView image;
             TextView text;

@@ -96,7 +96,7 @@
         app:layout_constraintEnd_toEndOf="@+id/view10"
         app:layout_constraintStart_toStartOf="@+id/view10"
         app:layout_constraintTop_toTopOf="@+id/view10"
-        app:srcCompat="@drawable/bgp" />
+        app:srcCompat="@drawable/noimage" />
 
 
 
