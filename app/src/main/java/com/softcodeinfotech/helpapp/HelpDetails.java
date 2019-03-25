@@ -6,11 +6,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.telephony.PhoneNumberUtils;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,11 +29,17 @@ import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.softcodeinfotech.helpapp.helpDataPOJO.Datum;
+import com.softcodeinfotech.helpapp.helpDataPOJO.helpDataBean;
 import com.softcodeinfotech.helpapp.sendMessagePOJO.sendMessageBean;
 import com.softcodeinfotech.helpapp.ui.IndividualHelpActivity;
 import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,53 +49,43 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class HelpDetails extends AppCompatActivity {
 
-    TextView title , state , date , desc ,address;
+    TextView title , state , date , desc ,address , cat;
 
-    ImageView image;
+    ViewPager pager;
 
-    String tit , des , tim , sta , add , lt , ln , ima , uid , ph;
+    String hid , uphone , wphone , dob , image;
 
-    Button profile , chat , call , whatsapp;
+    Button chat , call , whatsapp;
+
+    CircleImageView pic;
+    TextView uname;
+
+    String uid;
+
+    CardView profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_details);
 
-        tit = getIntent().getStringExtra("title");
-        des = getIntent().getStringExtra("desc");
-        tim = getIntent().getStringExtra("time");
-        sta = getIntent().getStringExtra("state");
-        add = getIntent().getStringExtra("address");
-        lt = getIntent().getStringExtra("lat");
-        ln = getIntent().getStringExtra("lng");
-        ima = getIntent().getStringExtra("image");
-        uid = getIntent().getStringExtra("uid");
-        ph = getIntent().getStringExtra("phone");
+        hid = getIntent().getStringExtra("hid");
 
         title = findViewById(R.id.textView19);
         state = findViewById(R.id.textView18);
         date = findViewById(R.id.textView23);
         desc = findViewById(R.id.textView24);
         address = findViewById(R.id.textView25);
-        image = findViewById(R.id.imageView3);
+        pager = findViewById(R.id.imageView3);
+        cat = findViewById(R.id.textView46);
+        pic = findViewById(R.id.profile);
+        uname = findViewById(R.id.username);
 
-        profile = findViewById(R.id.imageButton8);
+        profile = findViewById(R.id.textView22);
         chat = findViewById(R.id.imageButton7);
         call = findViewById(R.id.imageButton2);
         whatsapp = findViewById(R.id.imageButton9);
 
-        title.setText(tit);
-        state.setText(sta);
-        date.setText(tim);
-        desc.setText(Html.fromHtml("Details: </br>" + des));
-        address.setText(Html.fromHtml("City:  " + add));
-
-
-
-        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).resetViewBeforeLoading(false).build();
-        ImageLoader loader = ImageLoader.getInstance();
-        loader.displayImage(ima , image , options);
 
 
         call.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +95,7 @@ public class HelpDetails extends AppCompatActivity {
 
                 try {
 
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + ph));
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + uphone));
                     startActivity(intent);
 
 
@@ -120,6 +124,10 @@ public class HelpDetails extends AppCompatActivity {
                 String user_id = String.valueOf(uid);
                 Intent intent = new Intent(HelpDetails.this, IndividualHelpActivity.class);
                 intent.putExtra("user_id", user_id);
+                intent.putExtra("name", uname.getText().toString());
+                intent.putExtra("dob", dob);
+                intent.putExtra("phone", uphone);
+                intent.putExtra("image", image);
                 startActivity(intent);
 
             }
@@ -183,27 +191,101 @@ public class HelpDetails extends AppCompatActivity {
             }
         });
 
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.BASE_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ServiceInterface serviceInterface = retrofit.create(ServiceInterface.class);
+
+        Call<helpDataBean> call = serviceInterface.helpData(SharePreferenceUtils.getInstance().getString("userId") , hid);
+
+        call.enqueue(new Callback<helpDataBean>() {
+            @Override
+            public void onResponse(Call<helpDataBean> call, Response<helpDataBean> response) {
+
+                if (response.body().getStatus().equals("1"))
+                {
+
+                    Datum item = response.body().getData().get(0);
+
+                    uname.setText(item.getUname());
+                    title.setText(item.getHowTo());
+                    state.setText(item.getFollowers() + " views");
+                    date.setText(item.getCreatedDate());
+                    desc.setText(Html.fromHtml("Need : </br>" + item.getNeed()));
+                    address.setText(Html.fromHtml("City :  " + item.getCity()));
+                    cat.setText(item.getCategory());
+
+                    uphone = item.getUphone();
+                    wphone = item.getWphone();
+                    dob = item.getDob();
+
+                    image = item.getUimage();
+
+
+                    DisplayImageOptions options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).resetViewBeforeLoading(false).build();
+                    ImageLoader loader = ImageLoader.getInstance();
+                    loader.displayImage(item.getUimage() , pic , options);
+
+
+                    List<String> iimm = new ArrayList<>();
+
+                    if (item.getFile1().length() > 0) {
+                        iimm.add(item.getFile1());
+                    } else if (item.getFile2().length() > 0) {
+                        iimm.add(item.getFile2());
+                    } else if (item.getFile3().length() > 0) {
+                        iimm.add(item.getFile3());
+                    } else if (item.getFile4().length() > 0) {
+                        iimm.add(item.getFile4());
+                    } else if (item.getFile5().length() > 0) {
+                        iimm.add(item.getFile5());
+                    } else if (item.getFile6().length() > 0) {
+                        iimm.add(item.getFile6());
+                    } else if (item.getFile7().length() > 0) {
+                        iimm.add(item.getFile7());
+                    } else if (item.getFile8().length() > 0) {
+                        iimm.add(item.getFile8());
+                    } else if (item.getFile9().length() > 0) {
+                        iimm.add(item.getFile9());
+                    } else if (item.getFile10().length() > 0) {
+                        iimm.add(item.getFile10());
+                    }
+                    else
+                    {
+                        iimm.add("adad");
+                    }
+
+
+                    PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager() , iimm);
+
+                    pager.setAdapter(adapter);
+
+
+
+                }
+                else {
+                    Toast.makeText(HelpDetails.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<helpDataBean> call, Throwable t) {
+
+            }
+        });
+
+
     }
 
 
 
     private void openWhatsApp() {
-        String smsNumber = "ph";
-        boolean isWhatsappInstalled = whatsappInstalledOrNot("com.whatsapp");
-        if (isWhatsappInstalled) {
-
-            Intent sendIntent = new Intent("android.intent.action.MAIN");
-            sendIntent.setComponent(new ComponentName("com.whatsapp", "com.whatsapp.Conversation"));
-            sendIntent.putExtra("jid", PhoneNumberUtils.stripSeparators(ph) + "@s.whatsapp.net");//phone number without "+" prefix
-
-            startActivity(sendIntent);
-        } else {
-            Uri uri = Uri.parse("market://details?id=com.whatsapp");
-            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-            Toast.makeText(this, "WhatsApp not Installed",
-                    Toast.LENGTH_SHORT).show();
-            startActivity(goToMarket);
-        }
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=" + wphone));
+        startActivity(browserIntent);
     }
 
     private boolean whatsappInstalledOrNot(String uri) {
@@ -217,5 +299,54 @@ public class HelpDetails extends AppCompatActivity {
         }
         return app_installed;
     }
+
+
+    class PagerAdapter extends FragmentStatePagerAdapter
+    {
+        List<String> images = new ArrayList<>();
+
+        public PagerAdapter(FragmentManager fm , List<String> images) {
+            super(fm);
+            this.images = images;
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            page frag = new page();
+            Bundle b = new Bundle();
+            b.putString("url" ,images.get(i));
+            frag.setArguments(b);
+            return frag;
+        }
+
+        @Override
+        public int getCount() {
+            return images.size();
+        }
+    }
+
+    public static class page extends Fragment
+    {
+        String url;
+        ImageView image;
+
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.page_layout , container , false);
+
+            url = getArguments().getString("url");
+
+            image = view.findViewById(R.id.image);
+
+            DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).showImageForEmptyUri(R.drawable.noimage).build();
+
+            ImageLoader loader = ImageLoader.getInstance();
+            loader.displayImage(url , image , options);
+
+            return view;
+        }
+    }
+
 
 }

@@ -7,6 +7,7 @@ import com.softcodeinfotech.helpapp.allMessagePOJO.allMessageBean;
 import com.softcodeinfotech.helpapp.beanresponse.AddHelpListResponse;
 import com.softcodeinfotech.helpapp.beanresponse.GetforgotpassResponse;
 import com.softcodeinfotech.helpapp.beanresponse.GetmobileverifyResponse;
+import com.softcodeinfotech.helpapp.helpDataPOJO.helpDataBean;
 import com.softcodeinfotech.helpapp.myHelpsPOJO.myHelpsBean;
 import com.softcodeinfotech.helpapp.response.AadharUpdateResponse;
 import com.softcodeinfotech.helpapp.response.EmailResponse;
@@ -384,6 +385,13 @@ public interface ServiceInterface {
             @Part("lat") String lat,
             @Part("lng") String lng,
             @Part("radius") String radius
+    );
+
+    @Multipart
+    @POST("elfee/api/help_data.php")
+    Call<helpDataBean> helpData(
+            @Part("userId") String userId,
+            @Part("helpId") String helpId
     );
 
 }

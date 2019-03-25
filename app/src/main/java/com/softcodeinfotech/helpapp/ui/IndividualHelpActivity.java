@@ -55,7 +55,7 @@ public class IndividualHelpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_individual_help);
 
         setUpWidget();
-        visibilityGone();
+        //visibilityGone();
 
 
         Gson gson = new GsonBuilder().create();
@@ -71,7 +71,7 @@ public class IndividualHelpActivity extends AppCompatActivity {
 
         //Toast.makeText(this, ""+user_id, Toast.LENGTH_SHORT).show();
 
-        setDataReq();
+        //setDataReq();
         setData();
 
         // user_id="9";
@@ -82,24 +82,6 @@ public class IndividualHelpActivity extends AppCompatActivity {
             }
         });
 
-        call.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mMobile));
-                if (ActivityCompat.checkSelfPermission(IndividualHelpActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return;
-                }
-                startActivity(intent);
-
-            }
-        });
 
 
     }
@@ -142,14 +124,15 @@ public class IndividualHelpActivity extends AppCompatActivity {
 
     private void setData() {
 
-        name.setText(mName);
-        email.setText(mEmail);
-        ageAndGender.setText(mAge+"    |    "+mGender);
+        name.setText(getIntent().getStringExtra("name"));
+        ageAndGender.setText(getIntent().getStringExtra("dob")+"    |    "+getIntent().getStringExtra("phone"));
+
+        url = getIntent().getStringExtra("image");
 
         //for default placeholder image in glide
         RequestOptions requestOptions = new RequestOptions();
-        requestOptions.placeholder(R.drawable.bgp);
-        requestOptions.error(R.drawable.bgp);
+        requestOptions.placeholder(R.drawable.noimage);
+        requestOptions.error(R.drawable.noimage);
 
         Glide.with(this).setDefaultRequestOptions(requestOptions).load(url).into(image);
     }

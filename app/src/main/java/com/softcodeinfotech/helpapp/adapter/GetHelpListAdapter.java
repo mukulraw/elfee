@@ -128,16 +128,7 @@ public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 */
 
                 Intent intent = new Intent(mContext, HelpDetails.class);
-                intent.putExtra("title", item.getHowTo());
-                intent.putExtra("desc", item.getNeed());
-                intent.putExtra("time", item.getCreatedDate());
-                intent.putExtra("state", item.getCategory());
-                intent.putExtra("address", item.getCity());
-                intent.putExtra("lat", item.getLat());
-                intent.putExtra("lng", item.getLng());
-                intent.putExtra("image", "");
-                intent.putExtra("uid", String.valueOf(item.getUserId()));
-                intent.putExtra("phone", "");
+                intent.putExtra("hid", item.getHelpId());
                 mContext.startActivity(intent);
 
 
