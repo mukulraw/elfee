@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/blur" />
+        app:srcCompat="@drawable/blur2" />
 
     <ImageButton
         android:id="@+id/imageButton3"
@@ -29,14 +29,13 @@
 
     <TextView
         android:id="@+id/textView7"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="20dp"
-        android:text="Mobile Verification"
+        android:text="We have sent OTP on your mobile. Enter the OTP to verify and login yo your account."
         android:textColor="#ffffff"
-        android:textSize="30sp"
         android:typeface="monospace"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -97,7 +96,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginEnd="40dp"
         android:gravity="start"
-        android:text="Enter your Otp Received On Mobile"
+        android:text="Enter your Otp manually"
         android:textAlignment="textStart"
         android:textColor="#ffffff"
         android:textSize="16sp"
@@ -105,5 +104,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <TextView
+        android:id="@+id/textView42"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:text="RESEND OTP"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/button3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/button3" />
 
 </android.support.constraint.ConstraintLayout>

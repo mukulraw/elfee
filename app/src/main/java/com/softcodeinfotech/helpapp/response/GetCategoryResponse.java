@@ -9,23 +9,23 @@ public class GetCategoryResponse {
 
     @SerializedName("status")
     @Expose
-    private Integer status;
-    @SerializedName("msg")
+    private String status;
+    @SerializedName("message")
     @Expose
     private String msg;
-    @SerializedName("Information")
+    @SerializedName("data")
     @Expose
     private List<Information> information = null;
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public GetCategoryResponse withStatus(Integer status) {
+    public GetCategoryResponse withStatus(String status) {
         this.status = status;
         return this;
     }

@@ -173,11 +173,11 @@ public class AddHelpActivity extends AppCompatActivity {
                 final GridLayoutManager manager = new GridLayoutManager(AddHelpActivity.this , 3);
 
                 String securecode = "1234";
-                Call<GetCategoryResponse> call = serviceInterface.getCategory(convertPlainString(securecode));
+                Call<GetCategoryResponse> call = serviceInterface.getCategory();
                 call.enqueue(new Callback<GetCategoryResponse>() {
                     @Override
                     public void onResponse(Call<GetCategoryResponse> call, Response<GetCategoryResponse> response) {
-                        if (response.body() != null && response.body().getStatus().equals(1)) {
+                        if (response.body() != null && response.body().getStatus().equals("1")) {
 
 
                             CategoryAdapter adapter = new CategoryAdapter(AddHelpActivity.this , response.body().getInformation() , dialog);
@@ -439,7 +439,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
             DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
             ImageLoader loader = ImageLoader.getInstance();
-            loader.displayImage(Constant.BASE_URL + "helpapp/admin/upload/streams/" + item.getImage() , viewHolder.image , options);
+            loader.displayImage(item.getImage() , viewHolder.image , options);
 
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {

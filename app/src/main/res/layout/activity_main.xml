@@ -142,7 +142,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <include
-        layout="@layout/drawer_menu"
+        layout="@layout/drawer2"
         android:layout_height="match_parent"
         android:layout_width="300dp"
         android:visibility="visible"

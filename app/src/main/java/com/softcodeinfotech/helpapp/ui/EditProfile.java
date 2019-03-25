@@ -108,7 +108,7 @@ public class EditProfile extends AppCompatActivity {
 
                 final String n = name.getText().toString();
                 final String a = age.getText().toString();
-                g = toggleSwitch.getCheckedTogglePosition();
+                /*g = toggleSwitch.getCheckedTogglePosition();
 
                 if (g == 0) {
                     gender = "Male";
@@ -116,7 +116,7 @@ public class EditProfile extends AppCompatActivity {
 
                 if (g == 1) {
                     gender = "Female";
-                }
+                }*/
 
                 bar.setVisibility(View.VISIBLE);
 

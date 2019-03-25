@@ -11,6 +11,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
@@ -21,6 +23,8 @@ import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.softcodeinfotech.helpapp.Donor;
+import com.softcodeinfotech.helpapp.Needy;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
@@ -30,12 +34,15 @@ import java.util.List;
 public class SplashActivity extends AppCompatActivity {
 
     String email;
+    Button donor , needy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        donor = findViewById(R.id.button15);
+        needy = findViewById(R.id.button14);
 
        // email = SharePreferenceUtils.getInstance().getString(Constant.USER_email);
 
@@ -44,6 +51,24 @@ public class SplashActivity extends AppCompatActivity {
        /* //key hash for facebook
         FacebookSdk.sdkInitialize(getApplicationContext());
         Log.d("AppLog", "key:" + FacebookSdk.getApplicationSignature(this));*/
+
+       donor.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Intent intent = new Intent(SplashActivity.this , Donor.class);
+               startActivity(intent);
+               //finishAffinity();
+           }
+       });
+
+        needy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SplashActivity.this , Needy.class);
+                startActivity(intent);
+                //finishAffinity();
+            }
+        });
 
         if (Build.VERSION.SDK_INT >= 23) {
             requestPermission();
@@ -56,24 +81,12 @@ public class SplashActivity extends AppCompatActivity {
 
     private void init() {
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                if (SharePreferenceUtils.getInstance().getString(Constant.USER_id).equalsIgnoreCase("")) {
-                    // not registted user  so show login screen
-                    Intent intent = new Intent(SplashActivity.this, SignupLoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    // home sscreen
+                if (!SharePreferenceUtils.getInstance().getString("userId").equalsIgnoreCase("")) {
                     Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                 }
 
-            }
-        }, 3000);
     }
 
 
@@ -90,6 +103,7 @@ public class SplashActivity extends AppCompatActivity {
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         // check if all permissions are granted
                         if (report.areAllPermissionsGranted()) {
+                            init();
                             // Toast.makeText(getApplicationContext(), "All permissions are granted!", Toast.LENGTH_SHORT).show();
                         }
                         // check for permanent denial of any permission
@@ -97,7 +111,7 @@ public class SplashActivity extends AppCompatActivity {
                             // show alert dialog navigating to Settings
                             showSettingsDialog();
                         }
-                        init();
+                        //init();
                     }
 
 
@@ -142,7 +156,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
-                init();
+                finish();
             }
         });
         builder.show();

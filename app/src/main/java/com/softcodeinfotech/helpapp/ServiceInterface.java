@@ -23,9 +23,12 @@ import com.softcodeinfotech.helpapp.response.ProfileupdateResponse;
 import com.softcodeinfotech.helpapp.response.SigninResponse;
 import com.softcodeinfotech.helpapp.sendMessagePOJO.sendMessageBean;
 import com.softcodeinfotech.helpapp.singleMessagePOJO.singleMessageBean;
+import com.softcodeinfotech.helpapp.verifyPOJO.verifyBean;
 
+import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -126,11 +129,9 @@ public interface ServiceInterface {
 
 
     //get category
-    @Multipart
-    @POST("helpapp/getCategory.php")
-    Call<GetCategoryResponse> getCategory(
-            @Part("securecode") RequestBody securecode
-    );
+
+    @GET("elfee/api/getCategory.php")
+    Call<GetCategoryResponse> getCategory();
 
     //helpData Insertion
     @Multipart
@@ -200,10 +201,9 @@ public interface ServiceInterface {
     //login
 
     @Multipart
-    @POST("helpapp/api/user_signin.php")
+    @POST("elfee/api/mobile_login.php")
     Call<SigninResponse> userlogin(
-            @Part("mobile") RequestBody mobile,
-            @Part("password") RequestBody password
+            @Part("phone") RequestBody mobile
     );
 
 
@@ -279,5 +279,45 @@ public interface ServiceInterface {
             @Part("chatId") String chatId
     );
 
+    @Multipart
+    @POST("elfee/api/verify_otp.php")
+    Call<verifyBean> verifyOTP(
+            @Part("phone") String phone,
+            @Part("otp") String otp
+    );
+
+    @Multipart
+    @POST("elfee/api/resend_otp.php")
+    Call<SigninResponse> resendOTP(
+            @Part("phone") String phone
+    );
+
+    @Multipart
+    @POST("elfee/api/update_kyc.php")
+    Call<verifyBean> updateKYC(
+            @Part("userId") String userId,
+            @Part("name") String name,
+            @Part("dob") String dob,
+            @Part("aadhar") String aadhar,
+            @Part("address") String address,
+            @Part("wphone") String wphone,
+            @Part("g_name") String g_name,
+            @Part("gphone") String gphone,
+            @Part("profession") String profession,
+            @Part MultipartBody.Part file1,
+            @Part MultipartBody.Part file2,
+            @Part MultipartBody.Part file3,
+            @Part MultipartBody.Part file4,
+            @Part MultipartBody.Part file5
+    );
+
+    @Multipart
+    @POST("helpapp/api/profile_update.php")
+    Call<verifyBean> editProfile(
+
+            @Part("userId") String userId,
+            @Part("name") String name,
+            @Part("dob") String dob
+    );
 
 }

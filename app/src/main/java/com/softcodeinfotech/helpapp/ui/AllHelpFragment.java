@@ -130,7 +130,7 @@ public class AllHelpFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getHelpListReq();
+        //getHelpListReq();
     }
 
     private void getHelpListReq() {

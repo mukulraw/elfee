@@ -43,22 +43,33 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textView26"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:fontFamily="@font/opensans_lightitalic"
-        android:text="Easy Life For Each And Everyone"
+        android:text="ELFEE"
         android:textColor="#ffffff"
-        android:textSize="16sp"
-        android:textStyle="italic"
-        android:typeface="monospace"
-        android:visibility="gone"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView29"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
+        android:text="Easy Life For Each And Everyone"
+        android:textColor="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView26" />
+
 
 
     <Button
@@ -71,24 +82,28 @@
         android:background="@drawable/green_back_round"
         android:text="sign up now"
         android:textColor="#ffffff"
+        android:visibility="gone"
         android:textStyle="bold"
         android:typeface="monospace"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView29" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/green_back_round"
-        android:text="login"
-        android:textColor="#ffffff"
+        android:background="@drawable/white_back_round"
+        android:text="login with phone"
+        android:textColor="#000000"
         android:textStyle="bold"
+        android:gravity="center"
+        android:drawableStart="@drawable/ic_smartphone"
+        android:padding="10dp"
         android:typeface="monospace"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -104,6 +119,7 @@
         android:fontFamily="@font/opensans_regular"
         android:text="Skip>>"
         android:textColor="#ffffff"
+        android:visibility="gone"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

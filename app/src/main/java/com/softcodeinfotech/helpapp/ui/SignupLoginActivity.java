@@ -151,7 +151,7 @@ public class SignupLoginActivity extends AppCompatActivity {
 
                 Intent loginIntent = new Intent(SignupLoginActivity.this, LoginActivity.class);
                 startActivity(loginIntent);
-                finish();
+                //finish();
 
             }
         });
@@ -162,7 +162,7 @@ public class SignupLoginActivity extends AppCompatActivity {
 
                 Intent mainIntent = new Intent(SignupLoginActivity.this, MainActivity.class);
                 startActivity(mainIntent);
-                finish();
+                finishAffinity();
 
             }
         });

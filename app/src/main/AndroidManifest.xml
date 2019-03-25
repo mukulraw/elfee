@@ -22,7 +22,10 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
         tools:replace="allowBackup,supportsRtl">
-        <activity android:name=".ChatScreen"></activity>
+        <activity android:name=".KYC"></activity>
+        <activity android:name=".Needy" />
+        <activity android:name=".Donor" />
+        <activity android:name=".ChatScreen" />
         <activity android:name=".MessageActivity" />
         <activity android:name=".HelpDetails" />
         <activity android:name=".ui.MainActivity" />
@@ -44,7 +47,6 @@
         <activity
             android:name=".ui.ProfilesActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.MyProfileActivity"
             android:screenOrientation="portrait" />
@@ -78,9 +80,9 @@
         <activity
             android:name=".ui.HelpersProfileActivity"
             android:screenOrientation="portrait" />
-
-        <activity android:name=".ui.EditProfile"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ui.EditProfile"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

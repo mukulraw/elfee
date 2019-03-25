@@ -55,6 +55,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.softcodeinfotech.helpapp.KYC;
 import com.softcodeinfotech.helpapp.MessageActivity;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
@@ -71,6 +72,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -83,17 +85,17 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    String email, name, age, gender, mobile, imageurl, uid, state;
+    String name, age, mobile, imageurl, uid, state , kycstatus;
 
     DrawerLayout drawer;
     ImageButton toggle;
-    TextView profile, kyc, orders, logout;
+    TextView profile, orders, logout;
     //BottomNavigationView bottom;
     //TextView toolbar;
-    TextView account, myHistory;
+
     ImageButton settings;
-    ImageView image;
-    TextView dName, dEmail;
+    CircleImageView image;
+    TextView dName;
     TextView fabButton;
 
     TextView addre;
@@ -105,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
 
     String address = "";
 
-    //TextView category;
+    TextView category;
+    TextView loca;
 
     Retrofit retrofit;
     ServiceInterface serviceInterface;
@@ -158,26 +161,7 @@ public class MainActivity extends AppCompatActivity {
 
         setUpWidget();
 
-        email = SharePreferenceUtils.getInstance().getString(Constant.USER_email);
-        name = SharePreferenceUtils.getInstance().getString(Constant.USER_name);
-        age = SharePreferenceUtils.getInstance().getString(Constant.User_age);
-        gender = SharePreferenceUtils.getInstance().getString(Constant.USER_gender);
-        mobile = SharePreferenceUtils.getInstance().getString(Constant.USER_mobile);
-        imageurl = SharePreferenceUtils.getInstance().getString(Constant.USER_imageurl);
-        uid = SharePreferenceUtils.getInstance().getString(Constant.USER_id);
 
-
-        //  Toast.makeText(this, ""+uid, Toast.LENGTH_SHORT).show();
-        // Toast.makeText(this, ""+email+""+name+""+""+age+""+gender+""+mobile, Toast.LENGTH_SHORT).show();
-
-        //for default placeholder image in glide
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions.placeholder(R.drawable.bgp);
-        requestOptions.error(R.drawable.bgp);
-
-        dName.setText(name);
-        dEmail.setText(email);
-        Glide.with(this).setDefaultRequestOptions(requestOptions).load(imageurl).into(image);
 
         //
         pBar.setVisibility(View.GONE);
@@ -265,10 +249,10 @@ public class MainActivity extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mobile.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+                if (kycstatus.equals("0")) {
+                    Toast.makeText(MainActivity.this, "Please complete your KYC first", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(MainActivity.this, KYC.class);
                     startActivity(intent);
 
                 } else {
@@ -281,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        kyc.setOnClickListener(new View.OnClickListener() {
+        /*kyc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mobile.isEmpty()) {
@@ -297,8 +281,8 @@ public class MainActivity extends AppCompatActivity {
                     drawer.closeDrawer(GravityCompat.START);
                 }
             }
-        });
-        account.setOnClickListener(new View.OnClickListener() {
+        });*/
+        /*account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -316,8 +300,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-        });
-        myHistory.setOnClickListener(new View.OnClickListener() {
+        });*/
+        /*myHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -335,17 +319,17 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
 
         fabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (mobile.isEmpty()) {
+                if (kycstatus.equals("0")) {
 
-                    Toast.makeText(MainActivity.this, "Login First Then Add Help..", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "Please complete your KYC first", Toast.LENGTH_LONG).show();
 
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(MainActivity.this, KYC.class);
                     startActivity(intent);
 
                 } else {
@@ -407,7 +391,7 @@ public class MainActivity extends AppCompatActivity {
         });*/
 
 
-        /*category.setOnClickListener(new View.OnClickListener() {
+        category.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -422,11 +406,11 @@ public class MainActivity extends AppCompatActivity {
                 final GridLayoutManager manager = new GridLayoutManager(MainActivity.this , 3);
 
                 String securecode = "1234";
-                Call<GetCategoryResponse> call = serviceInterface.getCategory(convertPlainString(securecode));
+                Call<GetCategoryResponse> call = serviceInterface.getCategory();
                 call.enqueue(new Callback<GetCategoryResponse>() {
                     @Override
                     public void onResponse(Call<GetCategoryResponse> call, Response<GetCategoryResponse> response) {
-                        if (response.body() != null && response.body().getStatus().equals(1)) {
+                        if (response.body() != null && response.body().getStatus().equals("1")) {
 
 
                             CategoryAdapter adapter = new CategoryAdapter(MainActivity.this , response.body().getInformation() , dialog);
@@ -447,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             }
-        });*/
+        });
 
 
         helps.setOnClickListener(new View.OnClickListener() {
@@ -492,10 +476,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                if (mobile.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "User not logged in", Toast.LENGTH_SHORT).show();
+                if (kycstatus.equals("0")) {
+                    Toast.makeText(MainActivity.this, "Please complete your KYC first", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    Intent intent = new Intent(MainActivity.this, KYC.class);
                     startActivity(intent);
 
                 } else {
@@ -601,14 +585,12 @@ public class MainActivity extends AppCompatActivity {
         ///
         drawer = findViewById(R.id.drawer);
         toggle = findViewById(R.id.imageButton10);
-        profile = findViewById(R.id.textView58);
-        orders = findViewById(R.id.textView61);
-        logout = findViewById(R.id.textView63);
-        //bottom = findViewById(R.id.bottomNavigationView);
-        //toolbar = findViewById(R.id.textView27);
-        kyc = findViewById(R.id.textView59);
-        account = findViewById(R.id.textView62);
-        myHistory = findViewById(R.id.textView60);
+        profile = findViewById(R.id.account);
+        orders = findViewById(R.id.posts);
+        logout = findViewById(R.id.logout);
+
+
+
         // settings = findViewById(R.id.imageButton6);
         fabButton = findViewById(R.id.floatingActionButton3);
 
@@ -616,15 +598,16 @@ public class MainActivity extends AppCompatActivity {
         helpers = findViewById(R.id.button11);
 
         //drawer design
-        image = findViewById(R.id.imageView1);
-        dName = findViewById(R.id.textView55);
-        dEmail = findViewById(R.id.textView56);
+        image = findViewById(R.id.pic);
+        dName = findViewById(R.id.name);
+
 
         addre = findViewById(R.id.textView41);
 
-//        category = findViewById(R.id.textView30);
+        category = findViewById(R.id.textView43);
         location = findViewById(R.id.spinner);
 
+        loca = findViewById(R.id.location);
         //recyler
         replaceRecyler = findViewById(R.id.replaceRecycler);
         pBar = findViewById(R.id.pBar);
@@ -683,6 +666,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        name = SharePreferenceUtils.getInstance().getString("name");
+        age = SharePreferenceUtils.getInstance().getString("dob");
+        kycstatus = SharePreferenceUtils.getInstance().getString("kyc_status");
+
+        mobile = SharePreferenceUtils.getInstance().getString(Constant.USER_mobile);
+        imageurl = SharePreferenceUtils.getInstance().getString("yimage");
+        uid = SharePreferenceUtils.getInstance().getString("userId");
+
+
+        //  Toast.makeText(this, ""+uid, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, ""+email+""+name+""+""+age+""+gender+""+mobile, Toast.LENGTH_SHORT).show();
+
+        //for default placeholder image in glide
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.noimage);
+        requestOptions.error(R.drawable.noimage);
+
+        dName.setText(name);
+
+        Glide.with(this).setDefaultRequestOptions(requestOptions).load(imageurl).into(image);
+
+
         startLocationUpdates();
     }
 
@@ -709,17 +715,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void getCategoryReq() {
         String securecode = "1234";
-        Call<GetCategoryResponse> call = serviceInterface.getCategory(convertPlainString(securecode));
+        Call<GetCategoryResponse> call = serviceInterface.getCategory();
         call.enqueue(new Callback<GetCategoryResponse>() {
             @Override
             public void onResponse(Call<GetCategoryResponse> call, Response<GetCategoryResponse> response) {
-                if (response.body() != null && response.body().getStatus().equals(1)) {
+                if (response.body() != null && response.body().getStatus().equals("1")) {
                     for (int i = 0; i < response.body().getInformation().size(); i++) {
                         catId.add(String.valueOf(response.body().getInformation().get(i).getCategoryId()));
                         catName.add(response.body().getInformation().get(i).getCategoryName());
                     }
 
-                    //category.setText(catName.get(0));
+                    category.setText(catName.get(0));
                     cat = catId.get(0);
 
                     rad = "2";
@@ -781,14 +787,14 @@ public class MainActivity extends AppCompatActivity {
 
             DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
             ImageLoader loader = ImageLoader.getInstance();
-            loader.displayImage(Constant.BASE_URL + "helpapp/admin/upload/streams/" + item.getImage(), viewHolder.image, options);
+            loader.displayImage(item.getImage(), viewHolder.image, options);
 
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    //category.setText(item.getCategoryName());
+                    category.setText(item.getCategoryName());
 
                     cat = String.valueOf(item.getCategoryId());
 
@@ -856,6 +862,7 @@ public class MainActivity extends AppCompatActivity {
 
                 addre.setText(city + " , " + state);
 
+                loca.setText(city);
                 //Toast.makeText(context, "" + address, Toast.LENGTH_SHORT).show();
 
 
@@ -865,5 +872,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return;
     }
+
+
 
 }

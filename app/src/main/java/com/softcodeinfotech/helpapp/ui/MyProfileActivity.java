@@ -44,11 +44,11 @@ public class MyProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
 
-        mName = SharePreferenceUtils.getInstance().getString(Constant.USER_name);
-        mAge = SharePreferenceUtils.getInstance().getString(Constant.User_age);
-        mGender = SharePreferenceUtils.getInstance().getString(Constant.USER_gender);
+        mName = SharePreferenceUtils.getInstance().getString("name");
+        mAge = SharePreferenceUtils.getInstance().getString("dob");
+        mGender = SharePreferenceUtils.getInstance().getString(Constant.USER_mobile);
         mEmail = SharePreferenceUtils.getInstance().getString(Constant.USER_email);
-        url = SharePreferenceUtils.getInstance().getString(Constant.USER_imageurl);
+        url = SharePreferenceUtils.getInstance().getString("yimage");
 
         setUpWidget();
         back.setOnClickListener(new View.OnClickListener() {
