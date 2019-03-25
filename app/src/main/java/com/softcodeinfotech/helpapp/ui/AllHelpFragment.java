@@ -24,6 +24,8 @@ import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.adapter.GetHelpListAdapter;
 import com.softcodeinfotech.helpapp.model.GetHelpListModel;
+import com.softcodeinfotech.helpapp.myHelpsPOJO.Datum;
+import com.softcodeinfotech.helpapp.myHelpsPOJO.myHelpsBean;
 import com.softcodeinfotech.helpapp.response.GethelplistResponse;
 import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
@@ -52,7 +54,7 @@ public class AllHelpFragment extends Fragment {
     ProgressBar pBar;
 
 
-    String cat , lat , lng , rad;
+    String cat , lat , lng , rad , sta;
 
 
     Retrofit retrofit;
@@ -60,7 +62,7 @@ public class AllHelpFragment extends Fragment {
 
     String TAG = "MainActivity";
     private RecyclerView replaceRecyler;
-    private ArrayList<GethelplistResponse.Information> mHelpDetailsList = new ArrayList<GethelplistResponse.Information>();
+    private ArrayList<Datum> mHelpDetailsList = new ArrayList<Datum>();
     private GetHelpListAdapter getHelpListAdapter;
 
 
@@ -80,6 +82,7 @@ public class AllHelpFragment extends Fragment {
         lat = getArguments().getString("lat");
         lng = getArguments().getString("lng");
         rad = getArguments().getString("rad");
+        sta = getArguments().getString("state");
 
 
         replaceRecyler =view.findViewById(R.id.replaceRecycler);
@@ -107,9 +110,9 @@ public class AllHelpFragment extends Fragment {
         serviceInterface = retrofit.create(ServiceInterface.class);
 
         //state = SharePreferenceUtils.getInstance().getString(Constant.USER_state);
-        state = "delhi";
+        //state = "delhi";
         // Toast.makeText(this, ""+state, Toast.LENGTH_SHORT).show();
-        Log.v("state", state);
+        //Log.v("state", state);
 
 
         // replaceRecyler = (RecyclerView) findViewById(R.id.recyclerView);
@@ -130,21 +133,24 @@ public class AllHelpFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //getHelpListReq();
+        getHelpListReq();
     }
 
     private void getHelpListReq() {
 
         Log.d("cat" , cat);
 
-        Call<GethelplistResponse> call = serviceInterface.getHelpLitstItem(cat , lat , lng , rad);
-        call.enqueue(new Callback<GethelplistResponse>() {
+        Call<myHelpsBean> call = serviceInterface.allHelps(SharePreferenceUtils.getInstance().getString("userId") , sta , cat , lat , lng , rad);
+        call.enqueue(new Callback<myHelpsBean>() {
             @Override
-            public void onResponse(Call<GethelplistResponse> call, Response<GethelplistResponse> response) {
-                if (response.body().getStatus().equals(1)) {
-                    pBar.setVisibility(View.GONE);
+            public void onResponse(Call<myHelpsBean> call, Response<myHelpsBean> response) {
 
-                    getHelpListAdapter.setData(response.body().getInformation());
+                pBar.setVisibility(View.GONE);
+
+                if (response.body().getStatus().equals("1")) {
+
+
+                    getHelpListAdapter.setData(response.body().getData());
 
                     /*
                     mHelpDetailsList.addAll(response.body().getInformation());
@@ -160,10 +166,14 @@ public class AllHelpFragment extends Fragment {
                     }*//*
                     getHelpListAdapter.notifyDataSetChanged();*/
                 }
+                else
+                {
+                    Toast.makeText(getContext() , response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
-            public void onFailure(Call<GethelplistResponse> call, Throwable t) {
+            public void onFailure(Call<myHelpsBean> call, Throwable t) {
                 pBar.setVisibility(View.GONE);
                // Toast.makeText(MainActivity.this, "" + t.toString(), Toast.LENGTH_SHORT).show();
 

@@ -2,10 +2,12 @@ package com.softcodeinfotech.helpapp;
 
 
 import com.facebook.internal.ImageResponse;
+import com.softcodeinfotech.helpapp.addHelpPOJO.addHelpBean;
 import com.softcodeinfotech.helpapp.allMessagePOJO.allMessageBean;
 import com.softcodeinfotech.helpapp.beanresponse.AddHelpListResponse;
 import com.softcodeinfotech.helpapp.beanresponse.GetforgotpassResponse;
 import com.softcodeinfotech.helpapp.beanresponse.GetmobileverifyResponse;
+import com.softcodeinfotech.helpapp.myHelpsPOJO.myHelpsBean;
 import com.softcodeinfotech.helpapp.response.AadharUpdateResponse;
 import com.softcodeinfotech.helpapp.response.EmailResponse;
 import com.softcodeinfotech.helpapp.response.ForgotpassResponse;
@@ -312,12 +314,76 @@ public interface ServiceInterface {
     );
 
     @Multipart
-    @POST("helpapp/api/profile_update.php")
+    @POST("elfee/api/update_profile.php")
     Call<verifyBean> editProfile(
-
             @Part("userId") String userId,
             @Part("name") String name,
             @Part("dob") String dob
+    );
+
+    @Multipart
+    @POST("elfee/api/update_profile_pic.php")
+    Call<verifyBean> updateProfilePic(
+            @Part("userId") String userId,
+            @Part MultipartBody.Part file1
+            );
+
+    @Multipart
+    @POST("elfee/api/add_help.php")
+    Call<addHelpBean> addHelp(
+            @Part("userId") String userId,
+            @Part("catId") String catId,
+            @Part("how_to") String how_to,
+            @Part("need") String need,
+            @Part("lat") String lat,
+            @Part("lng") String lng,
+            @Part("city") String city,
+            @Part MultipartBody.Part file1,
+            @Part MultipartBody.Part file2,
+            @Part MultipartBody.Part file3,
+            @Part MultipartBody.Part file4,
+            @Part MultipartBody.Part file5,
+            @Part MultipartBody.Part file6,
+            @Part MultipartBody.Part file7,
+            @Part MultipartBody.Part file8,
+            @Part MultipartBody.Part file9,
+            @Part MultipartBody.Part file10
+    );
+
+    @Multipart
+    @POST("elfee/api/update_help.php")
+    Call<addHelpBean> editHelp(
+            @Part("helpId") String helpId,
+            @Part("catId") String catId,
+            @Part("how_to") String how_to,
+            @Part("need") String need,
+            @Part MultipartBody.Part file1,
+            @Part MultipartBody.Part file2,
+            @Part MultipartBody.Part file3,
+            @Part MultipartBody.Part file4,
+            @Part MultipartBody.Part file5,
+            @Part MultipartBody.Part file6,
+            @Part MultipartBody.Part file7,
+            @Part MultipartBody.Part file8,
+            @Part MultipartBody.Part file9,
+            @Part MultipartBody.Part file10
+    );
+
+    @Multipart
+    @POST("elfee/api/my_helps.php")
+    Call<myHelpsBean> myHelps(
+            @Part("userId") String userId
+    );
+
+    @Multipart
+    @POST("elfee/api/all_helps.php")
+    Call<myHelpsBean> allHelps(
+            @Part("userId") String userId,
+            @Part("state") String state,
+            @Part("catId") String catId,
+            @Part("lat") String lat,
+            @Part("lng") String lng,
+            @Part("radius") String radius
     );
 
 }

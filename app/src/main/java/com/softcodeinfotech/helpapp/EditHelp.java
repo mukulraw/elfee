@@ -1,4 +1,4 @@
-package com.softcodeinfotech.helpapp.ui;
+package com.softcodeinfotech.helpapp;
 
 import android.app.Dialog;
 import android.content.ContentUris;
@@ -8,57 +8,39 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Address;
-import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.softcodeinfotech.helpapp.KYC;
-import com.softcodeinfotech.helpapp.R;
-import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.addHelpPOJO.addHelpBean;
-import com.softcodeinfotech.helpapp.beanresponse.AddHelpListResponse;
 import com.softcodeinfotech.helpapp.response.GetCategoryResponse;
-import com.softcodeinfotech.helpapp.response.HelpDataInsertResponse;
 import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -70,8 +52,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class AddHelpActivity extends AppCompatActivity {
-    private static final String TAG = "addHelp";
+public class EditHelp extends AppCompatActivity {
+
+    private static final String TAG = "editHelp";
     private static final int IMAGE_PICKER = 1;
     ImageButton back;
     ProgressBar pBar;
@@ -80,28 +63,27 @@ public class AddHelpActivity extends AppCompatActivity {
     //currentAddress;
     Button submit;
 
-    String mUserid, mTitle, mDesc, mCatId, mState, item2, mCurrentAddress;
+    String mUserid, mTitle, mDesc, mCatId, item2, mCurrentAddress;
 
     ArrayList<String> catId = new ArrayList<>();
     ArrayList<String> catName = new ArrayList<>();
     Retrofit retrofit;
     ServiceInterface serviceInterface;
-    //location
-    String lati = "0", longi = "0";
-    String address = "";
 
-    //imageview
 
     ImageView file1, file2, file3, file4, file5, file6, file7, file8, file9, file10;
 
     //Button selectImage;
     Uri uri1, uri2, uri3, uri4, uri5, uri6, uri7, uri8, uri9, uri10;
 
+    String i1 , i2 , i3 , i4 , i5 , i6 , i7 , i8 , i9 ,i10;
+    String tt , nn , helpId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_help);
+        setContentView(R.layout.activity_edit_help);
+
         catId = new ArrayList<>();
         catName = new ArrayList<>();
 
@@ -109,19 +91,43 @@ public class AddHelpActivity extends AppCompatActivity {
         getData();
         pBar.setVisibility(View.GONE);
 
-        Intent intent = getIntent();
-        lati = intent.getStringExtra("lati");
-        longi = intent.getStringExtra("longi");
 
-        //Toast.makeText(this, "" + lati + "" + longi, Toast.LENGTH_SHORT).show();
-        try {
-            getAddress(AddHelpActivity.this, Double.parseDouble(lati), Double.parseDouble(longi));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        mCatId = getIntent().getStringExtra("catId");
+        helpId = getIntent().getStringExtra("helpId");
+        spinCategory.setText(getIntent().getStringExtra("cat"));
+        i1 = getIntent().getStringExtra("i1");
+        i2 = getIntent().getStringExtra("i2");
+        i3 = getIntent().getStringExtra("i3");
+        i4 = getIntent().getStringExtra("i4");
+        i5 = getIntent().getStringExtra("i5");
+        i6 = getIntent().getStringExtra("i6");
+        i7 = getIntent().getStringExtra("i7");
+        i8 = getIntent().getStringExtra("i8");
+        i9 = getIntent().getStringExtra("i9");
+        i10 = getIntent().getStringExtra("i10");
 
-        //currentAddress.setText(address);
-        mCurrentAddress = address;
+        tt = getIntent().getStringExtra("tt");
+        nn = getIntent().getStringExtra("nn");
+
+        title.setText(tt);
+        desc.setText(nn);
+
+
+
+        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).resetViewBeforeLoading(false).showImageForEmptyUri(R.drawable.addimg).build();
+
+        ImageLoader loader = ImageLoader.getInstance();
+
+        loader.displayImage(i1 , file1 , options);
+        loader.displayImage(i2 , file2 , options);
+        loader.displayImage(i3 , file3 , options);
+        loader.displayImage(i4 , file4 , options);
+        loader.displayImage(i5 , file5 , options);
+        loader.displayImage(i6 , file6 , options);
+        loader.displayImage(i7 , file7 , options);
+        loader.displayImage(i8 , file8 , options);
+        loader.displayImage(i9 , file9 , options);
+        loader.displayImage(i10 , file10 , options);
 
 
         mUserid = SharePreferenceUtils.getInstance().getString("userId");
@@ -146,31 +152,11 @@ public class AddHelpActivity extends AppCompatActivity {
 
         serviceInterface = retrofit.create(ServiceInterface.class);
 
-
-        //getCategoryReq();
-
-
-        //if you want to set any action you can do in this listener
-        /*spinCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                       int position, long id) {
-
-                mCatId = catId.get(position);
-                item = String.valueOf(arg0.getItemAtPosition(position));
-                // Toast.makeText(AddNoteActivity.this, ""+item, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-            }
-        });*/
-
         spinCategory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                final Dialog dialog = new Dialog(AddHelpActivity.this);
+                final Dialog dialog = new Dialog(EditHelp.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setCancelable(true);
                 dialog.setContentView(R.layout.dialog_layout);
@@ -178,7 +164,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
 
                 final RecyclerView grid = dialog.findViewById(R.id.grid);
-                final GridLayoutManager manager = new GridLayoutManager(AddHelpActivity.this, 3);
+                final GridLayoutManager manager = new GridLayoutManager(EditHelp.this, 3);
 
                 String securecode = "1234";
                 Call<GetCategoryResponse> call = serviceInterface.getCategory();
@@ -188,13 +174,13 @@ public class AddHelpActivity extends AppCompatActivity {
                         if (response.body() != null && response.body().getStatus().equals("1")) {
 
 
-                            CategoryAdapter adapter = new CategoryAdapter(AddHelpActivity.this, response.body().getInformation(), dialog);
+                            CategoryAdapter adapter = new CategoryAdapter(EditHelp.this, response.body().getInformation(), dialog);
                             grid.setAdapter(adapter);
                             grid.setLayoutManager(manager);
 
 
                         } else {
-                            Toast.makeText(AddHelpActivity.this, "not inserted", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(EditHelp.this, "not inserted", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -207,22 +193,30 @@ public class AddHelpActivity extends AppCompatActivity {
             }
         });
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getData();
                 if (mCatId.isEmpty()) {
-                    Toast.makeText(AddHelpActivity.this, "Invalid category", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditHelp.this, "Invalid category", Toast.LENGTH_SHORT).show();
                 }
                 else if (mTitle.isEmpty()) {
-                    Toast.makeText(AddHelpActivity.this, "Invalid title", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditHelp.this, "Invalid title", Toast.LENGTH_SHORT).show();
                 } else if (mDesc.isEmpty()) {
-                    Toast.makeText(AddHelpActivity.this, "Invalid need", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditHelp.this, "Invalid need", Toast.LENGTH_SHORT).show();
                 } else {
 
                     pBar.setVisibility(View.VISIBLE);
                     getData();
-                    //   Toast.makeText(AddHelpActivity.this, ""+mCatId+""+mUserid+""+mTitle+""+
+                    //   Toast.makeText(EditHelp.this, ""+mCatId+""+mUserid+""+mTitle+""+
                     //          ""+mDesc+""+mState, Toast.LENGTH_SHORT).show();
                     //saveData();
 
@@ -241,7 +235,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
                     try {
 
-                        String ypath = getPath(AddHelpActivity.this, uri1);
+                        String ypath = getPath(EditHelp.this, uri1);
                         File f1 = new File(ypath);
 
                         RequestBody reqFile1 = RequestBody.create(MediaType.parse("multipart/form-data"), f1);
@@ -255,7 +249,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
                     try {
 
-                        String ypath = getPath(AddHelpActivity.this, uri2);
+                        String ypath = getPath(EditHelp.this, uri2);
                         File f2 = new File(ypath);
 
                         RequestBody reqFile2 = RequestBody.create(MediaType.parse("multipart/form-data"), f2);
@@ -268,7 +262,7 @@ public class AddHelpActivity extends AppCompatActivity {
                     }
                     try {
 
-                        String ypath = getPath(AddHelpActivity.this, uri3);
+                        String ypath = getPath(EditHelp.this, uri3);
                         File f3 = new File(ypath);
 
                         RequestBody reqFile3 = RequestBody.create(MediaType.parse("multipart/form-data"), f3);
@@ -281,7 +275,7 @@ public class AddHelpActivity extends AppCompatActivity {
                     }
                     try {
 
-                        String ypath = getPath(AddHelpActivity.this, uri4);
+                        String ypath = getPath(EditHelp.this, uri4);
                         File f4 = new File(ypath);
 
                         RequestBody reqFile4 = RequestBody.create(MediaType.parse("multipart/form-data"), f4);
@@ -294,7 +288,7 @@ public class AddHelpActivity extends AppCompatActivity {
                     }
                     try {
 
-                        String ypath = getPath(AddHelpActivity.this, uri5);
+                        String ypath = getPath(EditHelp.this, uri5);
                         File f5 = new File(ypath);
 
                         RequestBody reqFile5 = RequestBody.create(MediaType.parse("multipart/form-data"), f5);
@@ -307,7 +301,7 @@ public class AddHelpActivity extends AppCompatActivity {
                     }
                     try {
 
-                        String ypath = getPath(AddHelpActivity.this, uri6);
+                        String ypath = getPath(EditHelp.this, uri6);
                         File f6 = new File(ypath);
 
                         RequestBody reqFile6 = RequestBody.create(MediaType.parse("multipart/form-data"), f6);
@@ -320,7 +314,7 @@ public class AddHelpActivity extends AppCompatActivity {
                     }
                     try {
 
-                        String ypath = getPath(AddHelpActivity.this, uri7);
+                        String ypath = getPath(EditHelp.this, uri7);
                         File f7 = new File(ypath);
 
                         RequestBody reqFile7 = RequestBody.create(MediaType.parse("multipart/form-data"), f7);
@@ -333,7 +327,7 @@ public class AddHelpActivity extends AppCompatActivity {
                     }
                     try {
 
-                        String ypath = getPath(AddHelpActivity.this, uri8);
+                        String ypath = getPath(EditHelp.this, uri8);
                         File f8 = new File(ypath);
 
                         RequestBody reqFile8 = RequestBody.create(MediaType.parse("multipart/form-data"), f8);
@@ -346,7 +340,7 @@ public class AddHelpActivity extends AppCompatActivity {
                     }
                     try {
 
-                        String ypath = getPath(AddHelpActivity.this, uri9);
+                        String ypath = getPath(EditHelp.this, uri9);
                         File f9 = new File(ypath);
 
                         RequestBody reqFile9 = RequestBody.create(MediaType.parse("multipart/form-data"), f9);
@@ -359,7 +353,7 @@ public class AddHelpActivity extends AppCompatActivity {
                     }
                     try {
 
-                        String ypath = getPath(AddHelpActivity.this, uri10);
+                        String ypath = getPath(EditHelp.this, uri10);
                         File f10 = new File(ypath);
 
                         RequestBody reqFile10 = RequestBody.create(MediaType.parse("multipart/form-data"), f10);
@@ -373,14 +367,11 @@ public class AddHelpActivity extends AppCompatActivity {
 
 
 
-                    Call<addHelpBean> call = serviceInterface.addHelp(
-                            SharePreferenceUtils.getInstance().getString("userId"),
+                    Call<addHelpBean> call = serviceInterface.editHelp(
+                            helpId,
                             mCatId,
                             mTitle,
                             mDesc,
-                            lati,
-                            longi,
-                            mState,
                             body1,
                             body2,
                             body3,
@@ -401,12 +392,12 @@ public class AddHelpActivity extends AppCompatActivity {
                             if (response.body().getStatus().equals("1"))
                             {
 
-                                Toast.makeText(AddHelpActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                             else
                             {
-                                Toast.makeText(AddHelpActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             }
 
 
@@ -427,13 +418,6 @@ public class AddHelpActivity extends AppCompatActivity {
         });
 
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
         file1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -441,7 +425,7 @@ public class AddHelpActivity extends AppCompatActivity {
                 final CharSequence[] items = {"Take Photo from Camera",
                         "Choose from Gallery",
                         "Cancel"};
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AddHelpActivity.this);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(EditHelp.this);
                 builder.setTitle("Add Photo!");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -470,7 +454,7 @@ public class AddHelpActivity extends AppCompatActivity {
                 final CharSequence[] items = {"Take Photo from Camera",
                         "Choose from Gallery",
                         "Cancel"};
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AddHelpActivity.this);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(EditHelp.this);
                 builder.setTitle("Add Photo!");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -499,7 +483,7 @@ public class AddHelpActivity extends AppCompatActivity {
                 final CharSequence[] items = {"Take Photo from Camera",
                         "Choose from Gallery",
                         "Cancel"};
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AddHelpActivity.this);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(EditHelp.this);
                 builder.setTitle("Add Photo!");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -528,7 +512,7 @@ public class AddHelpActivity extends AppCompatActivity {
                 final CharSequence[] items = {"Take Photo from Camera",
                         "Choose from Gallery",
                         "Cancel"};
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AddHelpActivity.this);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(EditHelp.this);
                 builder.setTitle("Add Photo!");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -557,7 +541,7 @@ public class AddHelpActivity extends AppCompatActivity {
                 final CharSequence[] items = {"Take Photo from Camera",
                         "Choose from Gallery",
                         "Cancel"};
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AddHelpActivity.this);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(EditHelp.this);
                 builder.setTitle("Add Photo!");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -586,7 +570,7 @@ public class AddHelpActivity extends AppCompatActivity {
                 final CharSequence[] items = {"Take Photo from Camera",
                         "Choose from Gallery",
                         "Cancel"};
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AddHelpActivity.this);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(EditHelp.this);
                 builder.setTitle("Add Photo!");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -615,7 +599,7 @@ public class AddHelpActivity extends AppCompatActivity {
                 final CharSequence[] items = {"Take Photo from Camera",
                         "Choose from Gallery",
                         "Cancel"};
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AddHelpActivity.this);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(EditHelp.this);
                 builder.setTitle("Add Photo!");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -644,7 +628,7 @@ public class AddHelpActivity extends AppCompatActivity {
                 final CharSequence[] items = {"Take Photo from Camera",
                         "Choose from Gallery",
                         "Cancel"};
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AddHelpActivity.this);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(EditHelp.this);
                 builder.setTitle("Add Photo!");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -673,7 +657,7 @@ public class AddHelpActivity extends AppCompatActivity {
                 final CharSequence[] items = {"Take Photo from Camera",
                         "Choose from Gallery",
                         "Cancel"};
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AddHelpActivity.this);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(EditHelp.this);
                 builder.setTitle("Add Photo!");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -702,7 +686,7 @@ public class AddHelpActivity extends AppCompatActivity {
                 final CharSequence[] items = {"Take Photo from Camera",
                         "Choose from Gallery",
                         "Cancel"};
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(AddHelpActivity.this);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(EditHelp.this);
                 builder.setTitle("Add Photo!");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
@@ -725,8 +709,6 @@ public class AddHelpActivity extends AppCompatActivity {
         });
 
     }
-
-
 
     private void setUpwidget() {
         back = findViewById(R.id.backButton);
@@ -762,48 +744,6 @@ public class AddHelpActivity extends AppCompatActivity {
         return RequestBody.create(MediaType.parse("text/plain"), data);
     }
 
-    //
-    public void getAddress(Context context, double LATITUDE, double LONGITUDE) {
-
-        //Set Address
-        try {
-            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
-            if (addresses != null && addresses.size() > 0) {
-
-
-                address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-                String city = addresses.get(0).getLocality();
-                String state = addresses.get(0).getAdminArea();
-                String country = addresses.get(0).getCountryName();
-                String postalCode = addresses.get(0).getPostalCode();
-                String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
-
-                Log.d(TAG, "getAddress:  address" + address);
-                Log.d(TAG, "getAddress:  city" + city);
-                Log.d(TAG, "getAddress:  state" + state);
-                Log.d(TAG, "getAddress:  postalCode" + postalCode);
-                Log.d(TAG, "getAddress:  knownName" + knownName);
-
-                mState = city;
-
-                //Toast.makeText(context, "" + address, Toast.LENGTH_SHORT).show();
-
-
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return;
-    }
-
-    //image load
-    private void OpenGallery() {
-        //opening file chooser
-        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, 100);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -812,7 +752,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
             uri1 = data.getData();
 
-            String[] filePath = { MediaStore.Images.Media.DATA };
+            String[] filePath = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri1, filePath, null, null, null);
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
@@ -830,12 +770,11 @@ public class AddHelpActivity extends AppCompatActivity {
             file1.setImageBitmap(bitmap);
 
 
-        }
-        else if (requestCode == 4 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 4 && resultCode == RESULT_OK && null != data) {
 
             uri2 = data.getData();
 
-            String[] filePath = { MediaStore.Images.Media.DATA };
+            String[] filePath = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri2, filePath, null, null, null);
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
@@ -853,12 +792,11 @@ public class AddHelpActivity extends AppCompatActivity {
             file2.setImageBitmap(bitmap);
 
 
-        }
-        else if (requestCode == 6 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 6 && resultCode == RESULT_OK && null != data) {
 
             uri3 = data.getData();
 
-            String[] filePath = { MediaStore.Images.Media.DATA };
+            String[] filePath = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri3, filePath, null, null, null);
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
@@ -876,11 +814,11 @@ public class AddHelpActivity extends AppCompatActivity {
             file3.setImageBitmap(bitmap);
 
 
-        }else if (requestCode == 8 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 8 && resultCode == RESULT_OK && null != data) {
 
             uri4 = data.getData();
 
-            String[] filePath = { MediaStore.Images.Media.DATA };
+            String[] filePath = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri4, filePath, null, null, null);
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
@@ -898,11 +836,11 @@ public class AddHelpActivity extends AppCompatActivity {
             file4.setImageBitmap(bitmap);
 
 
-        }else if (requestCode == 10 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 10 && resultCode == RESULT_OK && null != data) {
 
             uri5 = data.getData();
 
-            String[] filePath = { MediaStore.Images.Media.DATA };
+            String[] filePath = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri5, filePath, null, null, null);
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
@@ -920,12 +858,11 @@ public class AddHelpActivity extends AppCompatActivity {
             file5.setImageBitmap(bitmap);
 
 
-        }
-        else if (requestCode == 12 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 12 && resultCode == RESULT_OK && null != data) {
 
             uri6 = data.getData();
 
-            String[] filePath = { MediaStore.Images.Media.DATA };
+            String[] filePath = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri6, filePath, null, null, null);
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
@@ -943,12 +880,11 @@ public class AddHelpActivity extends AppCompatActivity {
             file6.setImageBitmap(bitmap);
 
 
-        }
-        else if (requestCode == 14 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 14 && resultCode == RESULT_OK && null != data) {
 
             uri7 = data.getData();
 
-            String[] filePath = { MediaStore.Images.Media.DATA };
+            String[] filePath = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri7, filePath, null, null, null);
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
@@ -966,12 +902,11 @@ public class AddHelpActivity extends AppCompatActivity {
             file7.setImageBitmap(bitmap);
 
 
-        }
-        else if (requestCode == 16 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 16 && resultCode == RESULT_OK && null != data) {
 
             uri8 = data.getData();
 
-            String[] filePath = { MediaStore.Images.Media.DATA };
+            String[] filePath = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri8, filePath, null, null, null);
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
@@ -989,12 +924,11 @@ public class AddHelpActivity extends AppCompatActivity {
             file8.setImageBitmap(bitmap);
 
 
-        }
-        else if (requestCode == 18 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 18 && resultCode == RESULT_OK && null != data) {
 
             uri9 = data.getData();
 
-            String[] filePath = { MediaStore.Images.Media.DATA };
+            String[] filePath = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri9, filePath, null, null, null);
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
@@ -1012,12 +946,11 @@ public class AddHelpActivity extends AppCompatActivity {
             file9.setImageBitmap(bitmap);
 
 
-        }
-        else if (requestCode == 20 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 20 && resultCode == RESULT_OK && null != data) {
 
             uri10 = data.getData();
 
-            String[] filePath = { MediaStore.Images.Media.DATA };
+            String[] filePath = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri10, filePath, null, null, null);
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
@@ -1035,107 +968,40 @@ public class AddHelpActivity extends AppCompatActivity {
             file10.setImageBitmap(bitmap);
 
 
-        }
-        else if (requestCode == 1 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 1 && resultCode == RESULT_OK && null != data) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             file1.setImageBitmap(photo);
-        }
-        else if (requestCode == 3 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 3 && resultCode == RESULT_OK && null != data) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             file2.setImageBitmap(photo);
-        }
-        else if (requestCode == 5 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 5 && resultCode == RESULT_OK && null != data) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             file3.setImageBitmap(photo);
-        }
-        else if (requestCode == 7 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 7 && resultCode == RESULT_OK && null != data) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             file4.setImageBitmap(photo);
-        }
-        else if (requestCode == 9 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 9 && resultCode == RESULT_OK && null != data) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             file5.setImageBitmap(photo);
-        }
-        else if (requestCode == 11 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 11 && resultCode == RESULT_OK && null != data) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             file6.setImageBitmap(photo);
-        }
-        else if (requestCode == 13 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 13 && resultCode == RESULT_OK && null != data) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             file7.setImageBitmap(photo);
-        }
-        else if (requestCode == 15 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 15 && resultCode == RESULT_OK && null != data) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             file8.setImageBitmap(photo);
-        }
-        else if (requestCode == 17 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 17 && resultCode == RESULT_OK && null != data) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             file9.setImageBitmap(photo);
-        }
-        else if (requestCode == 19 && resultCode == RESULT_OK && null != data) {
+        } else if (requestCode == 19 && resultCode == RESULT_OK && null != data) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             file10.setImageBitmap(photo);
         }
 
+
     }
-
-    //
-    /*private void saveUserData() {
-        File file = new File(getRealPathFromURI(selectedImage));
-        try {
-            compressedImageFile = new Compressor(this).compressToFile(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // RequestBody requestFile = RequestBody.create(MediaType.parse(getContentResolver().getType(selectedImage)), file);
-        RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), compressedImageFile);
-
-        Call<AddHelpListResponse> call = serviceInterface.help_DataInsert(convertPlainString(mUserid),
-                convertPlainString(mTitle), convertPlainString(mDesc), convertPlainString(mCatId), convertPlainString(mState), requestFile,
-                convertPlainString(address), convertPlainString(lati), convertPlainString(longi));
-
-        call.enqueue(new Callback<AddHelpListResponse>() {
-            @Override
-            public void onResponse(Call<AddHelpListResponse> call, Response<AddHelpListResponse> response) {
-                pBar.setVisibility(View.GONE);
-                if (response.body() != null) {
-                    if (response.body().getStatus().equals(1)) {
-                        title.setText("");
-                        desc.setText("");
-                        Toast.makeText(AddHelpActivity.this, "help data added successfully", Toast.LENGTH_SHORT).show();
-                        finish();
-                    } else {
-                        Log.e("error_in upload", "not uploaded");
-
-                    }
-                } else {
-                    Toast.makeText(AddHelpActivity.this, "not inserted", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AddHelpListResponse> call, Throwable t) {
-                pBar.setVisibility(View.GONE);
-                Toast.makeText(AddHelpActivity.this, "" + t.toString(), Toast.LENGTH_SHORT).show();
-                Log.e("error", t.toString());
-
-            }
-        });
-    }*/
-
-
-    //This method is fetching the absolute path of the image file
-    private String getRealPathFromURI(Uri contentUri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        CursorLoader loader = new CursorLoader(this, contentUri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String result = cursor.getString(column_index);
-        cursor.close();
-        return result;
-    }
-
     class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
         Context context;
@@ -1306,20 +1172,4 @@ public class AddHelpActivity extends AppCompatActivity {
         return null;
     }
 
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        float bitmapRatio = (float) width / (float) height;
-        if (bitmapRatio > 1) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
-    }
-
 }
-

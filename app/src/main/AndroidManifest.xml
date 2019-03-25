@@ -22,7 +22,8 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
         tools:replace="allowBackup,supportsRtl">
-        <activity android:name=".KYC"></activity>
+        <activity android:name=".EditHelp"></activity>
+        <activity android:name=".KYC" />
         <activity android:name=".Needy" />
         <activity android:name=".Donor" />
         <activity android:name=".ChatScreen" />

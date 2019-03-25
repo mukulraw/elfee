@@ -483,7 +483,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
 
                 } else {
-                    Intent intent = new Intent(MainActivity.this, MessageActivity.class);
+                    Intent intent = new Intent(MainActivity.this, HistoryActivity.class);
                     startActivity(intent);
 
                 }
@@ -562,6 +562,7 @@ public class MainActivity extends AppCompatActivity {
                 bundle.putString("lat", latitude);
                 bundle.putString("lng", longitude);
                 bundle.putString("rad", rad);
+                bundle.putString("state", loca.getText().toString());
                 allHelpFragment.setArguments(bundle);
                 ft1.replace(R.id.replace, allHelpFragment);
                 ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
@@ -806,6 +807,7 @@ public class MainActivity extends AppCompatActivity {
                     bundle.putString("lat", latitude);
                     bundle.putString("lng", longitude);
                     bundle.putString("rad", rad);
+                    bundle.putString("state", loca.getText().toString());
                     allHelpFragment.setArguments(bundle);
                     ft1.replace(R.id.replace, allHelpFragment);
                     ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);

@@ -14,21 +14,23 @@ import android.widget.TextView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.softcodeinfotech.helpapp.HelpDetails;
+import com.softcodeinfotech.helpapp.myHelpsPOJO.Datum;
 import com.softcodeinfotech.helpapp.response.GethelplistResponse;
 import com.softcodeinfotech.helpapp.ui.IndividualHelpActivity;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.model.GetHelpListModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private List<GethelplistResponse.Information> mHelpListModel;
+    private List<Datum> mHelpListModel;
     private String TAG = "HelpListAdapter";
     private int mScrenwidth;
 
-    public GetHelpListAdapter(Context mContext, List<GethelplistResponse.Information> mHelpListModel, int mScrenwidth) {
+    public GetHelpListAdapter(Context mContext, List<Datum> mHelpListModel, int mScrenwidth) {
 
         this.mContext = mContext;
         this.mHelpListModel = mHelpListModel;
@@ -37,7 +39,7 @@ public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
     public class GetHelpListAdapterHolder extends RecyclerView.ViewHolder {
-        TextView title , state , date , desc;
+        TextView title, state, date, desc;
         ImageView image;
 
 
@@ -55,8 +57,7 @@ public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
 
-    public void setData(List<GethelplistResponse.Information> list)
-    {
+    public void setData(List<Datum> list) {
         this.mHelpListModel = list;
         notifyDataSetChanged();
     }
@@ -72,19 +73,48 @@ public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         viewHolder.setIsRecyclable(false);
-        final GethelplistResponse.Information item = mHelpListModel.get(i);
+        final Datum item = mHelpListModel.get(i);
 
 
-        ((GetHelpListAdapterHolder) viewHolder).title.setText(item.getHelpTitle());
-        ((GetHelpListAdapterHolder) viewHolder).desc.setText(item.getState());
-        ((GetHelpListAdapterHolder) viewHolder).date.setText(item.getTimestamp());
-        ((GetHelpListAdapterHolder) viewHolder).state.setText(item.getHelpCategory());
+        ((GetHelpListAdapterHolder) viewHolder).title.setText(item.getHowTo());
+        ((GetHelpListAdapterHolder) viewHolder).desc.setText(item.getCity());
+        ((GetHelpListAdapterHolder) viewHolder).date.setText(item.getCreatedDate());
+        ((GetHelpListAdapterHolder) viewHolder).state.setText(item.getCategory());
 
 
-        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).showImageForEmptyUri(R.drawable.blur2).build();
+        List<String> iimm = new ArrayList<>();
+
+        if (item.getFile1().length() > 0) {
+            iimm.add(item.getFile1());
+        } else if (item.getFile2().length() > 0) {
+            iimm.add(item.getFile2());
+        } else if (item.getFile3().length() > 0) {
+            iimm.add(item.getFile3());
+        } else if (item.getFile4().length() > 0) {
+            iimm.add(item.getFile4());
+        } else if (item.getFile5().length() > 0) {
+            iimm.add(item.getFile5());
+        } else if (item.getFile6().length() > 0) {
+            iimm.add(item.getFile6());
+        } else if (item.getFile7().length() > 0) {
+            iimm.add(item.getFile7());
+        } else if (item.getFile8().length() > 0) {
+            iimm.add(item.getFile8());
+        } else if (item.getFile9().length() > 0) {
+            iimm.add(item.getFile9());
+        } else if (item.getFile10().length() > 0) {
+            iimm.add(item.getFile10());
+        } else {
+            iimm.add("asd");
+        }
+
+
+        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).showImageForEmptyUri(R.drawable.noimage).build();
 
         ImageLoader loader = ImageLoader.getInstance();
-        loader.displayImage(item.getImage() , ((GetHelpListAdapterHolder) viewHolder).image , options);
+
+
+        loader.displayImage(iimm.get(0), ((GetHelpListAdapterHolder) viewHolder).image, options);
 
 
         ((GetHelpListAdapterHolder) viewHolder).itemView.setOnClickListener(new View.OnClickListener() {
@@ -97,25 +127,22 @@ public class GetHelpListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                  mContext.startActivity(intent);
 */
 
-                Intent intent = new Intent(mContext , HelpDetails.class);
-                intent.putExtra("title" , item.getHelpTitle());
-                intent.putExtra("desc" , item.getHelpDescription());
-                intent.putExtra("time" , item.getTimestamp());
-                intent.putExtra("state" , item.getHelpCategory());
-                intent.putExtra("address" , item.getState());
-                intent.putExtra("lat" , item.getLatitude());
-                intent.putExtra("lng" , item.getLongitude());
-                intent.putExtra("image" , item.getImage());
-                intent.putExtra("uid" , String.valueOf(item.getUserId()));
-
-                intent.putExtra("phone", item.getPhone());
+                Intent intent = new Intent(mContext, HelpDetails.class);
+                intent.putExtra("title", item.getHowTo());
+                intent.putExtra("desc", item.getNeed());
+                intent.putExtra("time", item.getCreatedDate());
+                intent.putExtra("state", item.getCategory());
+                intent.putExtra("address", item.getCity());
+                intent.putExtra("lat", item.getLat());
+                intent.putExtra("lng", item.getLng());
+                intent.putExtra("image", "");
+                intent.putExtra("uid", String.valueOf(item.getUserId()));
+                intent.putExtra("phone", "");
                 mContext.startActivity(intent);
 
 
-
-
-               // Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show();
-              //  Toast.makeText(mContext, ""+user_id, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(mContext, "clicked", Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(mContext, ""+user_id, Toast.LENGTH_SHORT).show();
 
             }
         });

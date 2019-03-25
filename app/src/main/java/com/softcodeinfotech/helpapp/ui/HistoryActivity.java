@@ -19,6 +19,8 @@ import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.adapter.HistoryAdapter;
 import com.softcodeinfotech.helpapp.model.HelpModel;
+import com.softcodeinfotech.helpapp.myHelpsPOJO.Datum;
+import com.softcodeinfotech.helpapp.myHelpsPOJO.myHelpsBean;
 import com.softcodeinfotech.helpapp.response.HelpHistoryResponse;
 import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
@@ -32,6 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class HistoryActivity extends AppCompatActivity {
     ImageButton back;
@@ -39,7 +42,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     String TAG = "HistoryActivity";
     private RecyclerView recycler_helpHistory;
-    private ArrayList<HelpModel> mHelpDetailsList = new ArrayList<HelpModel>();
+    private ArrayList<Datum> mHelpDetailsList = new ArrayList<Datum>();
     private HistoryAdapter historyAdapter;
 
     ProgressBar pBar;
@@ -65,13 +68,14 @@ public class HistoryActivity extends AppCompatActivity {
         Gson gson = new GsonBuilder().create();
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.BASE_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         serviceInterface = retrofit.create(ServiceInterface.class);
 
-        user_id = SharePreferenceUtils.getInstance().getString(Constant.USER_id);
+        user_id = SharePreferenceUtils.getInstance().getString("userId");
         Log.v(TAG, user_id + user_id);
-       // Toast.makeText(this, ""+user_id, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, ""+user_id, Toast.LENGTH_SHORT).show();
 
 
         recycler_helpHistory = (RecyclerView) findViewById(R.id.recyclerView);
@@ -83,7 +87,7 @@ public class HistoryActivity extends AppCompatActivity {
         recycler_helpHistory.setAdapter(historyAdapter);
         recycler_helpHistory.setItemAnimator(new DefaultItemAnimator());
 
-        getHelpHistory();
+
 
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -95,29 +99,27 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     private void getHelpHistory() {
-        Call<HelpHistoryResponse> call = serviceInterface.getHelpHistory(convertPlainString(user_id));
-        call.enqueue(new Callback<HelpHistoryResponse>() {
+        Call<myHelpsBean> call = serviceInterface.myHelps(user_id);
+        call.enqueue(new Callback<myHelpsBean>() {
             @Override
-            public void onResponse(Call<HelpHistoryResponse> call, Response<HelpHistoryResponse> response) {
+            public void onResponse(Call<myHelpsBean> call, Response<myHelpsBean> response) {
                 pBar.setVisibility(View.GONE);
 
-                if (response.body().getStatus().equals(1)) {
-                    for (int i = 0; i < response.body().getInformation().size(); i++) {
-                        mHelpDetailsList.add(new HelpModel(response.body().getInformation().get(i).getHelpTitle(),
-                                String.valueOf(response.body().getInformation().get(i).getTimestamp()),
-                                response.body().getInformation().get(i).getHelpDescription()
-                                , String.valueOf(response.body().getInformation().get(i).getHelpCategoryId()),
-                                response.body().getInformation().get(i).getStatus()
-                                , response.body().getInformation().get(i).getState()));
-                    }
-                    historyAdapter.notifyDataSetChanged();
+                if (response.body().getStatus().equals("1")) {
+
+
+                    historyAdapter.setData(response.body().getData());
+
+
+                } else {
+                    Toast.makeText(HistoryActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<HelpHistoryResponse> call, Throwable t) {
+            public void onFailure(Call<myHelpsBean> call, Throwable t) {
                 pBar.setVisibility(View.GONE);
-                Toast.makeText(HistoryActivity.this, "" + t.toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(HistoryActivity.this, "" + t.toString(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -144,5 +146,11 @@ public class HistoryActivity extends AppCompatActivity {
     public RequestBody convertPlainString(String data) {
         RequestBody plainString = RequestBody.create(MediaType.parse("text/plain"), data);
         return plainString;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getHelpHistory();
     }
 }

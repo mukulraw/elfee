@@ -1,6 +1,7 @@
 package com.softcodeinfotech.helpapp.ui;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.response.ProfileResponse;
 import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
+import com.softcodeinfotech.helpapp.verifyPOJO.verifyBean;
 
 import java.util.Objects;
 
@@ -102,6 +104,11 @@ public class EditProfile extends AppCompatActivity {
             }
         });
 
+
+        age.setText(SharePreferenceUtils.getInstance().getString("dob"));
+        name.setText(SharePreferenceUtils.getInstance().getString("name"));
+
+
        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,36 +135,44 @@ public class EditProfile extends AppCompatActivity {
 
                 ServiceInterface serviceInterface = retrofit.create(ServiceInterface.class);
 
-                Call<ProfileResponse>call = serviceInterface.profile("", n , a , gender,"" ,  ""  , "" , "" , "");
+                Call<verifyBean>call = serviceInterface.editProfile(SharePreferenceUtils.getInstance().getString("userId"), n , a);
 
-                call.enqueue(new Callback<ProfileResponse>() {
+                call.enqueue(new Callback<verifyBean>() {
                     @Override
-                    public void onResponse(Call<ProfileResponse> call, Response<ProfileResponse> response) {
+                    public void onResponse(Call<verifyBean> call, Response<verifyBean> response) {
 
-                        if (Objects.equals(response.body().getStatus() , "1")){
+                        if (response.body().getStatus().equals("1"))
+                        {
 
-                            Toast.makeText(EditProfile.this, response.body().getMsg(), Toast.LENGTH_SHORT).show();
+                            SharePreferenceUtils.getInstance().saveString("userId" , response.body().getData().getUserId());
+                            SharePreferenceUtils.getInstance().saveString("name" , response.body().getData().getName());
+                            SharePreferenceUtils.getInstance().saveString("dob" , response.body().getData().getDob());
+                            SharePreferenceUtils.getInstance().saveString("aadhar" , response.body().getData().getAadhar());
+                            SharePreferenceUtils.getInstance().saveString("address" , response.body().getData().getAddress());
+                            SharePreferenceUtils.getInstance().saveString("kyc_status" , response.body().getData().getKycStatus());
+                            SharePreferenceUtils.getInstance().saveString("wphone" , response.body().getData().getWphone());
+                            SharePreferenceUtils.getInstance().saveString("g_name" , response.body().getData().getGName());
+                            SharePreferenceUtils.getInstance().saveString("gphone" , response.body().getData().getGphone());
+                            SharePreferenceUtils.getInstance().saveString("profession" , response.body().getData().getProfession());
+                            SharePreferenceUtils.getInstance().saveString("yimage" , response.body().getData().getYimage());
+                            SharePreferenceUtils.getInstance().saveString("gimage" , response.body().getData().getGimage());
+                            SharePreferenceUtils.getInstance().saveString("afront" , response.body().getData().getAfront());
+                            SharePreferenceUtils.getInstance().saveString("aback" , response.body().getData().getAback());
+                            SharePreferenceUtils.getInstance().saveString("eimage" , response.body().getData().getEimage());
 
-
-                            SharePreferenceUtils.getInstance().saveString(Constant.USER_name , n);
-                            SharePreferenceUtils.getInstance().saveString(Constant.USER_gender , gender);
-                            SharePreferenceUtils.getInstance().saveString(Constant.User_age , a);
 
                             finish();
-                            name.setText("");
-                            age.setText("");
-
-
-                        }else {
-
-                            Toast.makeText(EditProfile.this, response.body().getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(EditProfile.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         }
 
                         bar.setVisibility(View.GONE);
                     }
 
                     @Override
-                    public void onFailure(Call<ProfileResponse> call, Throwable t) {
+                    public void onFailure(Call<verifyBean> call, Throwable t) {
 
                         bar.setVisibility(View.GONE);
 
