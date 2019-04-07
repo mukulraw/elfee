@@ -85,7 +85,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    String name, age, mobile, imageurl, uid, state , kycstatus;
+    String name, age, mobile, imageurl, uid, state, kycstatus;
 
     DrawerLayout drawer;
     ImageButton toggle;
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     List<String> locName;
     List<String> locId;
 
-    String cat, rad;
+    String cat = "0", rad;
 
     String TAG = "MainActivity";
     private RecyclerView replaceRecyler;
@@ -160,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
         locId.add("50");
 
         setUpWidget();
-
 
 
         //
@@ -357,7 +356,32 @@ public class MainActivity extends AppCompatActivity {
         serviceInterface = retrofit.create(ServiceInterface.class);
 
 
-        getCategoryReq();
+        //getCategoryReq();
+
+        FragmentManager fm1 = getSupportFragmentManager();
+        FragmentTransaction ft1 = fm1.beginTransaction();
+        AllHelpFragment allHelpFragment = new AllHelpFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("cat", cat);
+        bundle.putString("lat", latitude);
+        bundle.putString("lng", longitude);
+        bundle.putString("rad", rad);
+        bundle.putString("state", loca.getText().toString());
+        allHelpFragment.setArguments(bundle);
+        ft1.replace(R.id.replace, allHelpFragment);
+        ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+        //ft.addToBackStack(null);
+        ft1.commit();
+        drawer.closeDrawer(GravityCompat.START);
+
+        rad = "2";
+        //category.setText(catName.get(0));
+
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(MainActivity.this,
+                R.layout.spinner_item, locName);//setting the country_array to spinner
+        // string value
+        adapter1.setDropDownViewResource(R.layout.spinner_item);
+        location.setAdapter(adapter1);
 
 
         /*category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -403,7 +427,34 @@ public class MainActivity extends AppCompatActivity {
 
 
                 final RecyclerView grid = dialog.findViewById(R.id.grid);
-                final GridLayoutManager manager = new GridLayoutManager(MainActivity.this , 3);
+                TextView reset = dialog.findViewById(R.id.textView47);
+                final GridLayoutManager manager = new GridLayoutManager(MainActivity.this, 3);
+
+                reset.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        category.setText("All Categories");
+                        cat = "0";
+                        FragmentManager fm1 = getSupportFragmentManager();
+                        FragmentTransaction ft1 = fm1.beginTransaction();
+                        AllHelpFragment allHelpFragment = new AllHelpFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("cat", cat);
+                        bundle.putString("lat", latitude);
+                        bundle.putString("lng", longitude);
+                        bundle.putString("rad", rad);
+                        bundle.putString("state", loca.getText().toString());
+                        allHelpFragment.setArguments(bundle);
+                        ft1.replace(R.id.replace, allHelpFragment);
+                        ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                        //ft.addToBackStack(null);
+                        ft1.commit();
+                        drawer.closeDrawer(GravityCompat.START);
+                        dialog.dismiss();
+
+                    }
+                });
 
                 String securecode = "1234";
                 Call<GetCategoryResponse> call = serviceInterface.getCategory();
@@ -413,7 +464,7 @@ public class MainActivity extends AppCompatActivity {
                         if (response.body() != null && response.body().getStatus().equals("1")) {
 
 
-                            CategoryAdapter adapter = new CategoryAdapter(MainActivity.this , response.body().getInformation() , dialog);
+                            CategoryAdapter adapter = new CategoryAdapter(MainActivity.this, response.body().getInformation(), dialog);
                             grid.setAdapter(adapter);
                             grid.setLayoutManager(manager);
 
@@ -589,7 +640,6 @@ public class MainActivity extends AppCompatActivity {
         profile = findViewById(R.id.account);
         orders = findViewById(R.id.posts);
         logout = findViewById(R.id.logout);
-
 
 
         // settings = findViewById(R.id.imageButton6);
@@ -866,6 +916,21 @@ public class MainActivity extends AppCompatActivity {
 
                 loca.setText(city);
                 //Toast.makeText(context, "" + address, Toast.LENGTH_SHORT).show();
+                FragmentManager fm1 = getSupportFragmentManager();
+                FragmentTransaction ft1 = fm1.beginTransaction();
+                AllHelpFragment allHelpFragment = new AllHelpFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("cat", cat);
+                bundle.putString("lat", latitude);
+                bundle.putString("lng", longitude);
+                bundle.putString("rad", rad);
+                bundle.putString("state", loca.getText().toString());
+                allHelpFragment.setArguments(bundle);
+                ft1.replace(R.id.replace, allHelpFragment);
+                ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                //ft.addToBackStack(null);
+                ft1.commit();
+                drawer.closeDrawer(GravityCompat.START);
 
 
             }
@@ -874,7 +939,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return;
     }
-
 
 
 }

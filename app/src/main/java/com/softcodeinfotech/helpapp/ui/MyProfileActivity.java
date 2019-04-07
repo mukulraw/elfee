@@ -5,6 +5,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -25,6 +27,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.softcodeinfotech.helpapp.KYC;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
@@ -50,7 +54,7 @@ public class MyProfileActivity extends AppCompatActivity {
 
     String mName, mAge, mGender, mEmail, url;
 
-    TextView name, ageAndGender, email, edit;
+    TextView edit;
 
     ImageView image;
     ProgressBar progress;
@@ -58,6 +62,9 @@ public class MyProfileActivity extends AppCompatActivity {
     static final int RC_TAKE_PHOTO = 1;
 
     private final int PICK_IMAGE_REQUEST = 2;
+
+    TextView name, phone, wphone, gname, gphone, aadhar, dob, profession, address;
+    ImageView yimage, gimage, afront, aback, eimage;
 
     Uri yuri;
 
@@ -81,7 +88,7 @@ public class MyProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent i = new Intent(MyProfileActivity.this, EditProfile.class);
+                Intent i = new Intent(MyProfileActivity.this, KYC.class);
                 startActivity(i);
             }
         });
@@ -99,9 +106,7 @@ public class MyProfileActivity extends AppCompatActivity {
         mEmail = SharePreferenceUtils.getInstance().getString(Constant.USER_email);
         url = SharePreferenceUtils.getInstance().getString("yimage");
 
-        name.setText(mName);
-        email.setText(mEmail);
-        ageAndGender.setText(mAge + "    |    " + mGender);
+        loadData();
 
         //for default placeholder image in glide
         RequestOptions requestOptions = new RequestOptions();
@@ -146,13 +151,25 @@ public class MyProfileActivity extends AppCompatActivity {
     private void setUpWidget() {
 
         back = findViewById(R.id.imageButton4);
-        name = findViewById(R.id.textView63);
-        ageAndGender = findViewById(R.id.textView64);
-        email = findViewById(R.id.textView66);
+
         image = findViewById(R.id.imageView6);
         edit = findViewById(R.id.textView33);
         change = findViewById(R.id.textView45);
         progress = findViewById(R.id.progressBar8);
+        name = findViewById(R.id.name);
+        phone = findViewById(R.id.phone);
+        wphone = findViewById(R.id.wphone);
+        gname = findViewById(R.id.gname);
+        gphone = findViewById(R.id.gphone);
+        aadhar = findViewById(R.id.aadhar);
+        dob = findViewById(R.id.dob);
+        profession = findViewById(R.id.profession);
+        address = findViewById(R.id.address);
+        yimage = findViewById(R.id.yimage);
+        gimage = findViewById(R.id.gimage);
+        afront = findViewById(R.id.afront);
+        aback = findViewById(R.id.aback);
+        eimage = findViewById(R.id.eimage);
     }
 
     @Override
@@ -422,6 +439,31 @@ progress.setVisibility(View.GONE);
             width = (int) (height * bitmapRatio);
         }
         return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+
+
+    void loadData()
+    {
+
+        name.setText(SharePreferenceUtils.getInstance().getString("name"));
+        phone.setText(SharePreferenceUtils.getInstance().getString(Constant.USER_mobile));
+        wphone.setText(SharePreferenceUtils.getInstance().getString("wphone"));
+        gname.setText(SharePreferenceUtils.getInstance().getString("g_name"));
+        gphone.setText(SharePreferenceUtils.getInstance().getString("gphone"));
+        aadhar.setText(SharePreferenceUtils.getInstance().getString("aadhar"));
+        dob.setText(SharePreferenceUtils.getInstance().getString("dob"));
+        profession.setText(SharePreferenceUtils.getInstance().getString("profession"));
+        address.setText(SharePreferenceUtils.getInstance().getString("address"));
+
+
+        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
+        ImageLoader loader = ImageLoader.getInstance();
+        loader.displayImage(SharePreferenceUtils.getInstance().getString("gimage") , gimage , options);
+        loader.displayImage(SharePreferenceUtils.getInstance().getString("afront") , afront , options);
+        loader.displayImage(SharePreferenceUtils.getInstance().getString("aback") , aback , options);
+        loader.displayImage(SharePreferenceUtils.getInstance().getString("eimage") , eimage , options);
+
+
     }
 
 }

@@ -15,7 +15,7 @@
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo72" />
+        app:srcCompat="@drawable/logo7" />
 
     <ImageButton
         android:id="@+id/imageButton10"
@@ -55,18 +55,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="Category"
+        android:text="All Categories"
         app:layout_constraintBottom_toBottomOf="@+id/textView41"
         app:layout_constraintEnd_toStartOf="@+id/imageView13"
         app:layout_constraintTop_toTopOf="@+id/textView41" />
 
-    <TextView
+    <ImageView
         android:id="@+id/textView44"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:text="ELFEE"
+        android:src="@drawable/llloo"
+        app:layout_constraintDimensionRatio="h,665:240"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/imageView13"
         app:layout_constraintStart_toStartOf="@+id/imageView13"

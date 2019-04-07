@@ -97,6 +97,7 @@
                 android:id="@+id/file4"
                 android:background="#ffffff"
                 android:layout_margin="2dp"
+                android:visibility="gone"
                 android:src="@drawable/addimg"
                 android:scaleType="fitCenter"
                 />
@@ -109,6 +110,7 @@
                 android:background="#ffffff"
                 android:layout_margin="2dp"
                 android:id="@+id/file5"
+                android:visibility="gone"
                 android:src="@drawable/addimg"
                 android:scaleType="fitCenter"
                 />
@@ -122,6 +124,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="5"
+            android:visibility="gone"
             >
 
             <ImageView

@@ -146,8 +146,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_power_settings_new_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\mukul\Desktop\icon-no-image.svg" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_whatsapp" />
+                            <entry key="sourceFile" value="C:\Users\mukul\Downloads\whatsapp.svg" />
                           </map>
                         </option>
                       </PersistentState>

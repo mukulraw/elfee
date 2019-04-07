@@ -97,6 +97,8 @@ public class AddHelpActivity extends AppCompatActivity {
     //Button selectImage;
     Uri uri1, uri2, uri3, uri4, uri5, uri6, uri7, uri8, uri9, uri10;
 
+    TextView ptitle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +180,10 @@ public class AddHelpActivity extends AppCompatActivity {
 
 
                 final RecyclerView grid = dialog.findViewById(R.id.grid);
+                TextView reset = dialog.findViewById(R.id.textView47);
+
+                reset.setVisibility(View.GONE);
+
                 final GridLayoutManager manager = new GridLayoutManager(AddHelpActivity.this, 3);
 
                 String securecode = "1234";
@@ -734,6 +740,7 @@ public class AddHelpActivity extends AppCompatActivity {
         title = findViewById(R.id.editText7);
         desc = findViewById(R.id.editText8);
         submit = findViewById(R.id.button13);
+        ptitle = findViewById(R.id.textView35);
         spinCategory = findViewById(R.id.recyclerView2);
 
         file1 = findViewById(R.id.file1);
@@ -1176,6 +1183,8 @@ public class AddHelpActivity extends AppCompatActivity {
                     //item = String.valueOf(arg0.getItemAtPosition(position));
 
                     spinCategory.setText(item.getCategoryName());
+
+                    ptitle.setText("Upload " + item.getCategoryName() + " photos");
 
                     dialog.dismiss();
 

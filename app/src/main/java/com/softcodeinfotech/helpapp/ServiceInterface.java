@@ -1,7 +1,6 @@
 package com.softcodeinfotech.helpapp;
 
 
-import com.facebook.internal.ImageResponse;
 import com.softcodeinfotech.helpapp.addHelpPOJO.addHelpBean;
 import com.softcodeinfotech.helpapp.allMessagePOJO.allMessageBean;
 import com.softcodeinfotech.helpapp.beanresponse.AddHelpListResponse;
@@ -10,7 +9,6 @@ import com.softcodeinfotech.helpapp.beanresponse.GetmobileverifyResponse;
 import com.softcodeinfotech.helpapp.helpDataPOJO.helpDataBean;
 import com.softcodeinfotech.helpapp.myHelpsPOJO.myHelpsBean;
 import com.softcodeinfotech.helpapp.response.AadharUpdateResponse;
-import com.softcodeinfotech.helpapp.response.EmailResponse;
 import com.softcodeinfotech.helpapp.response.ForgotpassResponse;
 import com.softcodeinfotech.helpapp.response.GetAllHelperListResponse;
 import com.softcodeinfotech.helpapp.response.GetCategoryResponse;
@@ -18,11 +16,9 @@ import com.softcodeinfotech.helpapp.response.GetIndividualUserResponse;
 import com.softcodeinfotech.helpapp.response.GethelplistResponse;
 import com.softcodeinfotech.helpapp.response.HelpDataInsertResponse;
 import com.softcodeinfotech.helpapp.response.HelpHistoryResponse;
-
 import com.softcodeinfotech.helpapp.response.PasswordResponse;
 import com.softcodeinfotech.helpapp.response.PasswordUpdateResponse;
 import com.softcodeinfotech.helpapp.response.ProfileResponse;
-import com.softcodeinfotech.helpapp.response.ProfileupdateResponse;
 import com.softcodeinfotech.helpapp.response.SigninResponse;
 import com.softcodeinfotech.helpapp.sendMessagePOJO.sendMessageBean;
 import com.softcodeinfotech.helpapp.singleMessagePOJO.singleMessageBean;
@@ -104,12 +100,6 @@ public interface ServiceInterface {
     );
 
     //image upload
-    @Multipart
-    @POST("helpapp/image.php")
-    Call<ImageResponse> uploadImage
-    (@Part("image\"; filename=\"myfile.jpg\" ") RequestBody file,
-     @Part("name") RequestBody desc,
-     @Part("email") RequestBody email);
 
 
     //Aadhar update

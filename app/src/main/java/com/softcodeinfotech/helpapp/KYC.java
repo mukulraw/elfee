@@ -96,7 +96,7 @@ public class KYC extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.BLACK);
         toolbar.setNavigationIcon(R.drawable.arrow);
 
-        toolbar.setTitle("KYC");
+        toolbar.setTitle("Update Profile");
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
