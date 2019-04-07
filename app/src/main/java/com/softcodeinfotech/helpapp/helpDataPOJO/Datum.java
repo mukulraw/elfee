@@ -82,6 +82,9 @@ public class Datum {
     @SerializedName("dob")
     @Expose
     private String dob;
+    @SerializedName("address")
+    @Expose
+    private String address;
 
     public String getHelpId() {
         return helpId;
@@ -289,5 +292,13 @@ public class Datum {
 
     public void setDob(String dob) {
         this.dob = dob;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
     }
 }

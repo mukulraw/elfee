@@ -387,6 +387,7 @@ public class AddHelpActivity extends AppCompatActivity {
                             lati,
                             longi,
                             mState,
+                            address,
                             body1,
                             body2,
                             body3,

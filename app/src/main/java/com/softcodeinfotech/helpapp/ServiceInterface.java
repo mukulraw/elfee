@@ -329,6 +329,7 @@ public interface ServiceInterface {
             @Part("lat") String lat,
             @Part("lng") String lng,
             @Part("city") String city,
+            @Part("address") String address,
             @Part MultipartBody.Part file1,
             @Part MultipartBody.Part file2,
             @Part MultipartBody.Part file3,
@@ -358,6 +359,12 @@ public interface ServiceInterface {
             @Part MultipartBody.Part file8,
             @Part MultipartBody.Part file9,
             @Part MultipartBody.Part file10
+    );
+
+    @Multipart
+    @POST("elfee/api/delete_help.php")
+    Call<addHelpBean> deleteHelp(
+            @Part("helpId") String helpId
     );
 
     @Multipart

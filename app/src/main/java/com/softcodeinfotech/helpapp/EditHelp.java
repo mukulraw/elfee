@@ -56,7 +56,7 @@ public class EditHelp extends AppCompatActivity {
 
     private static final String TAG = "editHelp";
     private static final int IMAGE_PICKER = 1;
-    ImageButton back;
+    ImageButton back , delete;
     ProgressBar pBar;
     TextView spinCategory;
     EditText title, desc;
@@ -79,6 +79,8 @@ public class EditHelp extends AppCompatActivity {
     String i1 , i2 , i3 , i4 , i5 , i6 , i7 , i8 , i9 ,i10;
     String tt , nn , helpId;
 
+    TextView ptitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +97,9 @@ public class EditHelp extends AppCompatActivity {
         mCatId = getIntent().getStringExtra("catId");
         helpId = getIntent().getStringExtra("helpId");
         spinCategory.setText(getIntent().getStringExtra("cat"));
+
+        ptitle.setText("Edit " + getIntent().getStringExtra("cat") + " photos");
+
         i1 = getIntent().getStringExtra("i1");
         i2 = getIntent().getStringExtra("i2");
         i3 = getIntent().getStringExtra("i3");
@@ -708,14 +713,49 @@ public class EditHelp extends AppCompatActivity {
             }
         });
 
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                pBar.setVisibility(View.VISIBLE);
+
+                Call<addHelpBean> call = serviceInterface.deleteHelp(helpId);
+
+                call.enqueue(new Callback<addHelpBean>() {
+                    @Override
+                    public void onResponse(Call<addHelpBean> call, Response<addHelpBean> response) {
+
+                        Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+                        if (response.body().getStatus().equals("1"))
+                        {
+                            finish();
+                        }
+
+                        pBar.setVisibility(View.GONE);
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<addHelpBean> call, Throwable t) {
+                        pBar.setVisibility(View.GONE);
+                    }
+                });
+
+
+            }
+        });
+
     }
 
     private void setUpwidget() {
         back = findViewById(R.id.backButton);
+        delete = findViewById(R.id.delete);
         pBar = findViewById(R.id.progressBar4);
         title = findViewById(R.id.editText7);
         desc = findViewById(R.id.editText8);
         submit = findViewById(R.id.button13);
+        ptitle = findViewById(R.id.textView35);
         spinCategory = findViewById(R.id.recyclerView2);
 
         file1 = findViewById(R.id.file1);
@@ -1042,6 +1082,8 @@ public class EditHelp extends AppCompatActivity {
                     //item = String.valueOf(arg0.getItemAtPosition(position));
 
                     spinCategory.setText(item.getCategoryName());
+
+                    ptitle.setText("Edit " + item.getCategoryName() + " photos");
 
                     dialog.dismiss();
 

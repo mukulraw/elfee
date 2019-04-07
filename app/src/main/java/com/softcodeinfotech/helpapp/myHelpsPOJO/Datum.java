@@ -67,6 +67,9 @@ public class Datum {
     @SerializedName("file10")
     @Expose
     private String file10;
+    @SerializedName("address")
+    @Expose
+    private String address;
 
     public String getHelpId() {
         return helpId;
@@ -236,4 +239,11 @@ public class Datum {
         this.file10 = file10;
     }
 
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
 }
