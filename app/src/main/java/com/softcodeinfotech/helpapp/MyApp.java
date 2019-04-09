@@ -24,4 +24,10 @@ public class MyApp extends Application {
     public static Context getContext() {
         return context;
     }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.onAttach(base, "hi"));
+    }
+
 }

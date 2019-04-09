@@ -3,20 +3,14 @@ package com.softcodeinfotech.helpapp;
 
 import com.softcodeinfotech.helpapp.addHelpPOJO.addHelpBean;
 import com.softcodeinfotech.helpapp.allMessagePOJO.allMessageBean;
-import com.softcodeinfotech.helpapp.beanresponse.AddHelpListResponse;
 import com.softcodeinfotech.helpapp.beanresponse.GetforgotpassResponse;
 import com.softcodeinfotech.helpapp.beanresponse.GetmobileverifyResponse;
 import com.softcodeinfotech.helpapp.helpDataPOJO.helpDataBean;
 import com.softcodeinfotech.helpapp.myHelpsPOJO.myHelpsBean;
 import com.softcodeinfotech.helpapp.response.AadharUpdateResponse;
-import com.softcodeinfotech.helpapp.response.ForgotpassResponse;
 import com.softcodeinfotech.helpapp.response.GetAllHelperListResponse;
 import com.softcodeinfotech.helpapp.response.GetCategoryResponse;
 import com.softcodeinfotech.helpapp.response.GetIndividualUserResponse;
-import com.softcodeinfotech.helpapp.response.GethelplistResponse;
-import com.softcodeinfotech.helpapp.response.HelpDataInsertResponse;
-import com.softcodeinfotech.helpapp.response.HelpHistoryResponse;
-import com.softcodeinfotech.helpapp.response.PasswordResponse;
 import com.softcodeinfotech.helpapp.response.PasswordUpdateResponse;
 import com.softcodeinfotech.helpapp.response.ProfileResponse;
 import com.softcodeinfotech.helpapp.response.SigninResponse;
@@ -45,15 +39,7 @@ public interface ServiceInterface {
     );*/
 
 
-    //not used to be removed
-    @Multipart
-    @POST("helpapp/savepassword.php")
-    Call<PasswordResponse> savePassword(
-            @Part("email") RequestBody email,
-            @Part("password") RequestBody password
-    );
-
-   /* //not used to be removed
+    /* //not used to be removed
     @Multipart
     @POST("helpapp/profileupdate.php")
     Call<ProfileupdateResponse> saveProfile(
@@ -92,13 +78,6 @@ public interface ServiceInterface {
 
     //forgotpassword
 
-    @Multipart
-    @POST("helpapp/forgotpassword.php")
-    Call<ForgotpassResponse> forgotPassword(
-
-            @Part("email") RequestBody email
-    );
-
     //image upload
 
 
@@ -126,34 +105,7 @@ public interface ServiceInterface {
     @GET("elfee/api/getCategory.php")
     Call<GetCategoryResponse> getCategory();
 
-    //helpData Insertion
-    @Multipart
-    @POST("helpapp/helpdataInsert.php")
-    Call<HelpDataInsertResponse> helpDataInsert(
-            @Part("user_id") RequestBody user_id,
-            @Part("help_title") RequestBody help_title,
-            @Part("help_description") RequestBody help_description,
-            @Part("help_category_id") RequestBody help_category_id,
-            @Part("state") RequestBody state
-    );
-
     //get History
-
-    @Multipart
-    @POST("helpapp/help_history.php")
-    Call<HelpHistoryResponse> getHelpHistory(
-            @Part("user_id") RequestBody user_id
-    );
-
-    //get help List on main Activity
-    @Multipart
-    @POST("helpapp/get_helplist.php")
-    Call<GethelplistResponse> getHelpLitstItem(
-            @Part("catId") String state,
-            @Part("latitude") String latitude,
-            @Part("longitude") String longitude,
-            @Part("radius") String radius
-    );
 
     //get all helper List
     @Multipart
@@ -233,22 +185,6 @@ public interface ServiceInterface {
             // @Part("profilestatus") RequestBody profilestatus
     );
 
-
-    @Multipart
-    @POST("helpapp/help_datainsert.php")
-    Call<AddHelpListResponse> help_DataInsert(
-            @Part("user_id") RequestBody user_id,
-            @Part("help_title") RequestBody help_title,
-            @Part("help_description") RequestBody help_description,
-            @Part("help_category_id") RequestBody help_category_id,
-            @Part("state") RequestBody state,
-            @Part("image\"; filename=\".jpg\" ") RequestBody file,
-            @Part("address") RequestBody address,
-            @Part("latitude") RequestBody latitude,
-            @Part("longitude") RequestBody longitude
-
-
-    );
 
     @Multipart
     @POST("helpapp/all_message.php")

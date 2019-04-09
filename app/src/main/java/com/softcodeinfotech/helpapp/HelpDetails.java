@@ -1,10 +1,10 @@
 package com.softcodeinfotech.helpapp;
 
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,9 +12,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.telephony.PhoneNumberUtils;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +20,6 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -203,8 +200,9 @@ public class HelpDetails extends AppCompatActivity {
 
         call.enqueue(new Callback<helpDataBean>() {
             @Override
-            public void onResponse(Call<helpDataBean> call, Response<helpDataBean> response) {
+            public void onResponse(@NonNull Call<helpDataBean> call, @NonNull Response<helpDataBean> response) {
 
+                assert response.body() != null;
                 if (response.body().getStatus().equals("1"))
                 {
 
@@ -212,7 +210,10 @@ public class HelpDetails extends AppCompatActivity {
 
                     uname.setText(item.getUname());
                     title.setText("How for need :  " + item.getHowTo());
-                    state.setText(item.getFollowers() + " views");
+
+                    String v = item.getFollowers() + R.string.views;
+
+                    state.setText(v);
                     date.setText(item.getCreatedDate());
                     desc.setText(Html.fromHtml("Need : </br>" + item.getNeed()));
                     address.setText(Html.fromHtml("Address :  " + item.getAddress()));

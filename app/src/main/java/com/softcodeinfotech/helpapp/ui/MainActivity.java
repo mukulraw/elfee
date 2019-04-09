@@ -8,26 +8,20 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.media.Image;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -44,7 +38,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.facebook.login.Login;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -56,13 +49,10 @@ import com.google.gson.GsonBuilder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.softcodeinfotech.helpapp.KYC;
-import com.softcodeinfotech.helpapp.MessageActivity;
+import com.softcodeinfotech.helpapp.LocaleHelper;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
-import com.softcodeinfotech.helpapp.adapter.GetHelpListAdapter;
-import com.softcodeinfotech.helpapp.model.GetHelpListModel;
 import com.softcodeinfotech.helpapp.response.GetCategoryResponse;
-import com.softcodeinfotech.helpapp.response.GethelplistResponse;
 import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
 
@@ -93,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
     //BottomNavigationView bottom;
     //TextView toolbar;
 
-    ImageButton settings;
     CircleImageView image;
     TextView dName;
     TextView fabButton;
@@ -107,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     String address = "";
 
-    TextView category;
+    TextView category , language;
     TextView loca;
 
     Retrofit retrofit;
@@ -123,9 +112,6 @@ public class MainActivity extends AppCompatActivity {
     String cat = "0", rad;
 
     String TAG = "MainActivity";
-    private RecyclerView replaceRecyler;
-    private ArrayList<GetHelpListModel> mHelpDetailsList = new ArrayList<GetHelpListModel>();
-    private GetHelpListAdapter getHelpListAdapter;
 
     //location
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -141,17 +127,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         catName = new ArrayList<>();
         catId = new ArrayList<>();
 
         locName = new ArrayList<>();
         locId = new ArrayList<>();
 
-        locName.add("nearby 2 KM");
-        locName.add("nearby 5 KM");
-        locName.add("nearby 10 KM");
-        locName.add("nearby 20 KM");
-        locName.add("nearby 50 KM");
+        locName.add(getString(R.string.nearby2km));
+        locName.add(getString(R.string.nearby5km));
+        locName.add(getString(R.string.nearby10km));
+        locName.add(getString(R.string.nearby20km));
+        locName.add(getString(R.string.nearby50km));
 
         locId.add("2");
         locId.add("5");
@@ -215,7 +202,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         //retrofit
-        Gson gson = new GsonBuilder().create();
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -249,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (kycstatus.equals("0")) {
-                    Toast.makeText(MainActivity.this, "Please complete your KYC first", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.kkyycc), Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(MainActivity.this, KYC.class);
                     startActivity(intent);
@@ -326,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (kycstatus.equals("0")) {
 
-                    Toast.makeText(MainActivity.this, "Please complete your KYC first", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.kkyycc), Toast.LENGTH_LONG).show();
 
                     Intent intent = new Intent(MainActivity.this, KYC.class);
                     startActivity(intent);
@@ -377,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
         rad = "2";
         //category.setText(catName.get(0));
 
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(MainActivity.this,
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(MainActivity.this,
                 R.layout.spinner_item, locName);//setting the country_array to spinner
         // string value
         adapter1.setDropDownViewResource(R.layout.spinner_item);
@@ -434,7 +420,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        category.setText("All Categories");
+                        category.setText(getString(R.string.all_categories));
                         cat = "0";
                         FragmentManager fm1 = getSupportFragmentManager();
                         FragmentTransaction ft1 = fm1.beginTransaction();
@@ -456,11 +442,10 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                String securecode = "1234";
                 Call<GetCategoryResponse> call = serviceInterface.getCategory();
                 call.enqueue(new Callback<GetCategoryResponse>() {
                     @Override
-                    public void onResponse(Call<GetCategoryResponse> call, Response<GetCategoryResponse> response) {
+                    public void onResponse(@NonNull Call<GetCategoryResponse> call, @NonNull Response<GetCategoryResponse> response) {
                         if (response.body() != null && response.body().getStatus().equals("1")) {
 
 
@@ -475,7 +460,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<GetCategoryResponse> call, Throwable t) {
+                    public void onFailure(@NonNull Call<GetCategoryResponse> call, @NonNull Throwable t) {
 
                     }
                 });
@@ -506,6 +491,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        language.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                LocaleHelper.setLocale(MainActivity.this, "hi-rIN");
+
+                //It is required to recreate the activity to reflect the change in UI.
+                recreate();
+
+            }
+        });
 
         helpers.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -528,7 +524,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 if (kycstatus.equals("0")) {
-                    Toast.makeText(MainActivity.this, "Please complete your KYC first", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.kkyycc), Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(MainActivity.this, KYC.class);
                     startActivity(intent);
@@ -640,6 +636,7 @@ public class MainActivity extends AppCompatActivity {
         profile = findViewById(R.id.account);
         orders = findViewById(R.id.posts);
         logout = findViewById(R.id.logout);
+        language = findViewById(R.id.language);
 
 
         // settings = findViewById(R.id.imageButton6);
@@ -660,7 +657,6 @@ public class MainActivity extends AppCompatActivity {
 
         loca = findViewById(R.id.location);
         //recyler
-        replaceRecyler = findViewById(R.id.replaceRecycler);
         pBar = findViewById(R.id.pBar);
     }
 
@@ -674,21 +670,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //
-    private int GetScreenWidth() {
-        int width = 100;
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE);
-        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
-        width = displayMetrics.widthPixels;
-
-        return width;
-    }
-
     public RequestBody convertPlainString(String data) {
-        RequestBody plainString = RequestBody.create(MediaType.parse("text/plain"), data);
-        return plainString;
+        return RequestBody.create(MediaType.parse("text/plain"), data);
     }
 
 
@@ -701,13 +684,11 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case MY_PERMISSION_REQUEST_FINE_LOCATION:
 
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //permission was granted do nothing and carry on
-
-                } else {
-                    Toast.makeText(getApplicationContext(), "This app requires location permissions to be granted", Toast.LENGTH_SHORT).show();
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.permission), Toast.LENGTH_SHORT).show();
                     finish();
-                }
+                }  //permission was granted do nothing and carry on
+
 
                 break;
 
@@ -717,6 +698,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        /*LocaleHelper.setLocale(MainActivity.this, "hi");
+
+        //It is required to recreate the activity to reflect the change in UI.
+        recreate();*/
+
 
         name = SharePreferenceUtils.getInstance().getString("name");
         age = SharePreferenceUtils.getInstance().getString("dob");
@@ -741,6 +728,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         startLocationUpdates();
+
+
+
     }
 
     private void startLocationUpdates() {
@@ -764,58 +754,13 @@ public class MainActivity extends AppCompatActivity {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
     }
 
-    private void getCategoryReq() {
-        String securecode = "1234";
-        Call<GetCategoryResponse> call = serviceInterface.getCategory();
-        call.enqueue(new Callback<GetCategoryResponse>() {
-            @Override
-            public void onResponse(Call<GetCategoryResponse> call, Response<GetCategoryResponse> response) {
-                if (response.body() != null && response.body().getStatus().equals("1")) {
-                    for (int i = 0; i < response.body().getInformation().size(); i++) {
-                        catId.add(String.valueOf(response.body().getInformation().get(i).getCategoryId()));
-                        catName.add(response.body().getInformation().get(i).getCategoryName());
-                    }
-
-                    category.setText(catName.get(0));
-                    cat = catId.get(0);
-
-                    rad = "2";
-                    //category.setText(catName.get(0));
-
-                    ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(MainActivity.this,
-                            R.layout.spinner_item, locName);//setting the country_array to spinner
-                    // string value
-                    adapter1.setDropDownViewResource(R.layout.spinner_item);
-                    location.setAdapter(adapter1);
-
-
-/*
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
-                            android.R.layout.simple_spinner_item, catName);//setting the country_array to spinner
-                    // string value
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    category.setAdapter(adapter);*/
-                } else {
-                    Toast.makeText(MainActivity.this, "not inserted", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<GetCategoryResponse> call, Throwable t) {
-
-            }
-        });
-
-
-    }
-
     class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
         Context context;
-        List<GetCategoryResponse.Information> list = new ArrayList<>();
+        List<GetCategoryResponse.Information> list;
         Dialog dialog;
 
-        public CategoryAdapter(Context context, List<GetCategoryResponse.Information> list, Dialog dialog) {
+        CategoryAdapter(Context context, List<GetCategoryResponse.Information> list, Dialog dialog) {
             this.context = context;
             this.list = list;
             this.dialog = dialog;
@@ -882,7 +827,7 @@ public class MainActivity extends AppCompatActivity {
             ImageView image;
             TextView text;
 
-            public ViewHolder(@NonNull View itemView) {
+            ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 image = itemView.findViewById(R.id.imageView11);
                 text = itemView.findViewById(R.id.textView34);
@@ -937,7 +882,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return;
     }
 
 

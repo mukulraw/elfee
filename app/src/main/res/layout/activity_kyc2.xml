@@ -22,7 +22,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enter your name"
+        android:text="@string/enter_your_name"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
@@ -37,14 +37,14 @@
         android:background="@drawable/white_back_round"
         android:padding="10dp"
         android:id="@+id/name"
-        android:hint="tap to enter"
+        android:hint="@string/tap_to_enter1"
         android:lines="1"
         />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Upload your photo"
+        android:text="@string/upload_your_photo1"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
@@ -64,7 +64,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Your phone number"
+        android:text="@string/your_phone_numberq"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
@@ -89,7 +89,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enter your whatsapp number"
+        android:text="@string/enter_your_whatsapp_number1"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
@@ -128,7 +128,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enter your guardian name"
+        android:text="@string/enter_your_guardian_name1"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
@@ -144,13 +144,13 @@
         android:background="@drawable/white_back_round"
         android:padding="10dp"
         android:lines="1"
-        android:hint="tap to enter"
+        android:hint="@string/tap_to_enter"
         />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Upload his/her photo"
+        android:text="@string/upload_his_her_photo1"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
@@ -170,7 +170,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enter his/her phone number"
+            android:text="@string/enter_his_her_phone_number1"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
@@ -209,7 +209,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enter your aadhar card number"
+            android:text="@string/enter_your_aadhar_card_number1"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
@@ -225,13 +225,13 @@
             android:background="@drawable/white_back_round"
             android:lines="1"
             android:padding="10dp"
-            android:hint="tap to enter"
+            android:hint="@string/tap_to_enter"
             />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Upload your aadhar card photo"
+            android:text="@string/upload_your_aadhar_card_photo1"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
@@ -266,7 +266,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="front"
+                    android:text="@string/front"
                     android:layout_gravity="center_horizontal"
                     />
 
@@ -291,7 +291,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:text="back"
+                    android:text="@string/back"
                     android:layout_gravity="center_horizontal"
                     />
 
@@ -304,7 +304,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Upload your electricity bill/ gas bill or any other govt. bill photo with address"
+            android:text="@string/upload_your_electricity_bill_gas_bill_or_any_other_govt_bill_photo_with_address1"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
@@ -325,7 +325,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enter your D.O.B."
+            android:text="@string/enter_your_d_o_b1"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
@@ -342,14 +342,14 @@
             android:lines="1"
             android:id="@+id/dob"
             android:focusable="false"
-            android:hint="tap to enter"
+            android:hint="@string/tap_to_enter"
             />
 
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enter your profession"
+            android:text="@string/enter_your_profession1"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
@@ -363,7 +363,7 @@
             android:layout_marginEnd="8dp"
             android:background="@drawable/white_back_round"
             android:padding="10dp"
-            android:hint="tap to enter"
+            android:hint="@string/tap_to_enter"
             android:lines="1"
             android:id="@+id/profession"
             />
@@ -371,7 +371,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enter your address"
+            android:text="@string/enter_your_address1"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
@@ -387,7 +387,7 @@
             android:padding="10dp"
             android:id="@+id/address"
             android:gravity="start"
-            android:hint="tap to enter"
+            android:hint="@string/tap_to_enter"
             android:lines="3"
             />
 
@@ -405,7 +405,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:layout_gravity="center_horizontal"
-            android:text="SUBMIT"
+            android:text="@string/submit"
             android:background="@drawable/green_back_round"
             android:textColor="#ffffff"
             android:id="@+id/submit"

@@ -2,6 +2,7 @@ package com.softcodeinfotech.helpapp.ui;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,10 +14,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.adapter.GetAllHelperListAdapter;
@@ -25,6 +23,7 @@ import com.softcodeinfotech.helpapp.response.GetAllHelperListResponse;
 import com.softcodeinfotech.helpapp.util.Constant;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -50,9 +49,7 @@ public class AllHelperFragment extends Fragment {
     Retrofit retrofit;
     ServiceInterface serviceInterface;
 
-    String TAG = "AllHelperActivity";
-    private RecyclerView recycler_allhelper;
-    private ArrayList<GetAllHelperListModel> mHelperDetailsList = new ArrayList<GetAllHelperListModel>();
+    private ArrayList<GetAllHelperListModel> mHelperDetailsList = new ArrayList<>();
     private GetAllHelperListAdapter getAllHelperListAdapter;
 
     String cat , lat , lng , rad;
@@ -63,13 +60,14 @@ public class AllHelperFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
          View view = inflater.inflate(R.layout.fragment_all_helper, container, false);
 
 
-         cat = getArguments().getString("cat");
+        assert getArguments() != null;
+        cat = getArguments().getString("cat");
          lat = getArguments().getString("lat");
          lng = getArguments().getString("lng");
          rad = getArguments().getString("rad");
@@ -89,7 +87,6 @@ public class AllHelperFragment extends Fragment {
         pBar.setVisibility(View.VISIBLE);
 
 
-        Gson gson = new GsonBuilder().create();
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -101,7 +98,7 @@ public class AllHelperFragment extends Fragment {
         // Toast.makeText(this, ""+user_id, Toast.LENGTH_SHORT).show();
 
 
-        recycler_allhelper = (RecyclerView)view.findViewById(R.id.recyclerView);
+        RecyclerView recycler_allhelper = view.findViewById(R.id.recyclerView);
         LinearLayoutManager mLayoutManger = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recycler_allhelper.setLayoutManager(mLayoutManger);
         recycler_allhelper.setItemAnimator(new DefaultItemAnimator());
@@ -130,7 +127,8 @@ public class AllHelperFragment extends Fragment {
         Call<GetAllHelperListResponse> call = serviceInterface.getAllHelper(convertPlainString(profilestatus));
         call.enqueue(new Callback<GetAllHelperListResponse>() {
             @Override
-            public void onResponse(Call<GetAllHelperListResponse> call, Response<GetAllHelperListResponse> response) {
+            public void onResponse(@NonNull Call<GetAllHelperListResponse> call, @NonNull Response<GetAllHelperListResponse> response) {
+                assert response.body() != null;
                 if (response.body().getStatus().equals(1)) {
                     pBar.setVisibility(View.GONE);
                     for (int i = 0; i < response.body().getInformation().size(); i++) {
@@ -147,7 +145,7 @@ public class AllHelperFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<GetAllHelperListResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<GetAllHelperListResponse> call, @NonNull Throwable t) {
                 pBar.setVisibility(View.GONE);
                 //Toast.makeText(getContext().this, "" + t.toString(), Toast.LENGTH_SHORT).show();
 
@@ -161,15 +159,14 @@ public class AllHelperFragment extends Fragment {
 
     // convert aa param into plain text
     public RequestBody convertPlainString(String data) {
-        RequestBody plainString = RequestBody.create(MediaType.parse("text/plain"), data);
-        return plainString;
+        return RequestBody.create(MediaType.parse("text/plain"), data);
     }
 
     private int GetScreenWidth() {
-        int width = 100;
+        int width;
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) getContext().getSystemService(WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) Objects.requireNonNull(getContext()).getSystemService(WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
         width = displayMetrics.widthPixels;
 

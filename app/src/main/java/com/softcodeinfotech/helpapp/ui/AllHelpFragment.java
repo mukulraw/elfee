@@ -2,10 +2,9 @@ package com.softcodeinfotech.helpapp.ui;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.DisplayMetrics;
@@ -14,23 +13,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.GridLayoutAnimationController;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.adapter.GetHelpListAdapter;
-import com.softcodeinfotech.helpapp.model.GetHelpListModel;
 import com.softcodeinfotech.helpapp.myHelpsPOJO.Datum;
 import com.softcodeinfotech.helpapp.myHelpsPOJO.myHelpsBean;
-import com.softcodeinfotech.helpapp.response.GethelplistResponse;
 import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -48,7 +43,13 @@ import static android.content.Context.WINDOW_SERVICE;
  */
 public class AllHelpFragment extends Fragment {
 
-    String email, name, age, gender, mobile, imageurl, uid, state;
+    String email;
+    String name;
+    String age;
+    String gender;
+    String mobile;
+    String imageurl;
+    String uid;
 
     //RecylerView
     ProgressBar pBar;
@@ -60,9 +61,7 @@ public class AllHelpFragment extends Fragment {
     Retrofit retrofit;
     ServiceInterface serviceInterface;
 
-    String TAG = "MainActivity";
-    private RecyclerView replaceRecyler;
-    private ArrayList<Datum> mHelpDetailsList = new ArrayList<Datum>();
+    private ArrayList<Datum> mHelpDetailsList = new ArrayList<>();
     private GetHelpListAdapter getHelpListAdapter;
 
 
@@ -72,12 +71,13 @@ public class AllHelpFragment extends Fragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_all_help, container, false);
 
 
+        assert getArguments() != null;
         cat = getArguments().getString("cat");
         lat = getArguments().getString("lat");
         lng = getArguments().getString("lng");
@@ -85,7 +85,7 @@ public class AllHelpFragment extends Fragment {
         sta = getArguments().getString("state");
 
 
-        replaceRecyler =view.findViewById(R.id.replaceRecycler);
+        RecyclerView replaceRecyler = view.findViewById(R.id.replaceRecycler);
         pBar = view.findViewById(R.id.progressBar6);
 
         email = SharePreferenceUtils.getInstance().getString(Constant.USER_email);
@@ -101,7 +101,6 @@ public class AllHelpFragment extends Fragment {
         pBar.setVisibility(View.VISIBLE);
 
 
-        Gson gson = new GsonBuilder().create();
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
@@ -143,14 +142,16 @@ public class AllHelpFragment extends Fragment {
         Call<myHelpsBean> call = serviceInterface.allHelps(SharePreferenceUtils.getInstance().getString("userId") , sta , cat , lat , lng , rad);
         call.enqueue(new Callback<myHelpsBean>() {
             @Override
-            public void onResponse(Call<myHelpsBean> call, Response<myHelpsBean> response) {
+            public void onResponse(@NonNull Call<myHelpsBean> call, @NonNull Response<myHelpsBean> response) {
 
                 pBar.setVisibility(View.GONE);
 
-                if (response.body().getStatus().equals("1")) {
+                try {
+                    assert response.body() != null;
+                    if (response.body().getStatus().equals("1")) {
 
 
-                    getHelpListAdapter.setData(response.body().getData());
+                        getHelpListAdapter.setData(response.body().getData());
 
                     /*
                     mHelpDetailsList.addAll(response.body().getInformation());
@@ -165,15 +166,20 @@ public class AllHelpFragment extends Fragment {
                                 String.valueOf(response.body().getInformation().get(i).getUserId())));
                     }*//*
                     getHelpListAdapter.notifyDataSetChanged();*/
-                }
-                else
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext() , response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }catch (Exception e)
                 {
-                    Toast.makeText(getContext() , response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
                 }
+
             }
 
             @Override
-            public void onFailure(Call<myHelpsBean> call, Throwable t) {
+            public void onFailure(@NonNull Call<myHelpsBean> call, @NonNull Throwable t) {
                 pBar.setVisibility(View.GONE);
                // Toast.makeText(MainActivity.this, "" + t.toString(), Toast.LENGTH_SHORT).show();
 
@@ -183,10 +189,10 @@ public class AllHelpFragment extends Fragment {
     }
 
     private int GetScreenWidth() {
-        int width = 100;
+        int width;
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) getContext().getSystemService(WINDOW_SERVICE);
+        WindowManager windowManager = (WindowManager) Objects.requireNonNull(getContext()).getSystemService(WINDOW_SERVICE);
         windowManager.getDefaultDisplay().getMetrics(displayMetrics);
         width = displayMetrics.widthPixels;
 
@@ -194,8 +200,7 @@ public class AllHelpFragment extends Fragment {
     }
 
     public RequestBody convertPlainString(String data) {
-        RequestBody plainString = RequestBody.create(MediaType.parse("text/plain"), data);
-        return plainString;
+        return RequestBody.create(MediaType.parse("text/plain"), data);
     }
 
 }

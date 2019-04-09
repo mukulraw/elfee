@@ -11,16 +11,12 @@ import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.view.GravityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,26 +24,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.softcodeinfotech.helpapp.KYC;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.addHelpPOJO.addHelpBean;
-import com.softcodeinfotech.helpapp.beanresponse.AddHelpListResponse;
 import com.softcodeinfotech.helpapp.response.GetCategoryResponse;
-import com.softcodeinfotech.helpapp.response.HelpDataInsertResponse;
 import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
 
@@ -56,9 +46,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -72,7 +62,6 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class AddHelpActivity extends AppCompatActivity {
     private static final String TAG = "addHelp";
-    private static final int IMAGE_PICKER = 1;
     ImageButton back;
     ProgressBar pBar;
     TextView spinCategory;
@@ -80,7 +69,12 @@ public class AddHelpActivity extends AppCompatActivity {
     //currentAddress;
     Button submit;
 
-    String mUserid, mTitle, mDesc, mCatId, mState, item2, mCurrentAddress;
+    String mUserid;
+    String mTitle;
+    String mDesc;
+    String mCatId;
+    String mState;
+    String mCurrentAddress;
 
     ArrayList<String> catId = new ArrayList<>();
     ArrayList<String> catName = new ArrayList<>();
@@ -186,11 +180,10 @@ public class AddHelpActivity extends AppCompatActivity {
 
                 final GridLayoutManager manager = new GridLayoutManager(AddHelpActivity.this, 3);
 
-                String securecode = "1234";
                 Call<GetCategoryResponse> call = serviceInterface.getCategory();
                 call.enqueue(new Callback<GetCategoryResponse>() {
                     @Override
-                    public void onResponse(Call<GetCategoryResponse> call, Response<GetCategoryResponse> response) {
+                    public void onResponse(@NonNull Call<GetCategoryResponse> call, @NonNull Response<GetCategoryResponse> response) {
                         if (response.body() != null && response.body().getStatus().equals("1")) {
 
 
@@ -205,7 +198,7 @@ public class AddHelpActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<GetCategoryResponse> call, Throwable t) {
+                    public void onFailure(@NonNull Call<GetCategoryResponse> call, Throwable t) {
 
                     }
                 });
@@ -402,7 +395,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
                     call.enqueue(new Callback<addHelpBean>() {
                         @Override
-                        public void onResponse(Call<addHelpBean> call, Response<addHelpBean> response) {
+                        public void onResponse(@NonNull Call<addHelpBean> call, @NonNull Response<addHelpBean> response) {
 
 
                             if (response.body().getStatus().equals("1"))
@@ -422,7 +415,7 @@ public class AddHelpActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(Call<addHelpBean> call, Throwable t) {
+                        public void onFailure(@NonNull Call<addHelpBean> call, @NonNull Throwable t) {
                             pBar.setVisibility(View.GONE);
                         }
                     });
@@ -783,7 +776,6 @@ public class AddHelpActivity extends AppCompatActivity {
                 address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
                 String city = addresses.get(0).getLocality();
                 String state = addresses.get(0).getAdminArea();
-                String country = addresses.get(0).getCountryName();
                 String postalCode = addresses.get(0).getPostalCode();
                 String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
 
@@ -802,14 +794,6 @@ public class AddHelpActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return;
-    }
-
-    //image load
-    private void OpenGallery() {
-        //opening file chooser
-        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, 100);
     }
 
     @Override
@@ -822,6 +806,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(uri1, filePath, null, null, null);
+            assert cursor != null;
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
@@ -845,6 +830,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(uri2, filePath, null, null, null);
+            assert cursor != null;
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
@@ -868,6 +854,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(uri3, filePath, null, null, null);
+            assert cursor != null;
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
@@ -890,6 +877,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(uri4, filePath, null, null, null);
+            assert cursor != null;
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
@@ -912,6 +900,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(uri5, filePath, null, null, null);
+            assert cursor != null;
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
@@ -935,6 +924,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(uri6, filePath, null, null, null);
+            assert cursor != null;
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
@@ -958,6 +948,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(uri7, filePath, null, null, null);
+            assert cursor != null;
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
@@ -981,6 +972,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(uri8, filePath, null, null, null);
+            assert cursor != null;
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
@@ -1004,6 +996,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(uri9, filePath, null, null, null);
+            assert cursor != null;
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
@@ -1027,6 +1020,7 @@ public class AddHelpActivity extends AppCompatActivity {
 
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(uri10, filePath, null, null, null);
+            assert cursor != null;
             cursor.moveToFirst();
             String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
 
@@ -1045,43 +1039,43 @@ public class AddHelpActivity extends AppCompatActivity {
 
         }
         else if (requestCode == 1 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             file1.setImageBitmap(photo);
         }
         else if (requestCode == 3 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             file2.setImageBitmap(photo);
         }
         else if (requestCode == 5 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             file3.setImageBitmap(photo);
         }
         else if (requestCode == 7 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             file4.setImageBitmap(photo);
         }
         else if (requestCode == 9 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             file5.setImageBitmap(photo);
         }
         else if (requestCode == 11 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             file6.setImageBitmap(photo);
         }
         else if (requestCode == 13 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             file7.setImageBitmap(photo);
         }
         else if (requestCode == 15 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             file8.setImageBitmap(photo);
         }
         else if (requestCode == 17 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             file9.setImageBitmap(photo);
         }
         else if (requestCode == 19 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
             file10.setImageBitmap(photo);
         }
 
@@ -1132,25 +1126,13 @@ public class AddHelpActivity extends AppCompatActivity {
     }*/
 
 
-    //This method is fetching the absolute path of the image file
-    private String getRealPathFromURI(Uri contentUri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        CursorLoader loader = new CursorLoader(this, contentUri, proj, null, null, null);
-        Cursor cursor = loader.loadInBackground();
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        String result = cursor.getString(column_index);
-        cursor.close();
-        return result;
-    }
-
     class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
         Context context;
-        List<GetCategoryResponse.Information> list = new ArrayList<>();
+        List<GetCategoryResponse.Information> list;
         Dialog dialog;
 
-        public CategoryAdapter(Context context, List<GetCategoryResponse.Information> list, Dialog dialog) {
+        CategoryAdapter(Context context, List<GetCategoryResponse.Information> list, Dialog dialog) {
             this.context = context;
             this.list = list;
             this.dialog = dialog;
@@ -1204,7 +1186,7 @@ public class AddHelpActivity extends AppCompatActivity {
             ImageView image;
             TextView text;
 
-            public ViewHolder(@NonNull View itemView) {
+            ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 image = itemView.findViewById(R.id.imageView11);
                 text = itemView.findViewById(R.id.textView34);
@@ -1213,7 +1195,6 @@ public class AddHelpActivity extends AppCompatActivity {
     }
 
     private static String getPath(final Context context, final Uri uri) {
-        final boolean isKitKatOrAbove = true;
 
         // DocumentProvider
         if (DocumentsContract.isDocumentUri(context, uri)) {
@@ -1296,39 +1277,18 @@ public class AddHelpActivity extends AppCompatActivity {
     private static String getDataColumn(Context context, Uri uri, String selection,
                                         String[] selectionArgs) {
 
-        Cursor cursor = null;
         final String column = "_data";
         final String[] projection = {
                 column
         };
-
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
+        try (Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 final int column_index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(column_index);
             }
-        } finally {
-            if (cursor != null)
-                cursor.close();
         }
         return null;
-    }
-
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        float bitmapRatio = (float) width / (float) height;
-        if (bitmapRatio > 1) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
 }

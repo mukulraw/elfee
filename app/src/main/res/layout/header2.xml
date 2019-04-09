@@ -32,7 +32,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="asdadasd"
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="@+id/imageButton10"
         app:layout_constraintStart_toEndOf="@+id/imageButton10"
