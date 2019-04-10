@@ -1,6 +1,7 @@
 package com.softcodeinfotech.helpapp.ui;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -56,10 +58,17 @@ public class LoginActivity extends AppCompatActivity {
 
         code.registerPhoneNumberTextView(mobile);
 
+        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .readTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .build();
+
         Gson gson = new GsonBuilder().create();
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.BASE_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
                 .build();
 
         serviceInterface = retrofit.create(ServiceInterface.class);
@@ -102,7 +111,8 @@ public class LoginActivity extends AppCompatActivity {
         Call<SigninResponse> call = serviceInterface.userlogin(convertPlainString(mMobile));
         call.enqueue(new Callback<SigninResponse>() {
             @Override
-            public void onResponse(Call<SigninResponse> call, Response<SigninResponse> response) {
+            public void onResponse(@NonNull Call<SigninResponse> call, @NonNull Response<SigninResponse> response) {
+                assert response.body() != null;
                 if (response.body().getStatus().equals("1")) {
                     pBar.setVisibility(View.GONE);
                     //Toast.makeText(LoginActivity.this, "userid"+response.body().getInformation().getdUserId(), Toast.LENGTH_SHORT).show();
@@ -131,9 +141,10 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<SigninResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<SigninResponse> call, @NonNull Throwable t) {
                 pBar.setVisibility(View.GONE);
-                Toast.makeText(LoginActivity.this, "Invalid Details", Toast.LENGTH_SHORT).show();
+                Log.d("faiulure" , t.toString());
+                Toast.makeText(LoginActivity.this, "Some error occurred", Toast.LENGTH_SHORT).show();
                 //Toast.makeText(LoginActivity.this, "" + t.toString(), Toast.LENGTH_SHORT).show();
             }
         });

@@ -209,15 +209,15 @@ public class HelpDetails extends AppCompatActivity {
                     Datum item = response.body().getData().get(0);
 
                     uname.setText(item.getUname());
-                    title.setText("How for need :  " + item.getHowTo());
+                    title.setText(getString(R.string.how_for_need) + item.getHowTo());
 
                     String v = item.getFollowers() + R.string.views;
 
                     state.setText(v);
                     date.setText(item.getCreatedDate());
-                    desc.setText(Html.fromHtml("Need : </br>" + item.getNeed()));
-                    address.setText(Html.fromHtml("Address :  " + item.getAddress()));
-                    cat.setText("Category :  " + item.getCategory());
+                    desc.setText(Html.fromHtml(getString(R.string.needd) + item.getNeed()));
+                    address.setText(Html.fromHtml(getString(R.string.addrreess) + item.getAddress()));
+                    cat.setText(getString(R.string.catt) + item.getCategory());
 
                     uphone = item.getUphone();
                     wphone = item.getWphone();

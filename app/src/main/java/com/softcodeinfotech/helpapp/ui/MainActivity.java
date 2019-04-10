@@ -5,6 +5,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -28,6 +31,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -96,8 +100,10 @@ public class MainActivity extends AppCompatActivity {
 
     String address = "";
 
-    TextView category , language;
+    TextView category;
     TextView loca;
+
+    TextView language;
 
     Retrofit retrofit;
     ServiceInterface serviceInterface;
@@ -126,6 +132,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
 
 
         catName = new ArrayList<>();
@@ -491,17 +500,89 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         language.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                LocaleHelper.setLocale(MainActivity.this, "hi-rIN");
 
-                //It is required to recreate the activity to reflect the change in UI.
-                recreate();
+                Dialog dialog = new Dialog(MainActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(true);
+                dialog.setContentView(R.layout.language_dialog);
+                dialog.show();
+
+                final Button en = dialog.findViewById(R.id.button17);
+                final Button hi = dialog.findViewById(R.id.button18);
+
+                String l = SharePreferenceUtils.getInstance().getString("lang");
+
+                if (l.equals("en"))
+                {
+                    en.setBackground(getResources().getDrawable(R.drawable.green_back_round));
+                    hi.setBackground(getResources().getDrawable(R.drawable.white_back_round));
+                    en.setTextColor(Color.WHITE);
+                    hi.setTextColor(Color.BLACK);
+                }
+                else
+                {
+                    en.setBackground(getResources().getDrawable(R.drawable.white_back_round));
+                    hi.setBackground(getResources().getDrawable(R.drawable.green_back_round));
+                    en.setTextColor(Color.BLACK);
+                    hi.setTextColor(Color.WHITE);
+                }
+
+                en.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        en.setBackground(getResources().getDrawable(R.drawable.green_back_round));
+                        hi.setBackground(getResources().getDrawable(R.drawable.white_back_round));
+                        en.setTextColor(Color.WHITE);
+                        hi.setTextColor(Color.BLACK);
+
+                        String languageToLoad  = "en"; // your language
+                        Locale locale = new Locale(languageToLoad);
+                        Locale.setDefault(locale);
+                        Configuration config = new Configuration();
+                        config.locale = locale;
+                        getBaseContext().getResources().updateConfiguration(config,
+                                getBaseContext().getResources().getDisplayMetrics());
+
+                        SharePreferenceUtils.getInstance().saveString("lang" , languageToLoad);
+
+                        recreate();
+
+                    }
+                });
+
+                hi.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        en.setBackground(getResources().getDrawable(R.drawable.white_back_round));
+                        hi.setBackground(getResources().getDrawable(R.drawable.green_back_round));
+                        en.setTextColor(Color.BLACK);
+                        hi.setTextColor(Color.WHITE);
+
+                        String languageToLoad  = "hi"; // your language
+                        Locale locale = new Locale(languageToLoad);
+                        Locale.setDefault(locale);
+                        Configuration config = new Configuration();
+                        config.locale = locale;
+                        getBaseContext().getResources().updateConfiguration(config,
+                                getBaseContext().getResources().getDisplayMetrics());
+
+                        SharePreferenceUtils.getInstance().saveString("lang" , languageToLoad);
+
+                        recreate();
+
+                    }
+                });
 
             }
         });
+
 
         helpers.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -699,10 +780,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+
         /*LocaleHelper.setLocale(MainActivity.this, "hi");
 
         //It is required to recreate the activity to reflect the change in UI.
         recreate();*/
+
 
 
         name = SharePreferenceUtils.getInstance().getString("name");

@@ -99,6 +99,10 @@
     <string name="nearby50km">nearby 50 KM</string>
     <string name="kkyycc">Please complete your KYC first</string>
     <string name="permission">This app requires location permissions to be granted</string>
+    <string name="how_for_need">How for need :</string>
+    <string name="needd"><![CDATA[Need : </br>]]></string>
+    <string name="catt">Category :</string>
+    <string name="addrreess">Address :</string>
 
 
 </resources>
