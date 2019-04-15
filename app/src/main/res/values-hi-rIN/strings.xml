@@ -105,6 +105,9 @@
     <string name="catt">"वर्ग : "</string>
     <string name="addrreess">"पता: "</string>
     <string name="this_help_has_completed">यह मदद पूरी हो गई है</string>
+    <string name="ok">ठीक</string>
+    <string name="your_help_has_been_posted_successfully">आपकी सहायता सफलतापूर्वक पोस्ट की गई है</string>
+    <string name="your_help_has_been_updated_successfully">आपकी सहायता को सफलतापूर्वक अपडेट कर दिया गया है</string>
 
 
 </resources>

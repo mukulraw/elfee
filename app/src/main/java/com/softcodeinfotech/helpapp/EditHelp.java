@@ -409,7 +409,9 @@ public class EditHelp extends AppCompatActivity {
 
                             if (response.body().getStatus().equals("1")) {
 
-                                Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                Intent intent1 = new Intent(EditHelp.this , Success.class);
+                                intent1.putExtra("ii" , "2");
+                                startActivity(intent1);
                                 finish();
                             } else {
                                 Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();

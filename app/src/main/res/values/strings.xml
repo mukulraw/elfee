@@ -104,6 +104,9 @@
     <string name="catt">"Category : "</string>
     <string name="addrreess">Address :</string>
     <string name="this_help_has_completed">This help has completed</string>
+    <string name="ok">OK</string>
+    <string name="your_help_has_been_posted_successfully">Your help has been posted successfully</string>
+    <string name="your_help_has_been_updated_successfully">your help has been updated successfully</string>
 
 
 </resources>

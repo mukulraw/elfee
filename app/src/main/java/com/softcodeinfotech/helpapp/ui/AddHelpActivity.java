@@ -42,6 +42,7 @@ import com.softcodeinfotech.helpapp.BuildConfig;
 import com.softcodeinfotech.helpapp.EditHelp;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
+import com.softcodeinfotech.helpapp.Success;
 import com.softcodeinfotech.helpapp.addHelpPOJO.addHelpBean;
 import com.softcodeinfotech.helpapp.response.GetCategoryResponse;
 import com.softcodeinfotech.helpapp.util.Constant;
@@ -128,7 +129,7 @@ public class AddHelpActivity extends AppCompatActivity {
         getData();
         pBar.dismiss();
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         lati = intent.getStringExtra("lati");
         longi = intent.getStringExtra("longi");
 
@@ -435,8 +436,9 @@ public class AddHelpActivity extends AppCompatActivity {
 
                             if (response.body().getStatus().equals("1"))
                             {
-
-                                Toast.makeText(AddHelpActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+Intent intent1 = new Intent(AddHelpActivity.this , Success.class);
+intent1.putExtra("ii" , "1");
+startActivity(intent1);
                                 finish();
                             }
                             else

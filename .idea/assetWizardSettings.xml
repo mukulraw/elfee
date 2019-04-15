@@ -147,8 +147,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_shopping_cart" />
-                            <entry key="sourceFile" value="C:\Users\mukul\Downloads\shopping-cart.svg" />
+                            <entry key="outputName" value="ic_checked" />
+                            <entry key="sourceFile" value="C:\Users\mukul\Downloads\checked.svg" />
                           </map>
                         </option>
                       </PersistentState>
