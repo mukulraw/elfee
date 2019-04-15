@@ -1,10 +1,12 @@
 package com.softcodeinfotech.helpapp;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -39,6 +41,7 @@ import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
@@ -57,7 +60,7 @@ public class EditHelp extends AppCompatActivity {
     private static final String TAG = "editHelp";
     private static final int IMAGE_PICKER = 1;
     ImageButton back , delete;
-    ProgressBar pBar;
+    ProgressDialog pBar;
     TextView spinCategory;
     EditText title, desc;
     //currentAddress;
@@ -83,6 +86,13 @@ public class EditHelp extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String languageToLoad  = SharePreferenceUtils.getInstance().getString("lang"); // your language
+        Locale locale = new Locale(languageToLoad);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_help);
 
@@ -91,7 +101,7 @@ public class EditHelp extends AppCompatActivity {
 
         setUpwidget();
         getData();
-        pBar.setVisibility(View.GONE);
+        pBar.dismiss();
 
 
         mCatId = getIntent().getStringExtra("catId");
@@ -219,7 +229,7 @@ public class EditHelp extends AppCompatActivity {
                     Toast.makeText(EditHelp.this, "Invalid need", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    pBar.setVisibility(View.VISIBLE);
+                    pBar.show();
                     getData();
                     //   Toast.makeText(EditHelp.this, ""+mCatId+""+mUserid+""+mTitle+""+
                     //          ""+mDesc+""+mState, Toast.LENGTH_SHORT).show();
@@ -406,13 +416,13 @@ public class EditHelp extends AppCompatActivity {
                             }
 
 
-                            pBar.setVisibility(View.GONE);
+                            pBar.dismiss();
 
                         }
 
                         @Override
                         public void onFailure(Call<addHelpBean> call, Throwable t) {
-                            pBar.setVisibility(View.GONE);
+                            pBar.dismiss();
                         }
                     });
 
@@ -717,7 +727,7 @@ public class EditHelp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                pBar.setVisibility(View.VISIBLE);
+                pBar.show();
 
                 Call<addHelpBean> call = serviceInterface.deleteHelp(helpId);
 
@@ -732,13 +742,13 @@ public class EditHelp extends AppCompatActivity {
                             finish();
                         }
 
-                        pBar.setVisibility(View.GONE);
+                        pBar.dismiss();
 
                     }
 
                     @Override
                     public void onFailure(Call<addHelpBean> call, Throwable t) {
-                        pBar.setVisibility(View.GONE);
+                        pBar.dismiss();
                     }
                 });
 
@@ -751,7 +761,13 @@ public class EditHelp extends AppCompatActivity {
     private void setUpwidget() {
         back = findViewById(R.id.backButton);
         delete = findViewById(R.id.delete);
-        pBar = findViewById(R.id.progressBar4);
+        pBar = new ProgressDialog(this);
+
+        pBar.setMessage("Please wait...");
+        pBar.setCancelable(false);
+        pBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pBar.setIndeterminate(false);
+
         title = findViewById(R.id.editText7);
         desc = findViewById(R.id.editText8);
         submit = findViewById(R.id.button13);

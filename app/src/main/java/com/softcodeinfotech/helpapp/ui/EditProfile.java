@@ -2,6 +2,7 @@ package com.softcodeinfotech.helpapp.ui;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,6 +22,7 @@ import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
 import com.softcodeinfotech.helpapp.verifyPOJO.verifyBean;
 
+import java.util.Locale;
 import java.util.Objects;
 
 import belka.us.androidtoggleswitch.widgets.ToggleSwitch;
@@ -49,6 +51,13 @@ public class EditProfile extends AppCompatActivity {
     ProgressBar bar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String languageToLoad  = SharePreferenceUtils.getInstance().getString("lang"); // your language
+        Locale locale = new Locale(languageToLoad);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.editprofile);
 

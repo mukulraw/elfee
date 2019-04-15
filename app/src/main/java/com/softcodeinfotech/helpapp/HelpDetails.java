@@ -3,6 +3,7 @@ package com.softcodeinfotech.helpapp;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +37,10 @@ import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import me.relex.circleindicator.CircleIndicator;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -61,13 +65,28 @@ public class HelpDetails extends AppCompatActivity {
 
     CardView profile;
 
+
+    CircleIndicator indicator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String languageToLoad  = SharePreferenceUtils.getInstance().getString("lang"); // your language
+        Locale locale = new Locale(languageToLoad);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_details);
 
+
+
+
+
         hid = getIntent().getStringExtra("hid");
 
+        indicator = findViewById(R.id.indicator);
         title = findViewById(R.id.textView19);
         state = findViewById(R.id.textView18);
         date = findViewById(R.id.textView23);
@@ -211,7 +230,7 @@ public class HelpDetails extends AppCompatActivity {
                     uname.setText(item.getUname());
                     title.setText(getString(R.string.how_for_need) + item.getHowTo());
 
-                    String v = item.getFollowers() + R.string.views;
+                    String v = item.getFollowers() + getString(R.string.views);
 
                     state.setText(v);
                     date.setText(item.getCreatedDate());
@@ -235,34 +254,37 @@ public class HelpDetails extends AppCompatActivity {
 
                     if (item.getFile1().length() > 0) {
                         iimm.add(item.getFile1());
-                    } else if (item.getFile2().length() > 0) {
+                    }
+                    if (item.getFile2().length() > 0) {
                         iimm.add(item.getFile2());
-                    } else if (item.getFile3().length() > 0) {
+                    }
+                    if (item.getFile3().length() > 0) {
                         iimm.add(item.getFile3());
-                    } else if (item.getFile4().length() > 0) {
+                    }
+                    if (item.getFile4().length() > 0) {
                         iimm.add(item.getFile4());
-                    } else if (item.getFile5().length() > 0) {
+                    } if (item.getFile5().length() > 0) {
                         iimm.add(item.getFile5());
-                    } else if (item.getFile6().length() > 0) {
+                    } if (item.getFile6().length() > 0) {
                         iimm.add(item.getFile6());
-                    } else if (item.getFile7().length() > 0) {
+                    } if (item.getFile7().length() > 0) {
                         iimm.add(item.getFile7());
-                    } else if (item.getFile8().length() > 0) {
+                    } if (item.getFile8().length() > 0) {
                         iimm.add(item.getFile8());
-                    } else if (item.getFile9().length() > 0) {
+                    } if (item.getFile9().length() > 0) {
                         iimm.add(item.getFile9());
-                    } else if (item.getFile10().length() > 0) {
+                    } if (item.getFile10().length() > 0) {
                         iimm.add(item.getFile10());
                     }
-                    else
-                    {
-                        iimm.add("adad");
-                    }
 
+
+                    Log.d("sizzee" , String.valueOf(iimm.size()));
 
                     PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager() , iimm);
 
                     pager.setAdapter(adapter);
+
+                    indicator.setViewPager(pager);
 
 
 
@@ -289,22 +311,12 @@ public class HelpDetails extends AppCompatActivity {
         startActivity(browserIntent);
     }
 
-    private boolean whatsappInstalledOrNot(String uri) {
-        PackageManager pm = getPackageManager();
-        boolean app_installed = false;
-        try {
-            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
-            app_installed = true;
-        } catch (PackageManager.NameNotFoundException e) {
-            app_installed = false;
-        }
-        return app_installed;
-    }
+
 
 
     class PagerAdapter extends FragmentStatePagerAdapter
     {
-        List<String> images = new ArrayList<>();
+        List<String> images;
 
         public PagerAdapter(FragmentManager fm , List<String> images) {
             super(fm);
@@ -350,4 +362,9 @@ public class HelpDetails extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 }

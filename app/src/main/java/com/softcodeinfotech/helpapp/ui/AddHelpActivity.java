@@ -1,10 +1,12 @@
 package com.softcodeinfotech.helpapp.ui;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -53,6 +55,10 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import pl.gumyns.retrofit_progress.ProgressConverterFactory;
+import pl.gumyns.retrofit_progress.ProgressInterceptor;
+import pl.gumyns.retrofit_progress.ProgressListener;
+import pl.gumyns.retrofit_progress.ProgressListenerPool;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,7 +69,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 public class AddHelpActivity extends AppCompatActivity {
     private static final String TAG = "addHelp";
     ImageButton back;
-    ProgressBar pBar;
+    ProgressDialog pBar;
     TextView spinCategory;
     EditText title, desc;
     //currentAddress;
@@ -96,14 +102,24 @@ public class AddHelpActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String languageToLoad  = SharePreferenceUtils.getInstance().getString("lang"); // your language
+        Locale locale = new Locale(languageToLoad);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_help);
+
+
+
         catId = new ArrayList<>();
         catName = new ArrayList<>();
 
         setUpwidget();
         getData();
-        pBar.setVisibility(View.GONE);
+        pBar.dismiss();
 
         Intent intent = getIntent();
         lati = intent.getStringExtra("lati");
@@ -133,11 +149,17 @@ public class AddHelpActivity extends AppCompatActivity {
                 .readTimeout(60, TimeUnit.SECONDS)
                 .build();
 
+
+        ProgressListenerPool pool = new ProgressListenerPool();
+
+
+
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(okHttpClient)
+                .client(new OkHttpClient.Builder().addInterceptor(new ProgressInterceptor(pool)).build())
+                .addConverterFactory(new ProgressConverterFactory(pool))
                 .build();
 
         serviceInterface = retrofit.create(ServiceInterface.class);
@@ -219,7 +241,7 @@ public class AddHelpActivity extends AppCompatActivity {
                     Toast.makeText(AddHelpActivity.this, "Invalid need", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    pBar.setVisibility(View.VISIBLE);
+                    pBar.show();
                     getData();
                     //   Toast.makeText(AddHelpActivity.this, ""+mCatId+""+mUserid+""+mTitle+""+
                     //          ""+mDesc+""+mState, Toast.LENGTH_SHORT).show();
@@ -410,13 +432,13 @@ public class AddHelpActivity extends AppCompatActivity {
                             }
 
 
-                            pBar.setVisibility(View.GONE);
+                            pBar.dismiss();
 
                         }
 
                         @Override
                         public void onFailure(@NonNull Call<addHelpBean> call, @NonNull Throwable t) {
-                            pBar.setVisibility(View.GONE);
+                            pBar.dismiss();
                         }
                     });
 
@@ -730,7 +752,14 @@ public class AddHelpActivity extends AppCompatActivity {
 
     private void setUpwidget() {
         back = findViewById(R.id.backButton);
-        pBar = findViewById(R.id.progressBar4);
+        pBar = new ProgressDialog(this);
+
+        pBar.setMessage("Please wait...");
+        pBar.setCancelable(false);
+        pBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pBar.setIndeterminate(false);
+
+
         title = findViewById(R.id.editText7);
         desc = findViewById(R.id.editText8);
         submit = findViewById(R.id.button13);
@@ -1291,5 +1320,10 @@ public class AddHelpActivity extends AppCompatActivity {
         return null;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 }
 

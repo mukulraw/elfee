@@ -100,6 +100,10 @@
     <string name="nearby50km">पास के 50 के.एम.</string>
     <string name="kkyycc">कृपया अपना केवाईसी पूरा करें</string>
     <string name="permission">इस एप्लिकेशन को स्थान अनुमतियों की आवश्यकता है</string>
+    <string name="how_for_need">जरूरत के लिए कैसे:</string>
+    <string name="needd">"आवश्यकता: "</string>
+    <string name="catt">"वर्ग : "</string>
+    <string name="addrreess">"पता: "</string>
 
 
 </resources>

@@ -1,10 +1,12 @@
 package com.softcodeinfotech.helpapp;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -28,6 +30,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.rilixtech.CountryCodePicker;
 import com.softcodeinfotech.helpapp.ui.EditProfile;
 import com.softcodeinfotech.helpapp.ui.MainActivity;
@@ -39,6 +43,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.Objects;
 
 import okhttp3.MediaType;
@@ -60,11 +65,18 @@ public class KYC extends AppCompatActivity {
     Button submit;
 
     Uri yuri, guri, afuri, aburi, euri;
-    ProgressBar progress;
+    ProgressDialog progress;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String languageToLoad  = SharePreferenceUtils.getInstance().getString("lang"); // your language
+        Locale locale = new Locale(languageToLoad);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_kyc2);
 
@@ -86,7 +98,12 @@ public class KYC extends AppCompatActivity {
         aback = findViewById(R.id.aback);
         eimage = findViewById(R.id.eimage);
         submit = findViewById(R.id.submit);
-        progress = findViewById(R.id.progress);
+        progress = new ProgressDialog(this);
+        progress.setMessage("Please wait...");
+        progress.setCancelable(false);
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setIndeterminate(false);
+
 
         wcode.registerPhoneNumberTextView(wphone);
         gcode.registerPhoneNumberTextView(gphone);
@@ -295,7 +312,7 @@ public class KYC extends AppCompatActivity {
 
                                                                 if (ad.length() > 0) {
 
-                                                                    progress.setVisibility(View.VISIBLE);
+                                                                    progress.show();
 
 
 
@@ -397,12 +414,12 @@ public class KYC extends AppCompatActivity {
                                                                                 Toast.makeText(KYC.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                                                             }
 
-                                                                            progress.setVisibility(View.GONE);
+                                                                            progress.dismiss();
                                                                         }
 
                                                                         @Override
                                                                         public void onFailure(Call<verifyBean> call, Throwable t) {
-                                                                            progress.setVisibility(View.GONE);
+                                                                            progress.dismiss();
                                                                         }
                                                                     });
 
@@ -490,6 +507,7 @@ public class KYC extends AppCompatActivity {
             }
         });
 
+        loadData();
 
     }
 
@@ -762,5 +780,30 @@ public class KYC extends AppCompatActivity {
         }
         return Bitmap.createScaledBitmap(image, width, height, true);
     }
+
+    void loadData()
+    {
+
+        name.setText(SharePreferenceUtils.getInstance().getString("name"));
+        phone.setText(SharePreferenceUtils.getInstance().getString(Constant.USER_mobile));
+        wphone.setText(SharePreferenceUtils.getInstance().getString("wphone"));
+        gname.setText(SharePreferenceUtils.getInstance().getString("g_name"));
+        gphone.setText(SharePreferenceUtils.getInstance().getString("gphone"));
+        aadhar.setText(SharePreferenceUtils.getInstance().getString("aadhar"));
+        dob.setText(SharePreferenceUtils.getInstance().getString("dob"));
+        profession.setText(SharePreferenceUtils.getInstance().getString("profession"));
+        address.setText(SharePreferenceUtils.getInstance().getString("address"));
+
+
+        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
+        ImageLoader loader = ImageLoader.getInstance();
+        loader.displayImage(SharePreferenceUtils.getInstance().getString("gimage") , gimage , options);
+        loader.displayImage(SharePreferenceUtils.getInstance().getString("afront") , afront , options);
+        loader.displayImage(SharePreferenceUtils.getInstance().getString("aback") , aback , options);
+        loader.displayImage(SharePreferenceUtils.getInstance().getString("eimage") , eimage , options);
+
+
+    }
+
 }
 
