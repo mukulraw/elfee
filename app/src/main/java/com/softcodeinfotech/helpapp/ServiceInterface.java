@@ -298,6 +298,12 @@ public interface ServiceInterface {
     );
 
     @Multipart
+    @POST("elfee/api/complete_help.php")
+    Call<addHelpBean> completeHelp(
+            @Part("helpId") String helpId
+    );
+
+    @Multipart
     @POST("elfee/api/delete_help.php")
     Call<addHelpBean> deleteHelp(
             @Part("helpId") String helpId

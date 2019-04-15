@@ -50,13 +50,13 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class HelpDetails extends AppCompatActivity {
 
-    TextView title , state , date , desc ,address , cat;
+    TextView title, state, date, desc, address, cat;
 
     ViewPager pager;
 
-    String hid , uphone , wphone , dob , image;
+    String hid, uphone, wphone, dob, image;
 
-    Button chat , call , whatsapp;
+    Button chat, call, whatsapp, completed;
 
     CircleImageView pic;
     TextView uname;
@@ -70,7 +70,7 @@ public class HelpDetails extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        String languageToLoad  = SharePreferenceUtils.getInstance().getString("lang"); // your language
+        String languageToLoad = SharePreferenceUtils.getInstance().getString("lang"); // your language
         Locale locale = new Locale(languageToLoad);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
@@ -79,9 +79,6 @@ public class HelpDetails extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_help_details);
-
-
-
 
 
         hid = getIntent().getStringExtra("hid");
@@ -96,12 +93,12 @@ public class HelpDetails extends AppCompatActivity {
         cat = findViewById(R.id.textView46);
         pic = findViewById(R.id.profile);
         uname = findViewById(R.id.username);
+        completed = findViewById(R.id.imageButton8);
 
         profile = findViewById(R.id.textView22);
         chat = findViewById(R.id.imageButton7);
         call = findViewById(R.id.imageButton2);
         whatsapp = findViewById(R.id.imageButton9);
-
 
 
         call.setOnClickListener(new View.OnClickListener() {
@@ -113,7 +110,6 @@ public class HelpDetails extends AppCompatActivity {
 
                     Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + uphone));
                     startActivity(intent);
-
 
 
                 } catch (Exception e) {
@@ -168,8 +164,7 @@ public class HelpDetails extends AppCompatActivity {
 
                         String m = mess.getText().toString();
 
-                        if (m.length() > 0)
-                        {
+                        if (m.length() > 0) {
 
                             Retrofit retrofit = new Retrofit.Builder()
                                     .baseUrl(Constant.BASE_URL)
@@ -180,7 +175,7 @@ public class HelpDetails extends AppCompatActivity {
                             ServiceInterface serviceInterface = retrofit.create(ServiceInterface.class);
 
 
-                            Call<sendMessageBean> call = serviceInterface.sendMessage(SharePreferenceUtils.getInstance().getString(Constant.USER_id), uid , m);
+                            Call<sendMessageBean> call = serviceInterface.sendMessage(SharePreferenceUtils.getInstance().getString(Constant.USER_id), uid, m);
 
                             call.enqueue(new Callback<sendMessageBean>() {
                                 @Override
@@ -188,7 +183,7 @@ public class HelpDetails extends AppCompatActivity {
 
                                     dialog.dismiss();
 
-                                    Intent intent = new Intent(HelpDetails.this , MessageActivity.class);
+                                    Intent intent = new Intent(HelpDetails.this, MessageActivity.class);
                                     startActivity(intent);
 
                                 }
@@ -215,20 +210,20 @@ public class HelpDetails extends AppCompatActivity {
                 .build();
         ServiceInterface serviceInterface = retrofit.create(ServiceInterface.class);
 
-        Call<helpDataBean> call = serviceInterface.helpData(SharePreferenceUtils.getInstance().getString("userId") , hid);
+        Call<helpDataBean> call1 = serviceInterface.helpData(SharePreferenceUtils.getInstance().getString("userId"), hid);
 
-        call.enqueue(new Callback<helpDataBean>() {
+        call1.enqueue(new Callback<helpDataBean>() {
             @Override
-            public void onResponse(@NonNull Call<helpDataBean> call, @NonNull Response<helpDataBean> response) {
+            public void onResponse(@NonNull Call<helpDataBean> call2, @NonNull Response<helpDataBean> response) {
 
                 assert response.body() != null;
-                if (response.body().getStatus().equals("1"))
-                {
+                if (response.body().getStatus().equals("1")) {
 
                     Datum item = response.body().getData().get(0);
 
                     uname.setText(item.getUname());
                     title.setText(getString(R.string.how_for_need) + item.getHowTo());
+
 
                     String v = item.getFollowers() + getString(R.string.views);
 
@@ -247,7 +242,7 @@ public class HelpDetails extends AppCompatActivity {
 
                     DisplayImageOptions options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).resetViewBeforeLoading(false).build();
                     ImageLoader loader = ImageLoader.getInstance();
-                    loader.displayImage(item.getUimage() , pic , options);
+                    loader.displayImage(item.getUimage(), pic, options);
 
 
                     List<String> iimm = new ArrayList<>();
@@ -263,33 +258,47 @@ public class HelpDetails extends AppCompatActivity {
                     }
                     if (item.getFile4().length() > 0) {
                         iimm.add(item.getFile4());
-                    } if (item.getFile5().length() > 0) {
+                    }
+                    if (item.getFile5().length() > 0) {
                         iimm.add(item.getFile5());
-                    } if (item.getFile6().length() > 0) {
+                    }
+                    if (item.getFile6().length() > 0) {
                         iimm.add(item.getFile6());
-                    } if (item.getFile7().length() > 0) {
+                    }
+                    if (item.getFile7().length() > 0) {
                         iimm.add(item.getFile7());
-                    } if (item.getFile8().length() > 0) {
+                    }
+                    if (item.getFile8().length() > 0) {
                         iimm.add(item.getFile8());
-                    } if (item.getFile9().length() > 0) {
+                    }
+                    if (item.getFile9().length() > 0) {
                         iimm.add(item.getFile9());
-                    } if (item.getFile10().length() > 0) {
+                    }
+                    if (item.getFile10().length() > 0) {
                         iimm.add(item.getFile10());
                     }
 
 
-                    Log.d("sizzee" , String.valueOf(iimm.size()));
+                    if (item.getStatus().equals("Pending")) {
+                        call.setVisibility(View.VISIBLE);
+                        whatsapp.setVisibility(View.VISIBLE);
+                        completed.setVisibility(View.GONE);
+                    } else {
+                        call.setVisibility(View.GONE);
+                        whatsapp.setVisibility(View.GONE);
+                        completed.setVisibility(View.VISIBLE);
+                    }
 
-                    PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager() , iimm);
+                    Log.d("sizzee", String.valueOf(iimm.size()));
+
+                    PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), iimm);
 
                     pager.setAdapter(adapter);
 
                     indicator.setViewPager(pager);
 
 
-
-                }
-                else {
+                } else {
                     Toast.makeText(HelpDetails.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
@@ -305,20 +314,16 @@ public class HelpDetails extends AppCompatActivity {
     }
 
 
-
     private void openWhatsApp() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=" + wphone));
         startActivity(browserIntent);
     }
 
 
-
-
-    class PagerAdapter extends FragmentStatePagerAdapter
-    {
+    class PagerAdapter extends FragmentStatePagerAdapter {
         List<String> images;
 
-        public PagerAdapter(FragmentManager fm , List<String> images) {
+        public PagerAdapter(FragmentManager fm, List<String> images) {
             super(fm);
             this.images = images;
         }
@@ -327,7 +332,7 @@ public class HelpDetails extends AppCompatActivity {
         public Fragment getItem(int i) {
             page frag = new page();
             Bundle b = new Bundle();
-            b.putString("url" ,images.get(i));
+            b.putString("url", images.get(i));
             frag.setArguments(b);
             return frag;
         }
@@ -338,15 +343,14 @@ public class HelpDetails extends AppCompatActivity {
         }
     }
 
-    public static class page extends Fragment
-    {
+    public static class page extends Fragment {
         String url;
         ImageView image;
 
         @Nullable
         @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.page_layout , container , false);
+            View view = inflater.inflate(R.layout.page_layout, container, false);
 
             url = getArguments().getString("url");
 
@@ -355,7 +359,7 @@ public class HelpDetails extends AppCompatActivity {
             DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).showImageForEmptyUri(R.drawable.noimage).build();
 
             ImageLoader loader = ImageLoader.getInstance();
-            loader.displayImage(url , image , options);
+            loader.displayImage(url, image, options);
 
             return view;
         }

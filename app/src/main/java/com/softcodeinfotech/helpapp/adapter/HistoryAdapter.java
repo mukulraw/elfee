@@ -67,6 +67,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             @Override
             public void onClick(View v) {
 
+
                 Intent intent = new Intent(mContext , EditHelp.class);
                 intent.putExtra("catId" , item.getCatId());
                 intent.putExtra("helpId" , item.getHelpId());
@@ -83,6 +84,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 intent.putExtra("i10" , item.getFile10());
                 intent.putExtra("tt" , item.getHowTo());
                 intent.putExtra("nn" , item.getNeed());
+                intent.putExtra("status" , item.getStatus());
                 mContext.startActivity(intent);
 
             }

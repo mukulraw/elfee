@@ -18,9 +18,11 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +38,8 @@ import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.softcodeinfotech.helpapp.BuildConfig;
+import com.softcodeinfotech.helpapp.EditHelp;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.addHelpPOJO.addHelpBean;
@@ -46,6 +50,7 @@ import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -81,6 +86,8 @@ public class AddHelpActivity extends AppCompatActivity {
     String mCatId;
     String mState;
     String mCurrentAddress;
+
+    File f1,f2,f3;
 
     ArrayList<String> catId = new ArrayList<>();
     ArrayList<String> catName = new ArrayList<>();
@@ -158,7 +165,7 @@ public class AddHelpActivity extends AppCompatActivity {
                 .baseUrl(Constant.BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(new OkHttpClient.Builder().addInterceptor(new ProgressInterceptor(pool)).build())
+                .client(okHttpClient)
                 .addConverterFactory(new ProgressConverterFactory(pool))
                 .build();
 
@@ -262,8 +269,10 @@ public class AddHelpActivity extends AppCompatActivity {
 
                     try {
 
+/*
                         String ypath = getPath(AddHelpActivity.this, uri1);
                         File f1 = new File(ypath);
+*/
 
                         RequestBody reqFile1 = RequestBody.create(MediaType.parse("multipart/form-data"), f1);
                         body1 = MultipartBody.Part.createFormData("file1", f1.getName(), reqFile1);
@@ -276,8 +285,10 @@ public class AddHelpActivity extends AppCompatActivity {
 
                     try {
 
+/*
                         String ypath = getPath(AddHelpActivity.this, uri2);
                         File f2 = new File(ypath);
+*/
 
                         RequestBody reqFile2 = RequestBody.create(MediaType.parse("multipart/form-data"), f2);
                         body2 = MultipartBody.Part.createFormData("file2", f2.getName(), reqFile2);
@@ -289,8 +300,10 @@ public class AddHelpActivity extends AppCompatActivity {
                     }
                     try {
 
+/*
                         String ypath = getPath(AddHelpActivity.this, uri3);
                         File f3 = new File(ypath);
+*/
 
                         RequestBody reqFile3 = RequestBody.create(MediaType.parse("multipart/form-data"), f3);
                         body3 = MultipartBody.Part.createFormData("file3", f3.getName(), reqFile3);
@@ -469,8 +482,31 @@ public class AddHelpActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Take Photo from Camera")) {
+                            final String dir =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+ "/Folder/";
+                            File newdir = new File(dir);
+                            try {
+                                newdir.mkdirs();
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
+
+                            String file = dir+ DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
+
+
+                            f1 = new File(file);
+                            try {
+                                f1.createNewFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            uri1 = FileProvider.getUriForFile(AddHelpActivity.this, BuildConfig.APPLICATION_ID + ".provider" , f1);
+
                             Intent getpic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             getpic.putExtra(MediaStore.EXTRA_OUTPUT, uri1);
+                            getpic.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             startActivityForResult(getpic, 1);
                         } else if (items[item].equals("Choose from Gallery")) {
                             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -498,8 +534,30 @@ public class AddHelpActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Take Photo from Camera")) {
+                            final String dir =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+ "/Folder/";
+                            File newdir = new File(dir);
+                            try {
+                                newdir.mkdirs();
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
+
+                            String file = dir+ DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
+
+
+                            f2 = new File(file);
+                            try {
+                                f2.createNewFile();
+                            } catch (IOException ignored) {}
+
+                            uri2 = FileProvider.getUriForFile(AddHelpActivity.this, BuildConfig.APPLICATION_ID + ".provider",f2);
+
+
                             Intent getpic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             getpic.putExtra(MediaStore.EXTRA_OUTPUT, uri2);
+                            getpic.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             startActivityForResult(getpic, 3);
                         } else if (items[item].equals("Choose from Gallery")) {
                             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -527,8 +585,30 @@ public class AddHelpActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Take Photo from Camera")) {
+                            final String dir =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+ "/Folder/";
+                            File newdir = new File(dir);
+                            try {
+                                newdir.mkdirs();
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
+
+                            String file = dir+ DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
+
+
+                            f3 = new File(file);
+                            try {
+                                f3.createNewFile();
+                            } catch (IOException ignored) {}
+
+                            uri3 = FileProvider.getUriForFile(AddHelpActivity.this, BuildConfig.APPLICATION_ID + ".provider",f3);
+
+
                             Intent getpic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             getpic.putExtra(MediaStore.EXTRA_OUTPUT, uri3);
+                            getpic.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             startActivityForResult(getpic, 5);
                         } else if (items[item].equals("Choose from Gallery")) {
                             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -832,6 +912,8 @@ public class AddHelpActivity extends AppCompatActivity {
         if (requestCode == 2 && resultCode == RESULT_OK && null != data) {
 
             uri1 = data.getData();
+            String ypath = getPath(AddHelpActivity.this, uri1);
+            f1 = new File(ypath);
 
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(uri1, filePath, null, null, null);
@@ -856,6 +938,8 @@ public class AddHelpActivity extends AppCompatActivity {
         else if (requestCode == 4 && resultCode == RESULT_OK && null != data) {
 
             uri2 = data.getData();
+            String ypath = getPath(AddHelpActivity.this, uri2);
+            f2 = new File(ypath);
 
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(uri2, filePath, null, null, null);
@@ -880,6 +964,10 @@ public class AddHelpActivity extends AppCompatActivity {
         else if (requestCode == 6 && resultCode == RESULT_OK && null != data) {
 
             uri3 = data.getData();
+
+            String ypath = getPath(AddHelpActivity.this, uri3);
+            f3 = new File(ypath);
+
 
             String[] filePath = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(uri3, filePath, null, null, null);
@@ -1067,17 +1155,17 @@ public class AddHelpActivity extends AppCompatActivity {
 
 
         }
-        else if (requestCode == 1 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
-            file1.setImageBitmap(photo);
+        else if (requestCode == 1 && resultCode == RESULT_OK ) {
+            //Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
+            file1.setImageURI(uri1);
         }
-        else if (requestCode == 3 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
-            file2.setImageBitmap(photo);
+        else if (requestCode == 3 && resultCode == RESULT_OK ) {
+            //Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
+            file2.setImageURI(uri2);
         }
-        else if (requestCode == 5 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
-            file3.setImageBitmap(photo);
+        else if (requestCode == 5 && resultCode == RESULT_OK ) {
+            //Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
+            file3.setImageURI(uri3);
         }
         else if (requestCode == 7 && resultCode == RESULT_OK && null != data) {
             Bitmap photo = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");

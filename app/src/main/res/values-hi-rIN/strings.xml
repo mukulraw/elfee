@@ -104,6 +104,7 @@
     <string name="needd">"आवश्यकता: "</string>
     <string name="catt">"वर्ग : "</string>
     <string name="addrreess">"पता: "</string>
+    <string name="this_help_has_completed">यह मदद पूरी हो गई है</string>
 
 
 </resources>

@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:layout_editor_absoluteY="25dp">
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
         <ImageButton
             android:id="@+id/backButton"
@@ -27,8 +23,8 @@
             android:id="@+id/delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/ic_delete_black_24dp"
             app:layout_constraintBottom_toTopOf="@+id/textView"
@@ -52,82 +48,75 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:orientation="vertical"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:orientation="vertical"
             android:scaleType="centerCrop"
             android:src="@drawable/noimage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView35" >
+            app:layout_constraintTop_toBottomOf="@+id/textView35">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="5"
-                >
+                android:weightSum="5">
 
                 <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:background="#ffffff"
-                    android:layout_margin="2dp"
                     android:id="@+id/file1"
-                    android:src="@drawable/addimg"
-                    android:scaleType="fitCenter"
-                    />
-
-                <ImageView
                     android:layout_width="0dp"
                     android:layout_height="60dp"
+                    android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:background="#ffffff"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/addimg" />
+
+                <ImageView
                     android:id="@+id/file2"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
                     android:layout_margin="2dp"
-                    android:src="@drawable/addimg"
+                    android:layout_weight="1"
+                    android:background="#ffffff"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@drawable/addimg" />
 
 
                 <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:layout_margin="2dp"
-                    android:background="#ffffff"
                     android:id="@+id/file3"
-                    android:src="@drawable/addimg"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:background="#ffffff"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@drawable/addimg" />
 
 
                 <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
                     android:id="@+id/file4"
-                    android:background="#ffffff"
-                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
                     android:layout_margin="2dp"
-                    android:src="@drawable/addimg"
+                    android:layout_weight="1"
+                    android:background="#ffffff"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@drawable/addimg"
+                    android:visibility="gone" />
 
 
                 <ImageView
+                    android:id="@+id/file5"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
+                    android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:background="#ffffff"
-                    android:layout_margin="2dp"
-                    android:visibility="gone"
-                    android:id="@+id/file5"
-                    android:src="@drawable/addimg"
                     android:scaleType="fitCenter"
-                    />
-
+                    android:src="@drawable/addimg"
+                    android:visibility="gone" />
 
 
             </LinearLayout>
@@ -137,67 +126,60 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:visibility="gone"
-                android:weightSum="5"
-                >
+                android:weightSum="5">
 
                 <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:layout_margin="2dp"
                     android:id="@+id/file6"
-                    android:src="@drawable/addimg"
-                    android:background="#ffffff"
-                    android:scaleType="fitCenter"
-                    />
-
-                <ImageView
                     android:layout_width="0dp"
                     android:layout_height="60dp"
+                    android:layout_margin="2dp"
                     android:layout_weight="1"
                     android:background="#ffffff"
-                    android:layout_margin="2dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/addimg" />
+
+                <ImageView
                     android:id="@+id/file7"
-                    android:src="@drawable/addimg"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:background="#ffffff"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@drawable/addimg" />
 
 
                 <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:background="#ffffff"
                     android:id="@+id/file8"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
                     android:layout_margin="2dp"
-                    android:src="@drawable/addimg"
+                    android:layout_weight="1"
+                    android:background="#ffffff"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@drawable/addimg" />
 
 
                 <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:background="#ffffff"
-                    android:layout_weight="1"
-                    android:layout_margin="2dp"
                     android:id="@+id/file9"
-                    android:src="@drawable/addimg"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_margin="2dp"
+                    android:layout_weight="1"
+                    android:background="#ffffff"
                     android:scaleType="fitCenter"
-                    />
+                    android:src="@drawable/addimg" />
 
 
                 <ImageView
+                    android:id="@+id/file10"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
-                    android:id="@+id/file10"
-                    android:layout_weight="1"
                     android:layout_margin="2dp"
+                    android:layout_weight="1"
                     android:background="#ffffff"
-                    android:src="@drawable/addimg"
                     android:scaleType="fitCenter"
-                    />
-
+                    android:src="@drawable/addimg" />
 
 
             </LinearLayout>
@@ -237,11 +219,11 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:background="#ffffff"
+            android:hint="@string/tap_to_enter"
+            android:inputType="textPersonName"
             android:lines="1"
             android:padding="10dp"
-            android:background="#ffffff"
-            android:inputType="textPersonName"
-            android:hint="@string/tap_to_enter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView37" />
@@ -264,13 +246,13 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:ems="500"
-            android:hint="@string/tap_to_enter"
             android:background="#ffffff"
-            android:padding="10dp"
-            android:lines="3"
+            android:ems="500"
             android:gravity="start"
+            android:hint="@string/tap_to_enter"
             android:inputType="textMultiLine"
+            android:lines="3"
+            android:padding="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView38" />
@@ -282,8 +264,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:text="@string/edit_help"
-            android:textStyle="bold"
             android:textColor="#000000"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/backButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -303,14 +285,14 @@
         <TextView
             android:id="@+id/recyclerView2"
             android:layout_width="0dp"
-            android:background="#ffffff"
-            android:padding="10dp"
-            android:textSize="16sp"
-            android:hint="@string/tap_to_choose"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
+            android:background="#ffffff"
+            android:hint="@string/tap_to_choose"
+            android:padding="10dp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView40" />
@@ -322,29 +304,42 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:visibility="gone"
             android:layout_marginEnd="8dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recyclerView2" />
 
-        <Button
-            android:id="@+id/button13"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/green_back_round"
-            android:text="@string/update"
-            android:textColor="#ffffff"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText8" />
+    <Button
+        android:id="@+id/button13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/green_back_round"
+        android:text="@string/update"
+        android:textColor="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.475"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView50" />
 
-    </android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/textView50"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/this_help_has_completed"
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText8" />
 
 
-</android.support.v4.widget.NestedScrollView>
+
+</android.support.constraint.ConstraintLayout>

@@ -103,6 +103,7 @@
     <string name="needd"><![CDATA[Need : </br>]]></string>
     <string name="catt">"Category : "</string>
     <string name="addrreess">Address :</string>
+    <string name="this_help_has_completed">This help has completed</string>
 
 
 </resources>

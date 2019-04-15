@@ -17,6 +17,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
@@ -30,6 +31,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.softcodeinfotech.helpapp.BuildConfig;
+import com.softcodeinfotech.helpapp.EditHelp;
 import com.softcodeinfotech.helpapp.KYC;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
@@ -38,6 +41,8 @@ import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
 import com.softcodeinfotech.helpapp.verifyPOJO.verifyBean;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 import java.util.Locale;
 
 import okhttp3.MediaType;
@@ -67,6 +72,8 @@ public class MyProfileActivity extends AppCompatActivity {
 
     TextView name, phone, wphone, gname, gphone, aadhar, dob, profession, address;
     ImageView yimage, gimage, afront, aback, eimage;
+
+    File yfile;
 
     Uri yuri;
 
@@ -139,9 +146,34 @@ public class MyProfileActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Take Photo from Camera")) {
+
+                            final String dir =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+ "/Folder/";
+                            File newdir = new File(dir);
+                            try {
+                                newdir.mkdirs();
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
+
+                            String file = dir+ DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
+
+
+                            yfile = new File(file);
+                            try {
+                                yfile.createNewFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            yuri = FileProvider.getUriForFile(MyProfileActivity.this, BuildConfig.APPLICATION_ID + ".provider" , yfile);
+
                             Intent getpic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             getpic.putExtra(MediaStore.EXTRA_OUTPUT, yuri);
+                            getpic.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             startActivityForResult(getpic, 1);
+
                         } else if (items[item].equals("Choose from Gallery")) {
                             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                             startActivityForResult(intent, 2);
@@ -185,12 +217,10 @@ public class MyProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == 1 && resultCode == RESULT_OK && null != data) {
+        if (requestCode == 1 && resultCode == RESULT_OK ) {
 
             progress.setVisibility(View.VISIBLE);
 
-            String ypath = getPath(MyProfileActivity.this, yuri);
-            File yfile = new File(ypath);
             MultipartBody.Part body1 = null;
 
             RequestBody reqFile1 = RequestBody.create(MediaType.parse("multipart/form-data"), yfile);

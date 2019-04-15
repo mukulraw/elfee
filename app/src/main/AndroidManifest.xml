@@ -9,6 +9,10 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:name=".MyApp"
@@ -23,22 +27,45 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
         tools:replace="allowBackup,supportsRtl">
-        <activity android:name=".EditHelp"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".KYC"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Needy"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".Donor"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ChatScreen"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".MessageActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".HelpDetails"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.MainActivity"
-            android:screenOrientation="portrait"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
+        <activity android:name=".Grocery">
+
+
+        </activity>
+        <activity
+            android:name=".EditHelp"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".KYC"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Needy"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Donor"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ChatScreen"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MessageActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HelpDetails"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SignupActivity"
             android:screenOrientation="portrait" />
@@ -111,7 +138,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="@string/fb_login_protocol_scheme"
+                <data
+                    android:scheme="@string/fb_login_protocol_scheme"
                     tools:ignore="ManifestResource" />
             </intent-filter>
         </activity>

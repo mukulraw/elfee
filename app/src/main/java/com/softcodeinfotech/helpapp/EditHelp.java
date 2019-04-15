@@ -16,9 +16,12 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +42,9 @@ import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -59,12 +64,14 @@ public class EditHelp extends AppCompatActivity {
 
     private static final String TAG = "editHelp";
     private static final int IMAGE_PICKER = 1;
-    ImageButton back , delete;
+    ImageButton back, delete;
     ProgressDialog pBar;
     TextView spinCategory;
     EditText title, desc;
     //currentAddress;
     Button submit;
+
+    TextView completed;
 
     String mUserid, mTitle, mDesc, mCatId, item2, mCurrentAddress;
 
@@ -73,20 +80,22 @@ public class EditHelp extends AppCompatActivity {
     Retrofit retrofit;
     ServiceInterface serviceInterface;
 
+    File f1 , f2 , f3;
+
 
     ImageView file1, file2, file3, file4, file5, file6, file7, file8, file9, file10;
 
     //Button selectImage;
     Uri uri1, uri2, uri3, uri4, uri5, uri6, uri7, uri8, uri9, uri10;
 
-    String i1 , i2 , i3 , i4 , i5 , i6 , i7 , i8 , i9 ,i10;
-    String tt , nn , helpId;
+    String i1, i2, i3, i4, i5, i6, i7, i8, i9, i10;
+    String tt, nn, helpId, status;
 
     TextView ptitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        String languageToLoad  = SharePreferenceUtils.getInstance().getString("lang"); // your language
+        String languageToLoad = SharePreferenceUtils.getInstance().getString("lang"); // your language
         Locale locale = new Locale(languageToLoad);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
@@ -123,26 +132,33 @@ public class EditHelp extends AppCompatActivity {
 
         tt = getIntent().getStringExtra("tt");
         nn = getIntent().getStringExtra("nn");
+        status = getIntent().getStringExtra("status");
 
         title.setText(tt);
         desc.setText(nn);
 
+
+        if (status.equals("Pending")) {
+            completed.setVisibility(View.VISIBLE);
+        } else {
+            completed.setVisibility(View.GONE);
+        }
 
 
         DisplayImageOptions options = new DisplayImageOptions.Builder().cacheOnDisk(true).cacheInMemory(true).resetViewBeforeLoading(false).showImageForEmptyUri(R.drawable.addimg).build();
 
         ImageLoader loader = ImageLoader.getInstance();
 
-        loader.displayImage(i1 , file1 , options);
-        loader.displayImage(i2 , file2 , options);
-        loader.displayImage(i3 , file3 , options);
-        loader.displayImage(i4 , file4 , options);
-        loader.displayImage(i5 , file5 , options);
-        loader.displayImage(i6 , file6 , options);
-        loader.displayImage(i7 , file7 , options);
-        loader.displayImage(i8 , file8 , options);
-        loader.displayImage(i9 , file9 , options);
-        loader.displayImage(i10 , file10 , options);
+        loader.displayImage(i1, file1, options);
+        loader.displayImage(i2, file2, options);
+        loader.displayImage(i3, file3, options);
+        loader.displayImage(i4, file4, options);
+        loader.displayImage(i5, file5, options);
+        loader.displayImage(i6, file6, options);
+        loader.displayImage(i7, file7, options);
+        loader.displayImage(i8, file8, options);
+        loader.displayImage(i9, file9, options);
+        loader.displayImage(i10, file10, options);
 
 
         mUserid = SharePreferenceUtils.getInstance().getString("userId");
@@ -222,8 +238,7 @@ public class EditHelp extends AppCompatActivity {
                 getData();
                 if (mCatId.isEmpty()) {
                     Toast.makeText(EditHelp.this, "Invalid category", Toast.LENGTH_SHORT).show();
-                }
-                else if (mTitle.isEmpty()) {
+                } else if (mTitle.isEmpty()) {
                     Toast.makeText(EditHelp.this, "Invalid title", Toast.LENGTH_SHORT).show();
                 } else if (mDesc.isEmpty()) {
                     Toast.makeText(EditHelp.this, "Invalid need", Toast.LENGTH_SHORT).show();
@@ -234,7 +249,6 @@ public class EditHelp extends AppCompatActivity {
                     //   Toast.makeText(EditHelp.this, ""+mCatId+""+mUserid+""+mTitle+""+
                     //          ""+mDesc+""+mState, Toast.LENGTH_SHORT).show();
                     //saveData();
-
 
 
                     MultipartBody.Part body1 = null;
@@ -250,42 +264,39 @@ public class EditHelp extends AppCompatActivity {
 
                     try {
 
-                        String ypath = getPath(EditHelp.this, uri1);
-                        File f1 = new File(ypath);
+                        /*String ypath = getPath(EditHelp.this, uri1);
+                        File f1 = new File(ypath);*/
 
                         RequestBody reqFile1 = RequestBody.create(MediaType.parse("multipart/form-data"), f1);
                         body1 = MultipartBody.Part.createFormData("file1", f1.getName(), reqFile1);
 
 
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
                     try {
 
-                        String ypath = getPath(EditHelp.this, uri2);
+                        /*String ypath = getPath(EditHelp.this, uri2);
                         File f2 = new File(ypath);
-
+*/
                         RequestBody reqFile2 = RequestBody.create(MediaType.parse("multipart/form-data"), f2);
                         body2 = MultipartBody.Part.createFormData("file2", f2.getName(), reqFile2);
 
 
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     try {
 
-                        String ypath = getPath(EditHelp.this, uri3);
+  /*                      String ypath = getPath(EditHelp.this, uri3);
                         File f3 = new File(ypath);
-
+*/
                         RequestBody reqFile3 = RequestBody.create(MediaType.parse("multipart/form-data"), f3);
                         body3 = MultipartBody.Part.createFormData("file3", f3.getName(), reqFile3);
 
 
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     try {
@@ -297,8 +308,7 @@ public class EditHelp extends AppCompatActivity {
                         body4 = MultipartBody.Part.createFormData("file4", f4.getName(), reqFile4);
 
 
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     try {
@@ -310,8 +320,7 @@ public class EditHelp extends AppCompatActivity {
                         body5 = MultipartBody.Part.createFormData("file5", f5.getName(), reqFile5);
 
 
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     try {
@@ -323,8 +332,7 @@ public class EditHelp extends AppCompatActivity {
                         body6 = MultipartBody.Part.createFormData("file6", f6.getName(), reqFile6);
 
 
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     try {
@@ -336,8 +344,7 @@ public class EditHelp extends AppCompatActivity {
                         body7 = MultipartBody.Part.createFormData("file7", f7.getName(), reqFile7);
 
 
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     try {
@@ -349,8 +356,7 @@ public class EditHelp extends AppCompatActivity {
                         body8 = MultipartBody.Part.createFormData("file8", f8.getName(), reqFile8);
 
 
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     try {
@@ -362,8 +368,7 @@ public class EditHelp extends AppCompatActivity {
                         body9 = MultipartBody.Part.createFormData("file9", f9.getName(), reqFile9);
 
 
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     try {
@@ -375,11 +380,9 @@ public class EditHelp extends AppCompatActivity {
                         body10 = MultipartBody.Part.createFormData("file10", f10.getName(), reqFile10);
 
 
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-
 
 
                     Call<addHelpBean> call = serviceInterface.editHelp(
@@ -404,14 +407,11 @@ public class EditHelp extends AppCompatActivity {
                         public void onResponse(Call<addHelpBean> call, Response<addHelpBean> response) {
 
 
-                            if (response.body().getStatus().equals("1"))
-                            {
+                            if (response.body().getStatus().equals("1")) {
 
                                 Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                                 finish();
-                            }
-                            else
-                            {
+                            } else {
                                 Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             }
 
@@ -432,6 +432,40 @@ public class EditHelp extends AppCompatActivity {
             }
         });
 
+        completed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                pBar.show();
+
+                Call<addHelpBean> call = serviceInterface.completeHelp(helpId);
+
+                call.enqueue(new Callback<addHelpBean>() {
+                    @Override
+                    public void onResponse(@NonNull Call<addHelpBean> call, @NonNull Response<addHelpBean> response) {
+
+                        if (response.body().getStatus().equals("1")) {
+
+                            Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else {
+                            Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+
+                        pBar.dismiss();
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<addHelpBean> call, Throwable t) {
+                        pBar.dismiss();
+                    }
+                });
+            }
+        });
+
 
         file1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -446,8 +480,32 @@ public class EditHelp extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Take Photo from Camera")) {
+
+                            final String dir =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+ "/Folder/";
+                            File newdir = new File(dir);
+                            try {
+                                newdir.mkdirs();
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
+
+                            String file = dir+ DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
+
+
+                            f1 = new File(file);
+                            try {
+                                f1.createNewFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            uri1 = FileProvider.getUriForFile(EditHelp.this, BuildConfig.APPLICATION_ID + ".provider" , f1);
+
                             Intent getpic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             getpic.putExtra(MediaStore.EXTRA_OUTPUT, uri1);
+                            getpic.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             startActivityForResult(getpic, 1);
                         } else if (items[item].equals("Choose from Gallery")) {
                             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -475,8 +533,31 @@ public class EditHelp extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Take Photo from Camera")) {
+
+                            final String dir =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+ "/Folder/";
+                            File newdir = new File(dir);
+                            try {
+                                newdir.mkdirs();
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
+
+                            String file = dir+ DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
+
+
+                            f2 = new File(file);
+                            try {
+                                f2.createNewFile();
+                            } catch (IOException ignored) {}
+
+                            uri2 = FileProvider.getUriForFile(EditHelp.this, BuildConfig.APPLICATION_ID + ".provider",f2);
+
+
                             Intent getpic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             getpic.putExtra(MediaStore.EXTRA_OUTPUT, uri2);
+                            getpic.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             startActivityForResult(getpic, 3);
                         } else if (items[item].equals("Choose from Gallery")) {
                             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -504,8 +585,31 @@ public class EditHelp extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Take Photo from Camera")) {
+
+                            final String dir =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+ "/Folder/";
+                            File newdir = new File(dir);
+                            try {
+                                newdir.mkdirs();
+                            }catch (Exception e)
+                            {
+                                e.printStackTrace();
+                            }
+
+
+                            String file = dir+ DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
+
+
+                            f3 = new File(file);
+                            try {
+                                f3.createNewFile();
+                            } catch (IOException ignored) {}
+
+                            uri3 = FileProvider.getUriForFile(EditHelp.this, BuildConfig.APPLICATION_ID + ".provider",f3);
+
+
                             Intent getpic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             getpic.putExtra(MediaStore.EXTRA_OUTPUT, uri3);
+                            getpic.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                             startActivityForResult(getpic, 5);
                         } else if (items[item].equals("Choose from Gallery")) {
                             Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -737,8 +841,7 @@ public class EditHelp extends AppCompatActivity {
 
                         Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
 
-                        if (response.body().getStatus().equals("1"))
-                        {
+                        if (response.body().getStatus().equals("1")) {
                             finish();
                         }
 
@@ -767,6 +870,8 @@ public class EditHelp extends AppCompatActivity {
         pBar.setCancelable(false);
         pBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         pBar.setIndeterminate(false);
+
+        completed = findViewById(R.id.textView50);
 
         title = findViewById(R.id.editText7);
         desc = findViewById(R.id.editText8);
@@ -808,6 +913,9 @@ public class EditHelp extends AppCompatActivity {
 
             uri1 = data.getData();
 
+            String ypath = getPath(EditHelp.this, uri1);
+            f1 = new File(ypath);
+
             String[] filePath = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri1, filePath, null, null, null);
             cursor.moveToFirst();
@@ -830,6 +938,9 @@ public class EditHelp extends AppCompatActivity {
 
             uri2 = data.getData();
 
+            String ypath = getPath(EditHelp.this, uri2);
+            f2 = new File(ypath);
+
             String[] filePath = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri2, filePath, null, null, null);
             cursor.moveToFirst();
@@ -851,6 +962,9 @@ public class EditHelp extends AppCompatActivity {
         } else if (requestCode == 6 && resultCode == RESULT_OK && null != data) {
 
             uri3 = data.getData();
+
+            String ypath = getPath(EditHelp.this, uri3);
+            f3 = new File(ypath);
 
             String[] filePath = {MediaStore.Images.Media.DATA};
             Cursor cursor = getContentResolver().query(uri3, filePath, null, null, null);
@@ -1024,15 +1138,19 @@ public class EditHelp extends AppCompatActivity {
             file10.setImageBitmap(bitmap);
 
 
-        } else if (requestCode == 1 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            file1.setImageBitmap(photo);
-        } else if (requestCode == 3 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            file2.setImageBitmap(photo);
-        } else if (requestCode == 5 && resultCode == RESULT_OK && null != data) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            file3.setImageBitmap(photo);
+        } else if (requestCode == 1 && resultCode == RESULT_OK) {
+
+            Log.d("asdasdasd" , String.valueOf(uri1));
+
+//            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            file1.setImageURI(uri1);
+            //file1.setImageBitmap(photo);
+        } else if (requestCode == 3 && resultCode == RESULT_OK) {
+  //          Bitmap photo = (Bitmap) data.getExtras().get("data");
+            file2.setImageURI(uri2);
+        } else if (requestCode == 5 && resultCode == RESULT_OK) {
+    //        Bitmap photo = (Bitmap) data.getExtras().get("data");
+            file3.setImageURI(uri3);
         } else if (requestCode == 7 && resultCode == RESULT_OK && null != data) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             file4.setImageBitmap(photo);
@@ -1058,6 +1176,7 @@ public class EditHelp extends AppCompatActivity {
 
 
     }
+
     class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
         Context context;
