@@ -88,6 +88,9 @@ public class Datum {
     @SerializedName("status")
     @Expose
     private String status;
+    @SerializedName("donor")
+    @Expose
+    private String donor;
 
     public String getHelpId() {
         return helpId;
@@ -311,5 +314,13 @@ public class Datum {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public void setDonor(String donor) {
+        this.donor = donor;
+    }
+
+    public String getDonor() {
+        return donor;
     }
 }

@@ -23,7 +23,7 @@
           }
         },
         {
-          "client_id": "936656044349-tjm4jknmv9h2oa08lhq5j24tmofn5lcr.apps.googleusercontent.com",
+          "client_id": "936656044349-l82nvuo0kg2cnmqoom10i6qc1dd8ddho.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -33,20 +33,13 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "936656044349-tjm4jknmv9h2oa08lhq5j24tmofn5lcr.apps.googleusercontent.com",
+              "client_id": "936656044349-l82nvuo0kg2cnmqoom10i6qc1dd8ddho.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

@@ -3,8 +3,10 @@ package com.softcodeinfotech.helpapp;
 
 import com.softcodeinfotech.helpapp.addHelpPOJO.addHelpBean;
 import com.softcodeinfotech.helpapp.allMessagePOJO.allMessageBean;
+import com.softcodeinfotech.helpapp.allUsersPOJO.allUsersBean;
 import com.softcodeinfotech.helpapp.beanresponse.GetforgotpassResponse;
 import com.softcodeinfotech.helpapp.beanresponse.GetmobileverifyResponse;
+import com.softcodeinfotech.helpapp.getFollowersPOJO.getFollowersBean;
 import com.softcodeinfotech.helpapp.helpDataPOJO.helpDataBean;
 import com.softcodeinfotech.helpapp.myHelpsPOJO.myHelpsBean;
 import com.softcodeinfotech.helpapp.response.AadharUpdateResponse;
@@ -216,6 +218,19 @@ public interface ServiceInterface {
     );
 
     @Multipart
+    @POST("elfee/api/social_login.php")
+    Call<verifyBean> socialLogin(
+            @Part("pid") String pid
+    );
+
+    @Multipart
+    @POST("elfee/api/update_phone.php")
+    Call<SigninResponse> updatePhone(
+            @Part("phone") String phone,
+            @Part("userId") String userId
+    );
+
+    @Multipart
     @POST("elfee/api/resend_otp.php")
     Call<SigninResponse> resendOTP(
             @Part("phone") String phone
@@ -306,8 +321,14 @@ public interface ServiceInterface {
     @Multipart
     @POST("elfee/api/complete_help.php")
     Call<addHelpBean> completeHelp(
-            @Part("helpId") String helpId
+            @Part("helpId") String helpId,
+            @Part("name") String name,
+            @Part("phone") String phone
     );
+
+
+    @GET("elfee/api/getUsers.php")
+    Call<allUsersBean> getUsers();
 
     @Multipart
     @POST("elfee/api/delete_help.php")
@@ -321,9 +342,28 @@ public interface ServiceInterface {
             @Part("userId") String userId
     );
 
+
+    @Multipart
+    @POST("elfee/api/getFollowers.php")
+    Call<getFollowersBean> followers(
+            @Part("userId") String userId
+    );
+
+
     @Multipart
     @POST("elfee/api/all_helps.php")
     Call<myHelpsBean> allHelps(
+            @Part("userId") String userId,
+            @Part("state") String state,
+            @Part("catId") String catId,
+            @Part("lat") String lat,
+            @Part("lng") String lng,
+            @Part("radius") String radius
+    );
+
+    @Multipart
+    @POST("elfee/api/completed_helps.php")
+    Call<myHelpsBean> sompletedHelps(
             @Part("userId") String userId,
             @Part("state") String state,
             @Part("catId") String catId,

@@ -26,6 +26,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -37,9 +39,11 @@ import android.widget.Toast;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.softcodeinfotech.helpapp.addHelpPOJO.addHelpBean;
+import com.softcodeinfotech.helpapp.allUsersPOJO.allUsersBean;
 import com.softcodeinfotech.helpapp.response.GetCategoryResponse;
 import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,7 +84,7 @@ public class EditHelp extends AppCompatActivity {
     Retrofit retrofit;
     ServiceInterface serviceInterface;
 
-    File f1 , f2 , f3;
+    File f1, f2, f3;
 
 
     ImageView file1, file2, file3, file4, file5, file6, file7, file8, file9, file10;
@@ -409,8 +413,8 @@ public class EditHelp extends AppCompatActivity {
 
                             if (response.body().getStatus().equals("1")) {
 
-                                Intent intent1 = new Intent(EditHelp.this , Success.class);
-                                intent1.putExtra("ii" , "2");
+                                Intent intent1 = new Intent(EditHelp.this, Success.class);
+                                intent1.putExtra("ii", "2");
                                 startActivity(intent1);
                                 finish();
                             } else {
@@ -438,18 +442,45 @@ public class EditHelp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Dialog dialog = new Dialog(EditHelp.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(true);
+                dialog.setContentView(R.layout.conplete_help_dialog);
+                dialog.show();
+
+
+                final EditText nn = dialog.findViewById(R.id.editText11);
+                final SearchableSpinner pp = dialog.findViewById(R.id.editText12);
+                Button ss = dialog.findViewById(R.id.button19);
+
+                final List<String> ppp = new ArrayList<>();
+                final List<String> ppp1 = new ArrayList<>();
+                final String[] p = {""};
+
+
+                pp.setTitle(getString(R.string.tap_to_choose));
+                pp.setPositiveButton(getString(R.string.ok));
+
                 pBar.show();
 
-                Call<addHelpBean> call = serviceInterface.completeHelp(helpId);
+                Call<allUsersBean> call = serviceInterface.getUsers();
 
-                call.enqueue(new Callback<addHelpBean>() {
+                call.enqueue(new Callback<allUsersBean>() {
                     @Override
-                    public void onResponse(@NonNull Call<addHelpBean> call, @NonNull Response<addHelpBean> response) {
+                    public void onResponse(@NonNull Call<allUsersBean> call, @NonNull Response<allUsersBean> response) {
 
                         if (response.body().getStatus().equals("1")) {
 
-                            Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                            finish();
+                            for (int i = 0; i < response.body().getData().size(); i++) {
+                                ppp.add(response.body().getData().get(i).getMobile());
+                                ppp1.add(response.body().getData().get(i).getUserId());
+                            }
+
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(EditHelp.this,
+                                    android.R.layout.simple_spinner_item, ppp);
+
+                            pp.setAdapter(adapter);
+
                         } else {
                             Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -461,10 +492,74 @@ public class EditHelp extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<addHelpBean> call, Throwable t) {
+                    public void onFailure(Call<allUsersBean> call, Throwable t) {
                         pBar.dismiss();
                     }
                 });
+
+                pp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        p[0] = ppp1.get(position);
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                ss.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String n = nn.getText().toString();
+
+                        if (n.length() > 0) {
+
+                            if (p[0].length() > 0) {
+
+                                pBar.show();
+
+                                Call<addHelpBean> call = serviceInterface.completeHelp(helpId, n, p[0]);
+
+                                call.enqueue(new Callback<addHelpBean>() {
+                                    @Override
+                                    public void onResponse(@NonNull Call<addHelpBean> call, @NonNull Response<addHelpBean> response) {
+
+                                        if (response.body().getStatus().equals("1")) {
+
+                                            Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        } else {
+                                            Toast.makeText(EditHelp.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+
+
+                                        pBar.dismiss();
+
+
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<addHelpBean> call, Throwable t) {
+                                        pBar.dismiss();
+                                    }
+                                });
+
+                            } else {
+                                Toast.makeText(EditHelp.this, "Invalid phone", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(EditHelp.this, "Invalid name", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                });
+
+
             }
         });
 
@@ -483,17 +578,16 @@ public class EditHelp extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Take Photo from Camera")) {
 
-                            final String dir =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+ "/Folder/";
+                            final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Folder/";
                             File newdir = new File(dir);
                             try {
                                 newdir.mkdirs();
-                            }catch (Exception e)
-                            {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
 
-                            String file = dir+ DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
+                            String file = dir + DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString() + ".jpg";
 
 
                             f1 = new File(file);
@@ -503,7 +597,7 @@ public class EditHelp extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            uri1 = FileProvider.getUriForFile(EditHelp.this, BuildConfig.APPLICATION_ID + ".provider" , f1);
+                            uri1 = FileProvider.getUriForFile(EditHelp.this, BuildConfig.APPLICATION_ID + ".provider", f1);
 
                             Intent getpic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             getpic.putExtra(MediaStore.EXTRA_OUTPUT, uri1);
@@ -536,25 +630,25 @@ public class EditHelp extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Take Photo from Camera")) {
 
-                            final String dir =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+ "/Folder/";
+                            final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Folder/";
                             File newdir = new File(dir);
                             try {
                                 newdir.mkdirs();
-                            }catch (Exception e)
-                            {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
 
-                            String file = dir+ DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
+                            String file = dir + DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString() + ".jpg";
 
 
                             f2 = new File(file);
                             try {
                                 f2.createNewFile();
-                            } catch (IOException ignored) {}
+                            } catch (IOException ignored) {
+                            }
 
-                            uri2 = FileProvider.getUriForFile(EditHelp.this, BuildConfig.APPLICATION_ID + ".provider",f2);
+                            uri2 = FileProvider.getUriForFile(EditHelp.this, BuildConfig.APPLICATION_ID + ".provider", f2);
 
 
                             Intent getpic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -588,25 +682,25 @@ public class EditHelp extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int item) {
                         if (items[item].equals("Take Photo from Camera")) {
 
-                            final String dir =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+ "/Folder/";
+                            final String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/Folder/";
                             File newdir = new File(dir);
                             try {
                                 newdir.mkdirs();
-                            }catch (Exception e)
-                            {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
 
-                            String file = dir+ DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString()+".jpg";
+                            String file = dir + DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString() + ".jpg";
 
 
                             f3 = new File(file);
                             try {
                                 f3.createNewFile();
-                            } catch (IOException ignored) {}
+                            } catch (IOException ignored) {
+                            }
 
-                            uri3 = FileProvider.getUriForFile(EditHelp.this, BuildConfig.APPLICATION_ID + ".provider",f3);
+                            uri3 = FileProvider.getUriForFile(EditHelp.this, BuildConfig.APPLICATION_ID + ".provider", f3);
 
 
                             Intent getpic = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -1142,16 +1236,16 @@ public class EditHelp extends AppCompatActivity {
 
         } else if (requestCode == 1 && resultCode == RESULT_OK) {
 
-            Log.d("asdasdasd" , String.valueOf(uri1));
+            Log.d("asdasdasd", String.valueOf(uri1));
 
 //            Bitmap photo = (Bitmap) data.getExtras().get("data");
             file1.setImageURI(uri1);
             //file1.setImageBitmap(photo);
         } else if (requestCode == 3 && resultCode == RESULT_OK) {
-  //          Bitmap photo = (Bitmap) data.getExtras().get("data");
+            //          Bitmap photo = (Bitmap) data.getExtras().get("data");
             file2.setImageURI(uri2);
         } else if (requestCode == 5 && resultCode == RESULT_OK) {
-    //        Bitmap photo = (Bitmap) data.getExtras().get("data");
+            //        Bitmap photo = (Bitmap) data.getExtras().get("data");
             file3.setImageURI(uri3);
         } else if (requestCode == 7 && resultCode == RESULT_OK && null != data) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");

@@ -1,5 +1,4 @@
-package com.softcodeinfotech.helpapp.ui;
-
+package com.softcodeinfotech.helpapp;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -14,11 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.softcodeinfotech.helpapp.R;
-import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.adapter.GetHelpListAdapter;
 import com.softcodeinfotech.helpapp.myHelpsPOJO.Datum;
 import com.softcodeinfotech.helpapp.myHelpsPOJO.myHelpsBean;
@@ -39,10 +35,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static android.content.Context.WINDOW_SERVICE;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class AllHelpFragment extends Fragment {
+
+public class allCompletedFragment extends Fragment {
 
     String email;
     String name;
@@ -64,11 +58,6 @@ public class AllHelpFragment extends Fragment {
 
     private ArrayList<Datum> mHelpDetailsList = new ArrayList<>();
     private GetHelpListAdapter getHelpListAdapter;
-
-
-    public AllHelpFragment() {
-        // Required empty public constructor
-    }
 
 
     @Override
@@ -147,7 +136,7 @@ public class AllHelpFragment extends Fragment {
         Log.d("cat" , cat);
         pBar.show();
 
-        Call<myHelpsBean> call = serviceInterface.allHelps(SharePreferenceUtils.getInstance().getString("userId") , sta , cat , lat , lng , rad);
+        Call<myHelpsBean> call = serviceInterface.sompletedHelps(SharePreferenceUtils.getInstance().getString("userId") , sta , cat , lat , lng , rad);
         call.enqueue(new Callback<myHelpsBean>() {
             @Override
             public void onResponse(@NonNull Call<myHelpsBean> call, @NonNull Response<myHelpsBean> response) {
@@ -190,7 +179,7 @@ public class AllHelpFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Call<myHelpsBean> call, @NonNull Throwable t) {
                 pBar.dismiss();
-               // Toast.makeText(MainActivity.this, "" + t.toString(), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(MainActivity.this, "" + t.toString(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -211,5 +200,6 @@ public class AllHelpFragment extends Fragment {
     public RequestBody convertPlainString(String data) {
         return RequestBody.create(MediaType.parse("text/plain"), data);
     }
+
 
 }

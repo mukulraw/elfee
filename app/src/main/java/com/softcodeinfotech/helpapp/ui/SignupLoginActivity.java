@@ -1,5 +1,8 @@
 package com.softcodeinfotech.helpapp.ui;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -11,7 +14,9 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,8 +34,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.rilixtech.CountryCodePicker;
+import com.softcodeinfotech.helpapp.EditHelp;
 import com.softcodeinfotech.helpapp.R;
+import com.softcodeinfotech.helpapp.ServiceInterface;
+import com.softcodeinfotech.helpapp.response.SigninResponse;
+import com.softcodeinfotech.helpapp.util.Constant;
+import com.softcodeinfotech.helpapp.util.DataValidation;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
+import com.softcodeinfotech.helpapp.verifyPOJO.verifyBean;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +52,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class SignupLoginActivity extends AppCompatActivity {
 
@@ -58,7 +79,7 @@ public class SignupLoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        String languageToLoad  = SharePreferenceUtils.getInstance().getString("lang"); // your language
+        String languageToLoad = SharePreferenceUtils.getInstance().getString("lang"); // your language
         Locale locale = new Locale(languageToLoad);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
@@ -91,14 +112,11 @@ public class SignupLoginActivity extends AppCompatActivity {
                                             final String email = object.getString("email");
 
 
-
-                                            Log.d("name" , object.getString("name"));
-                                            Log.d("id" , object.getString("id"));
-                                            Log.d("email" , object.getString("email"));
+                                            Log.d("name", object.getString("name"));
+                                            Log.d("id", object.getString("id"));
+                                            Log.d("email", object.getString("email"));
 
                                             //socialSignin(name , id , email);
-
-
 
 
                                         } catch (JSONException e) {
@@ -120,12 +138,12 @@ public class SignupLoginActivity extends AppCompatActivity {
                     @Override
                     public void onError(FacebookException exception) {
 
-                       Log.d("failure" ,exception.toString());
+                        Log.d("failure", exception.toString());
                         // App code
                     }
                 });
 
-        
+
         setContentView(R.layout.activity_signup_login);
 
         google = findViewById(R.id.button4);
@@ -193,10 +211,8 @@ public class SignupLoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-               //LoginManager.getInstance().logInWithReadPermissions(SignupLoginActivity.this, Arrays.asList("public_profile"));
+                //LoginManager.getInstance().logInWithReadPermissions(SignupLoginActivity.this, Arrays.asList("public_profile"));
                 LoginManager.getInstance().logInWithReadPermissions(SignupLoginActivity.this, Collections.singletonList("public_profile"));
-
-
 
 
             }
@@ -212,8 +228,7 @@ public class SignupLoginActivity extends AppCompatActivity {
                 md.update(signature.toByteArray());
                 Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
-        }
-        catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException ignored) {
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException ignored) {
 
         }
 
@@ -250,12 +265,133 @@ public class SignupLoginActivity extends AppCompatActivity {
 
             Log.d("email", account.getEmail());
             Log.d("id", account.getId());
-            // Signed in successfully, show authenticated UI.
-            //updateUI(account);
+
+
+            ProgressDialog pBar = new ProgressDialog(this);
+
+            pBar.setMessage("Please wait...");
+            pBar.setCancelable(false);
+            pBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pBar.setIndeterminate(false);
+
+            pBar.show();
+
+            OkHttpClient okHttpClient = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .build();
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(Constant.BASE_URL)
+                    .addConverterFactory(ScalarsConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(okHttpClient)
+                    .build();
+
+            final ServiceInterface serviceInterface = retrofit.create(ServiceInterface.class);
+
+            Call<verifyBean> call = serviceInterface.socialLogin(id);
+
+            call.enqueue(new Callback<verifyBean>() {
+                @Override
+                public void onResponse(final Call<verifyBean> call, final Response<verifyBean> response) {
+
+                    if (response.body().getData().getMobile().length() > 0) {
+                        SharePreferenceUtils.getInstance().saveString(Constant.USER_mobile, response.body().getData().getMobile());
+                        SharePreferenceUtils.getInstance().saveString("userId", response.body().getData().getUserId());
+                        SharePreferenceUtils.getInstance().saveString("name", response.body().getData().getName());
+                        SharePreferenceUtils.getInstance().saveString("dob", response.body().getData().getDob());
+                        SharePreferenceUtils.getInstance().saveString("aadhar", response.body().getData().getAadhar());
+                        SharePreferenceUtils.getInstance().saveString("address", response.body().getData().getAddress());
+                        SharePreferenceUtils.getInstance().saveString("kyc_status", response.body().getData().getKycStatus());
+                        SharePreferenceUtils.getInstance().saveString("wphone", response.body().getData().getWphone());
+                        SharePreferenceUtils.getInstance().saveString("g_name", response.body().getData().getGName());
+                        SharePreferenceUtils.getInstance().saveString("gphone", response.body().getData().getGphone());
+                        SharePreferenceUtils.getInstance().saveString("profession", response.body().getData().getProfession());
+                        SharePreferenceUtils.getInstance().saveString("yimage", response.body().getData().getYimage());
+                        SharePreferenceUtils.getInstance().saveString("gimage", response.body().getData().getGimage());
+                        SharePreferenceUtils.getInstance().saveString("afront", response.body().getData().getAfront());
+                        SharePreferenceUtils.getInstance().saveString("aback", response.body().getData().getAback());
+                        SharePreferenceUtils.getInstance().saveString("eimage", response.body().getData().getEimage());
+
+                        Intent intent = new Intent(SignupLoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finishAffinity();
+                    } else {
+                        //SharePreferenceUtils.getInstance().saveString("userId" , response.body().getData().getUserId());
+
+                        final Dialog dialog = new Dialog(SignupLoginActivity.this);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setCancelable(false);
+                        dialog.setContentView(R.layout.enter_phone_dialog);
+                        dialog.show();
+
+                        EditText ph = dialog.findViewById(R.id.editText);
+                        final CountryCodePicker code = dialog.findViewById(R.id.spinner3);
+                        Button submit = dialog.findViewById(R.id.button19);
+
+                        code.registerPhoneNumberTextView(ph);
+
+                        submit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                final String p = code.getFullNumber();
+
+                                if (DataValidation.isValidPhoneNumber(p)) {
+                                    Toast.makeText(SignupLoginActivity.this, "Fill Valid Mobile Number", Toast.LENGTH_SHORT).show();
+                                } else {
+
+                                    dialog.show();
+
+                                    Call<SigninResponse> call1 = serviceInterface.updatePhone(p, response.body().getData().getUserId());
+                                    call1.enqueue(new Callback<SigninResponse>() {
+                                        @Override
+                                        public void onResponse(Call<SigninResponse> call, Response<SigninResponse> response) {
+
+                                            dialog.dismiss();
+
+                                            SharePreferenceUtils.getInstance().saveString(Constant.USER_mobile, p);
+
+                                            Toast.makeText(SignupLoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+
+                                            Intent homeIntent = new Intent(SignupLoginActivity.this, MailVerifyActivity.class);
+                                            startActivity(homeIntent);
+                                            finishAffinity();
+
+
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<SigninResponse> call, Throwable t) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    // Toast.makeText(LoginActivity.this, "" + mMobile + " " + mPassword, Toast.LENGTH_SHORT).show();
+
+                                }
+
+
+                            }
+                        });
+
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<verifyBean> call, Throwable t) {
+
+                }
+            });
+
+
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("response", "signInResult:failed code=" + e.toString());
+            Log.w("response", "signInResult:failed code=" + e.getMessage());
             //updateUI(null);
         }
     }
@@ -270,10 +406,10 @@ public class SignupLoginActivity extends AppCompatActivity {
             email = object.getString("email");
             id = object.getString("id");
 
-            Log.d("name" , object.getString("first_name"));
-            Log.d("last" , object.getString("last_name"));
-            Log.d("email" , object.getString("email"));
-            Log.d("id" , object.getString("id"));
+            Log.d("name", object.getString("first_name"));
+            Log.d("last", object.getString("last_name"));
+            Log.d("email", object.getString("email"));
+            Log.d("id", object.getString("id"));
 
         } catch (JSONException e) {
             e.printStackTrace();

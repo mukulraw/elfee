@@ -219,7 +219,7 @@
         android:minHeight="0dp"
         android:textColor="#ffffff"
         android:background="#22343e"
-        android:text="@string/this_help_has_completed"
+        android:text="This help has completed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/imageButton9"
         app:layout_constraintHorizontal_bias="0.5"

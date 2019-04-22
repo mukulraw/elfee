@@ -287,6 +287,7 @@ public class HelpDetails extends AppCompatActivity {
                         call.setVisibility(View.GONE);
                         whatsapp.setVisibility(View.GONE);
                         completed.setVisibility(View.VISIBLE);
+                        completed.setText("This help has completed by " + item.getDonor());
                     }
 
                     Log.d("sizzee", String.valueOf(iimm.size()));

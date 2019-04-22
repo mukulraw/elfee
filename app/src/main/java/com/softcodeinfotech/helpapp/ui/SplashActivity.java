@@ -90,7 +90,9 @@ public class SplashActivity extends AppCompatActivity {
 
     private void init() {
 
-                if (!SharePreferenceUtils.getInstance().getString("userId").equalsIgnoreCase("")) {
+                if (!SharePreferenceUtils.getInstance().getString("userId").equalsIgnoreCase("")
+                && !SharePreferenceUtils.getInstance().getString(Constant.USER_mobile).equalsIgnoreCase("")
+                ) {
                     Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();

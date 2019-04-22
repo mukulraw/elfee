@@ -54,9 +54,11 @@ import com.google.gson.GsonBuilder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.softcodeinfotech.helpapp.About;
+import com.softcodeinfotech.helpapp.Followers;
 import com.softcodeinfotech.helpapp.KYC;
 import com.softcodeinfotech.helpapp.LocaleHelper;
 import com.softcodeinfotech.helpapp.Notice;
+import com.softcodeinfotech.helpapp.PagerFragment;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.response.GetCategoryResponse;
@@ -86,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     DrawerLayout drawer;
     ImageButton toggle;
-    TextView profile, orders, logout , notice , about;
+    TextView profile, orders, logout , notice , about , followers;
     //BottomNavigationView bottom;
     //TextView toolbar;
 
@@ -390,15 +392,15 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentManager fm1 = getSupportFragmentManager();
         FragmentTransaction ft1 = fm1.beginTransaction();
-        AllHelpFragment allHelpFragment = new AllHelpFragment();
+        PagerFragment PagerFragment = new PagerFragment();
         Bundle bundle = new Bundle();
         bundle.putString("cat", cat);
         bundle.putString("lat", latitude);
         bundle.putString("lng", longitude);
         bundle.putString("rad", rad);
         bundle.putString("state", loca.getText().toString());
-        allHelpFragment.setArguments(bundle);
-        ft1.replace(R.id.replace, allHelpFragment);
+        PagerFragment.setArguments(bundle);
+        ft1.replace(R.id.replace, PagerFragment);
         ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         //ft.addToBackStack(null);
         ft1.commit();
@@ -422,14 +424,14 @@ public class MainActivity extends AppCompatActivity {
 
                 FragmentManager fm1 = getSupportFragmentManager();
                 FragmentTransaction ft1 = fm1.beginTransaction();
-                AllHelpFragment allHelpFragment=new AllHelpFragment();
+                PagerFragment PagerFragment=new PagerFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("cat" , cat);
                 bundle.putString("lat" , latitude);
                 bundle.putString("lng" , longitude);
                 bundle.putString("rad" , rad);
-                allHelpFragment.setArguments(bundle);
-                ft1.replace(R.id.replace, allHelpFragment);
+                PagerFragment.setArguments(bundle);
+                ft1.replace(R.id.replace, PagerFragment);
                 ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                 //ft.addToBackStack(null);
                 ft1.commit();
@@ -468,15 +470,15 @@ public class MainActivity extends AppCompatActivity {
                         cat = "0";
                         FragmentManager fm1 = getSupportFragmentManager();
                         FragmentTransaction ft1 = fm1.beginTransaction();
-                        AllHelpFragment allHelpFragment = new AllHelpFragment();
+                        PagerFragment PagerFragment = new PagerFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("cat", cat);
                         bundle.putString("lat", latitude);
                         bundle.putString("lng", longitude);
                         bundle.putString("rad", rad);
                         bundle.putString("state", loca.getText().toString());
-                        allHelpFragment.setArguments(bundle);
-                        ft1.replace(R.id.replace, allHelpFragment);
+                        PagerFragment.setArguments(bundle);
+                        ft1.replace(R.id.replace, PagerFragment);
                         ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                         //ft.addToBackStack(null);
                         ft1.commit();
@@ -525,8 +527,8 @@ public class MainActivity extends AppCompatActivity {
 
                 FragmentManager fm1 = getSupportFragmentManager();
                 FragmentTransaction ft1 = fm1.beginTransaction();
-                AllHelpFragment allHelpFragment = new AllHelpFragment();
-                ft1.replace(R.id.replace, allHelpFragment);
+                PagerFragment PagerFragment = new PagerFragment();
+                ft1.replace(R.id.replace, PagerFragment);
                 ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                 //ft.addToBackStack(null);
                 ft1.commit();
@@ -634,6 +636,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        followers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                if (kycstatus.equals("0")) {
+                    Toast.makeText(MainActivity.this, getString(R.string.kkyycc), Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(MainActivity.this, KYC.class);
+                    startActivity(intent);
+
+                } else {
+                    Intent intent = new Intent(MainActivity.this, Followers.class);
+                    startActivity(intent);
+
+                }
+            }
+        });
+
         orders.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -679,8 +700,8 @@ public class MainActivity extends AppCompatActivity {
 
                         FragmentManager fm1 = getSupportFragmentManager();
                         FragmentTransaction ft1 = fm1.beginTransaction();
-                        AllHelpFragment allHelpFragment=new AllHelpFragment();
-                        ft1.replace(R.id.replace, allHelpFragment);
+                        PagerFragment PagerFragment=new PagerFragment();
+                        ft1.replace(R.id.replace, PagerFragment);
                         ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                         //ft.addToBackStack(null);
                         ft1.commit();
@@ -719,15 +740,15 @@ public class MainActivity extends AppCompatActivity {
                 rad = locId.get(position);
                 FragmentManager fm1 = getSupportFragmentManager();
                 FragmentTransaction ft1 = fm1.beginTransaction();
-                AllHelpFragment allHelpFragment = new AllHelpFragment();
+                PagerFragment PagerFragment = new PagerFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("cat", cat);
                 bundle.putString("lat", latitude);
                 bundle.putString("lng", longitude);
                 bundle.putString("rad", rad);
                 bundle.putString("state", loca.getText().toString());
-                allHelpFragment.setArguments(bundle);
-                ft1.replace(R.id.replace, allHelpFragment);
+                PagerFragment.setArguments(bundle);
+                ft1.replace(R.id.replace, PagerFragment);
                 ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                 //ft.addToBackStack(null);
                 ft1.commit();
@@ -755,6 +776,7 @@ public class MainActivity extends AppCompatActivity {
         language = findViewById(R.id.language);
         notice = findViewById(R.id.notice);
         about = findViewById(R.id.about);
+        followers = findViewById(R.id.followers);
 
 
         // settings = findViewById(R.id.imageButton6);
@@ -922,15 +944,15 @@ public class MainActivity extends AppCompatActivity {
 
                     FragmentManager fm1 = getSupportFragmentManager();
                     FragmentTransaction ft1 = fm1.beginTransaction();
-                    AllHelpFragment allHelpFragment = new AllHelpFragment();
+                    PagerFragment PagerFragment = new PagerFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("cat", cat);
                     bundle.putString("lat", latitude);
                     bundle.putString("lng", longitude);
                     bundle.putString("rad", rad);
                     bundle.putString("state", loca.getText().toString());
-                    allHelpFragment.setArguments(bundle);
-                    ft1.replace(R.id.replace, allHelpFragment);
+                    PagerFragment.setArguments(bundle);
+                    ft1.replace(R.id.replace, PagerFragment);
                     ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                     //ft.addToBackStack(null);
                     ft1.commit();
@@ -990,15 +1012,15 @@ public class MainActivity extends AppCompatActivity {
                 //Toast.makeText(context, "" + address, Toast.LENGTH_SHORT).show();
                 FragmentManager fm1 = getSupportFragmentManager();
                 FragmentTransaction ft1 = fm1.beginTransaction();
-                AllHelpFragment allHelpFragment = new AllHelpFragment();
+                PagerFragment PagerFragment = new PagerFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("cat", cat);
                 bundle.putString("lat", latitude);
                 bundle.putString("lng", longitude);
                 bundle.putString("rad", rad);
                 bundle.putString("state", loca.getText().toString());
-                allHelpFragment.setArguments(bundle);
-                ft1.replace(R.id.replace, allHelpFragment);
+                PagerFragment.setArguments(bundle);
+                ft1.replace(R.id.replace, PagerFragment);
                 ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                 //ft.addToBackStack(null);
                 ft1.commit();
