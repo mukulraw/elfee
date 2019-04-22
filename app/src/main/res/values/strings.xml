@@ -53,6 +53,7 @@
     <string name="notifications">Notifications</string>
     <string name="followers">Followers</string>
     <string name="location">Location</string>
+    <string name="location2">Location : </string>
     <string name="about_us">About Us</string>
     <string name="log_out">Log out</string>
     <string name="notice">Notice</string>
@@ -70,7 +71,7 @@
     <string name="your_electricity_bill_gas_bill_or_any_other_govt_bill_photo_with_address">Your electricity bill/ gas bill or any other govt. bill photo with address</string>
     <string name="your_d_o_b">Your D.O.B.</string>
     <string name="your_profession">Your profession</string>
-    <string name="your_address">Your address</string>
+    <string name="your_address">Your residential address</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="enter_your_name">Enter your name</string>
     <string name="tap_to_enter1">tap to enter</string>
@@ -99,14 +100,15 @@
     <string name="nearby50km">nearby 50 KM</string>
     <string name="kkyycc">Please complete your KYC first</string>
     <string name="permission">This app requires location permissions to be granted</string>
-    <string name="how_for_need">How for need :</string>
+    <string name="how_for_need">How for need : </string>
     <string name="needd"><![CDATA[Need : </br>]]></string>
     <string name="catt">"Category : "</string>
-    <string name="addrreess">Address :</string>
+    <string name="addrreess">Address : </string>
     <string name="this_help_has_completed">This help has completed</string>
     <string name="ok">OK</string>
     <string name="your_help_has_been_posted_successfully">Your help has been posted successfully</string>
     <string name="your_help_has_been_updated_successfully">your help has been updated successfully</string>
+    <string name="datee">Date : </string>
 
 
 </resources>

@@ -1,6 +1,7 @@
 package com.softcodeinfotech.helpapp.ui;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -52,7 +53,7 @@ public class AllHelpFragment extends Fragment {
     String uid;
 
     //RecylerView
-    ProgressBar pBar;
+    ProgressDialog pBar;
 
 
     String cat , lat , lng , rad , sta;
@@ -86,7 +87,13 @@ public class AllHelpFragment extends Fragment {
 
 
         RecyclerView replaceRecyler = view.findViewById(R.id.replaceRecycler);
-        pBar = view.findViewById(R.id.progressBar6);
+        pBar = new ProgressDialog(getActivity());
+
+        pBar.setMessage("Please wait...");
+        pBar.setCancelable(false);
+        pBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pBar.setIndeterminate(false);
+
 
         email = SharePreferenceUtils.getInstance().getString(Constant.USER_email);
         name = SharePreferenceUtils.getInstance().getString(Constant.USER_name);
@@ -98,7 +105,7 @@ public class AllHelpFragment extends Fragment {
 
 
         //
-        pBar.setVisibility(View.VISIBLE);
+        pBar.show();
 
 
         retrofit = new Retrofit.Builder()
@@ -144,12 +151,13 @@ public class AllHelpFragment extends Fragment {
             @Override
             public void onResponse(@NonNull Call<myHelpsBean> call, @NonNull Response<myHelpsBean> response) {
 
-                pBar.setVisibility(View.GONE);
+                pBar.dismiss();
 
                 try {
                     assert response.body() != null;
                     if (response.body().getStatus().equals("1")) {
 
+                        Log.d("asdasdsad" , String.valueOf(response.body().getData().size()));
 
                         getHelpListAdapter.setData(response.body().getData());
 
@@ -180,7 +188,7 @@ public class AllHelpFragment extends Fragment {
 
             @Override
             public void onFailure(@NonNull Call<myHelpsBean> call, @NonNull Throwable t) {
-                pBar.setVisibility(View.GONE);
+                pBar.dismiss();
                // Toast.makeText(MainActivity.this, "" + t.toString(), Toast.LENGTH_SHORT).show();
 
             }

@@ -1,9 +1,11 @@
 package com.softcodeinfotech.helpapp.ui;
 
+import android.app.ProgressDialog;
 import android.content.res.Configuration;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -47,7 +49,7 @@ public class HistoryActivity extends AppCompatActivity {
     private ArrayList<Datum> mHelpDetailsList = new ArrayList<Datum>();
     private HistoryAdapter historyAdapter;
 
-    ProgressBar pBar;
+    ProgressDialog pBar;
 
     String user_id;
 
@@ -71,7 +73,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         //get user id from Sharedpreferences
 
-        pBar.setVisibility(View.VISIBLE);
+        pBar.show();
 
 
         Gson gson = new GsonBuilder().create();
@@ -88,7 +90,7 @@ public class HistoryActivity extends AppCompatActivity {
 
 
         recycler_helpHistory = (RecyclerView) findViewById(R.id.recyclerView);
-        LinearLayoutManager mLayoutManger = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        GridLayoutManager mLayoutManger = new GridLayoutManager(this, 2);
         recycler_helpHistory.setLayoutManager(mLayoutManger);
         recycler_helpHistory.setItemAnimator(new DefaultItemAnimator());
 
@@ -112,7 +114,7 @@ public class HistoryActivity extends AppCompatActivity {
         call.enqueue(new Callback<myHelpsBean>() {
             @Override
             public void onResponse(Call<myHelpsBean> call, Response<myHelpsBean> response) {
-                pBar.setVisibility(View.GONE);
+                pBar.dismiss();
 
                 if (response.body().getStatus().equals("1")) {
 
@@ -127,7 +129,7 @@ public class HistoryActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<myHelpsBean> call, Throwable t) {
-                pBar.setVisibility(View.GONE);
+                pBar.dismiss();
                 //Toast.makeText(HistoryActivity.this, "" + t.toString(), Toast.LENGTH_SHORT).show();
 
             }
@@ -148,7 +150,12 @@ public class HistoryActivity extends AppCompatActivity {
     private void setUpWidget() {
 
         back = findViewById(R.id.imageButton);
-        pBar = findViewById(R.id.progressBar6);
+        pBar = new ProgressDialog(this);
+
+        pBar.setMessage("Please wait...");
+        pBar.setCancelable(false);
+        pBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pBar.setIndeterminate(false);
     }
 
     // convert aa param into plain text

@@ -2,6 +2,7 @@ package com.softcodeinfotech.helpapp.ui;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -52,8 +53,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.softcodeinfotech.helpapp.About;
 import com.softcodeinfotech.helpapp.KYC;
 import com.softcodeinfotech.helpapp.LocaleHelper;
+import com.softcodeinfotech.helpapp.Notice;
 import com.softcodeinfotech.helpapp.R;
 import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.response.GetCategoryResponse;
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     DrawerLayout drawer;
     ImageButton toggle;
-    TextView profile, orders, logout;
+    TextView profile, orders, logout , notice , about;
     //BottomNavigationView bottom;
     //TextView toolbar;
 
@@ -94,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     TextView addre;
 
     //RecylerView
-    ProgressBar pBar;
+    ProgressDialog pBar;
 
     Spinner location;
 
@@ -150,13 +153,12 @@ public class MainActivity extends AppCompatActivity {
         locName = new ArrayList<>();
         locId = new ArrayList<>();
 
-        locName.add(getString(R.string.nearby2km));
         locName.add(getString(R.string.nearby5km));
         locName.add(getString(R.string.nearby10km));
         locName.add(getString(R.string.nearby20km));
         locName.add(getString(R.string.nearby50km));
 
-        locId.add("2");
+
         locId.add("5");
         locId.add("10");
         locId.add("20");
@@ -166,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //
-        pBar.setVisibility(View.GONE);
+        pBar.dismiss();
 
         //location
 
@@ -265,6 +267,32 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        notice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this, Notice.class);
+                startActivity(intent);
+                drawer.closeDrawer(GravityCompat.START);
+
+
+            }
+        });
+
+        about.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this, About.class);
+                startActivity(intent);
+                drawer.closeDrawer(GravityCompat.START);
+
+
+            }
+        });
+
 
         /*kyc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -725,6 +753,8 @@ public class MainActivity extends AppCompatActivity {
         orders = findViewById(R.id.posts);
         logout = findViewById(R.id.logout);
         language = findViewById(R.id.language);
+        notice = findViewById(R.id.notice);
+        about = findViewById(R.id.about);
 
 
         // settings = findViewById(R.id.imageButton6);
@@ -745,7 +775,13 @@ public class MainActivity extends AppCompatActivity {
 
         loca = findViewById(R.id.location);
         //recyler
-        pBar = findViewById(R.id.pBar);
+        pBar = new ProgressDialog(this);
+
+        pBar.setMessage("Please wait...");
+        pBar.setCancelable(false);
+        pBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pBar.setIndeterminate(false);
+
     }
 
 
@@ -936,16 +972,17 @@ public class MainActivity extends AppCompatActivity {
 
                 address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
                 String city = addresses.get(0).getLocality();
-                String state = addresses.get(0).getAdminArea();
+                String state = addresses.get(0).getSubAdminArea();
+                String area = addresses.get(0).getAdminArea();
                 String country = addresses.get(0).getCountryName();
                 String postalCode = addresses.get(0).getPostalCode();
                 String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
 
-                Log.d(TAG, "getAddress:  address" + address);
-                Log.d(TAG, "getAddress:  city" + city);
-                Log.d(TAG, "getAddress:  state" + state);
-                Log.d(TAG, "getAddress:  postalCode" + postalCode);
-                Log.d(TAG, "getAddress:  knownName" + knownName);
+                Log.d(TAG, "getAddress:  address  " + address);
+                Log.d(TAG, "getAddress:  city  " + city);
+                Log.d(TAG, "getAddress:  state  " + area);
+                Log.d(TAG, "getAddress:  postalCode  " + postalCode);
+                Log.d(TAG, "getAddress:  knownName  " + knownName);
 
                 addre.setText(city + " , " + state);
 

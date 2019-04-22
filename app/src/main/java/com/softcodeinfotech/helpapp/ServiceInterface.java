@@ -249,6 +249,12 @@ public interface ServiceInterface {
     );
 
     @Multipart
+    @POST("elfee/api/get_profile.php")
+    Call<verifyBean> getProfile(
+            @Part("userId") String userId
+    );
+
+    @Multipart
     @POST("elfee/api/update_profile_pic.php")
     Call<verifyBean> updateProfilePic(
             @Part("userId") String userId,

@@ -1286,7 +1286,7 @@ startActivity(intent1);
 
                     spinCategory.setText(item.getCategoryName());
 
-                    ptitle.setText("Upload " + item.getCategoryName() + " photos");
+                    ptitle.setText(item.getHeading());
 
                     dialog.dismiss();
 

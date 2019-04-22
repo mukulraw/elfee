@@ -1,6 +1,7 @@
 package com.softcodeinfotech.helpapp.ui;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -64,7 +65,7 @@ public class MyProfileActivity extends AppCompatActivity {
     TextView edit;
 
     ImageView image;
-    ProgressBar progress;
+    ProgressDialog progress;
 
     static final int RC_TAKE_PHOTO = 1;
 
@@ -196,7 +197,12 @@ public class MyProfileActivity extends AppCompatActivity {
         image = findViewById(R.id.imageView6);
         edit = findViewById(R.id.textView33);
         change = findViewById(R.id.textView45);
-        progress = findViewById(R.id.progressBar8);
+        progress = new ProgressDialog(this);
+
+        progress.setMessage("Please wait...");
+        progress.setCancelable(false);
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setIndeterminate(false);
         name = findViewById(R.id.name);
         phone = findViewById(R.id.phone);
         wphone = findViewById(R.id.wphone);
@@ -219,7 +225,7 @@ public class MyProfileActivity extends AppCompatActivity {
 
         if (requestCode == 1 && resultCode == RESULT_OK ) {
 
-            progress.setVisibility(View.VISIBLE);
+            progress.show();
 
             MultipartBody.Part body1 = null;
 
@@ -276,12 +282,12 @@ public class MyProfileActivity extends AppCompatActivity {
                      //   Toast.makeText(EditProfile.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
-                    progress.setVisibility(View.GONE);
+                    progress.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<verifyBean> call, Throwable t) {
-progress.setVisibility(View.GONE);
+progress.dismiss();
                 }
             });
 
@@ -289,7 +295,7 @@ progress.setVisibility(View.GONE);
         else if (requestCode == 2 && resultCode == RESULT_OK && null != data)
         {
 
-            progress.setVisibility(View.VISIBLE);
+            progress.show();
             yuri = data.getData();
             String ypath = getPath(MyProfileActivity.this, yuri);
             File yfile = new File(ypath);
@@ -347,12 +353,12 @@ progress.setVisibility(View.GONE);
                         //   Toast.makeText(EditProfile.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
-                    progress.setVisibility(View.GONE);
+                    progress.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<verifyBean> call, Throwable t) {
-                    progress.setVisibility(View.GONE);
+                    progress.dismiss();
                 }
             });
 

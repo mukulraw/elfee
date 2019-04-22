@@ -108,7 +108,7 @@ public class HelpDetails extends AppCompatActivity {
 
                 try {
 
-                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + uphone));
+                    Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:+" + uphone));
                     startActivity(intent);
 
 
@@ -222,16 +222,16 @@ public class HelpDetails extends AppCompatActivity {
                     Datum item = response.body().getData().get(0);
 
                     uname.setText(item.getUname());
-                    title.setText(getString(R.string.how_for_need) + item.getHowTo());
+                    title.setText(Html.fromHtml( "<b>" + getString(R.string.how_for_need) + "</b> " + item.getHowTo()));
 
 
-                    String v = item.getFollowers() + getString(R.string.views);
+                    String v = item.getFollowers() + " " + getString(R.string.views);
 
                     state.setText(v);
-                    date.setText(item.getCreatedDate());
-                    desc.setText(Html.fromHtml(getString(R.string.needd) + item.getNeed()));
-                    address.setText(Html.fromHtml(getString(R.string.addrreess) + item.getAddress()));
-                    cat.setText(getString(R.string.catt) + item.getCategory());
+                    date.setText(Html.fromHtml("<b>" + getString(R.string.datee) + "</b> " + item.getCreatedDate()));
+                    desc.setText(Html.fromHtml("<b>" + getString(R.string.needd) + "</b> " + item.getNeed()));
+                    address.setText(Html.fromHtml("<b>" + getString(R.string.location2) + "</b> " + item.getAddress()));
+                    cat.setText(Html.fromHtml("<b>" + getString(R.string.catt) + "</b> " + item.getCategory()));
 
                     uphone = item.getUphone();
                     wphone = item.getWphone();
@@ -297,6 +297,7 @@ public class HelpDetails extends AppCompatActivity {
 
                     indicator.setViewPager(pager);
 
+                    uid = item.getUserId();
 
                 } else {
                     Toast.makeText(HelpDetails.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
@@ -315,7 +316,7 @@ public class HelpDetails extends AppCompatActivity {
 
 
     private void openWhatsApp() {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=" + wphone));
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://api.whatsapp.com/send?phone=" + wphone + "&text=Thank you for choosing ELFEE. This donor is verified by ELFEE. Connect here for help."));
         startActivity(browserIntent);
     }
 

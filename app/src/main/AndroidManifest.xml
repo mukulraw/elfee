@@ -28,7 +28,9 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning,UnusedAttribute"
         tools:replace="allowBackup,supportsRtl">
-        <activity android:name=".Success"></activity>
+        <activity android:name=".About"></activity>
+        <activity android:name=".Notice" />
+        <activity android:name=".Success" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -40,7 +42,7 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".Grocery"></activity>
+        <activity android:name=".Grocery" />
         <activity
             android:name=".EditHelp"
             android:screenOrientation="portrait" />

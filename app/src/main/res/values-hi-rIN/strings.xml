@@ -71,7 +71,7 @@
     <string name="your_electricity_bill_gas_bill_or_any_other_govt_bill_photo_with_address">आपका बिजली बिल / गैस बिल या अन्य कोई सरकार पते के साथ बिल फोटो</string>
     <string name="your_d_o_b">आपका डी.ओ.बी.</string>
     <string name="your_profession">आपका व्यवसाय</string>
-    <string name="your_address">आपका पता</string>
+    <string name="your_address">आपका आवासीय पता</string>
     <string name="edit_profile">प्रोफाइल एडिट करें</string>
     <string name="enter_your_name">अपना नाम दर्ज करें</string>
     <string name="tap_to_enter1">दर्ज करने के लिए टैप करें</string>
@@ -100,14 +100,16 @@
     <string name="nearby50km">पास के 50 के.एम.</string>
     <string name="kkyycc">कृपया अपना केवाईसी पूरा करें</string>
     <string name="permission">इस एप्लिकेशन को स्थान अनुमतियों की आवश्यकता है</string>
-    <string name="how_for_need">जरूरत के लिए कैसे:</string>
+    <string name="how_for_need">जरूरत के लिए कैसे : </string>
     <string name="needd">"आवश्यकता: "</string>
     <string name="catt">"वर्ग : "</string>
-    <string name="addrreess">"पता: "</string>
+    <string name="addrreess">"पता : "</string>
     <string name="this_help_has_completed">यह मदद पूरी हो गई है</string>
     <string name="ok">ठीक</string>
     <string name="your_help_has_been_posted_successfully">आपकी सहायता सफलतापूर्वक पोस्ट की गई है</string>
     <string name="your_help_has_been_updated_successfully">आपकी सहायता को सफलतापूर्वक अपडेट कर दिया गया है</string>
+    <string name="datee">दिनांक : </string>
+    <string name="location2">"स्थान : "</string>
 
 
 </resources>

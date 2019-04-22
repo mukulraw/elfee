@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Notice">
+
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/notice"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/ic_chevron_left_black_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        app:srcCompat="@color/grey"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_margin="10dp"
+            android:text="ELFEE  किसी भी अज्ञात व्यक्ति के द्वारा की गई कोई भी प्रकार की धोखाधड़ी के लिए जिम्मेदार नहीं है ।
+
+\n\nELFEE  के माध्यम से कोई भी अज्ञात व्यक्ति आपको हेल्प करने के लिए फोन करें या आपको मिलने के लिए बोले तो मेहरबानी करके आप अपना जरूरी प्रमाणपत्र लेके ही जाए। और हो सके तो कोई भी सार्वजनिक स्थल पर ही मुलाकात करे।
+
+
+\nध\nोखाधड़ी से सावधान ! हेल्प करने के लिए आपके पास कोई भी व्यक्ति आता है तो पहले  बातचीत से या किसी भी अन्य संभव तरीके से उन्हें जांच और परख ले और हर हाल में सावधानी रखे ।
+
+
+\n\nELFEE का मकसद जरूरतमंद लोगों और दानदाताओं को जोड़ना है और उनकी हर हाल में मदद करते रहना है ।"
+            />
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</android.support.constraint.ConstraintLayout>

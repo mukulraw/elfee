@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".About">
+
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/about_us"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/ic_chevron_left_black_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        app:srcCompat="@color/grey"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageButton" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:layout_margin="10dp"
+            android:text="E L F E E
+
+\n\nEasy Life for Each and Every One
+
+
+\n\n(1)  गरीब,मिड्लक्लास या जरूरतमंद लोगों  और  खूब अमीर, अमीर या हेल्पफुल लोगों को जोड़ने वाली याने के कनेक्टिंग करने वाली ऑनलाइन साइट है यह ।
+
+
+ \n\n(2)  जरूरतमंद एम्पलोइज, कोई भी फील्ड से जुड़े हुए टेक्निशियंस, ऑफिस स्टाफ या वर्कर  और  इन से रिलेटेड बॉस , कंपनी ऑनर या कोई भी मैनेजमेंट के हेड ऑफीसर जो स्टाफ़ का चयन करते है । इन दोनो लोगों को जोड़ने वाली याने के कनेक्टिंग करने वाली ऑनलाइन साइट है यह ।
+
+
+ \n\n    हमारा मकसद है कि सभी देशवासियों के लिए एक सुखी और खुशहाल जीवन का  सर्जन करे ।
+
+\n\n    हम आपको एक ऐसा प्लेटफार्म बनाके देंगे कि
+
+\n\nखुशियां आपके कदमो में होगी ।
+
+
+    \n\nआने वाले दिनों में हम आपको ऐसा माहौल बनाके दे देंगे कि खुशियां भी बाज़ार में बिकेगी ।
+
+\n\nऔऱ वो भी बिना कोई कीमत चुकाएं ।
+
+
+    \n\nकोई भी आपकी छोटी मोटी समस्या हो, वो चाहें कुछ भी हो, वो समस्याओं को आप हमारे साइट पे रख दीजिए । और वे समस्या को सुलझाने की जिनमेदारी हम उठाएंगे, और उसे पूरा करने की पूरी कोशिश भी करेंगे ।
+
+
+
+
+\n\nहम इस कॉन्सेप्ट के ऊपर पूरे जी जान से लगे हुए हैं ।"
+            />
+
+    </android.support.v4.widget.NestedScrollView>
+
+
+</android.support.constraint.ConstraintLayout>

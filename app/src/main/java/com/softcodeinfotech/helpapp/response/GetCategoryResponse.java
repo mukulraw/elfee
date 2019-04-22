@@ -67,6 +67,10 @@ public class GetCategoryResponse {
         @SerializedName("image")
         @Expose
         private String image;
+        @SerializedName("heading")
+        @Expose
+        private String heading;
+
 
         public Integer getCategoryId() {
             return categoryId;
@@ -92,5 +96,12 @@ public class GetCategoryResponse {
             this.image = image;
         }
 
+        public void setHeading(String heading) {
+            this.heading = heading;
+        }
+
+        public String getHeading() {
+            return heading;
+        }
     }
 }

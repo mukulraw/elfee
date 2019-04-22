@@ -1,6 +1,7 @@
 package com.softcodeinfotech.helpapp.ui;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -36,6 +38,7 @@ import com.softcodeinfotech.helpapp.ServiceInterface;
 import com.softcodeinfotech.helpapp.response.GetIndividualUserResponse;
 import com.softcodeinfotech.helpapp.util.Constant;
 import com.softcodeinfotech.helpapp.util.SharePreferenceUtils;
+import com.softcodeinfotech.helpapp.verifyPOJO.Data;
 import com.softcodeinfotech.helpapp.verifyPOJO.verifyBean;
 
 import java.io.File;
@@ -59,7 +62,7 @@ public class IndividualHelpActivity extends AppCompatActivity {
     TextView edit;
 
     ImageView image;
-    ProgressBar progress;
+    ProgressDialog progress;
 
     static final int RC_TAKE_PHOTO = 1;
 
@@ -110,12 +113,6 @@ public class IndividualHelpActivity extends AppCompatActivity {
         loadData();
 
         //for default placeholder image in glide
-        RequestOptions requestOptions = new RequestOptions();
-        requestOptions.placeholder(R.drawable.noimage);
-        requestOptions.error(R.drawable.noimage);
-
-        Glide.with(this).setDefaultRequestOptions(requestOptions).load(url).into(image);
-
 
         change.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +153,13 @@ public class IndividualHelpActivity extends AppCompatActivity {
         image = findViewById(R.id.imageView6);
         edit = findViewById(R.id.textView33);
         change = findViewById(R.id.textView45);
-        progress = findViewById(R.id.progressBar8);
+        progress = new ProgressDialog(this);
+
+        progress.setMessage("Please wait...");
+        progress.setCancelable(false);
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setIndeterminate(false);
+
         name = findViewById(R.id.name);
         phone = findViewById(R.id.phone);
         wphone = findViewById(R.id.wphone);
@@ -179,7 +182,7 @@ public class IndividualHelpActivity extends AppCompatActivity {
 
         if (requestCode == 1 && resultCode == RESULT_OK && null != data) {
 
-            progress.setVisibility(View.VISIBLE);
+            progress.show();
 
             String ypath = getPath(IndividualHelpActivity.this, yuri);
             File yfile = new File(ypath);
@@ -238,12 +241,12 @@ public class IndividualHelpActivity extends AppCompatActivity {
                         //   Toast.makeText(EditProfile.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
-                    progress.setVisibility(View.GONE);
+                    progress.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<verifyBean> call, Throwable t) {
-                    progress.setVisibility(View.GONE);
+                    progress.dismiss();
                 }
             });
 
@@ -251,7 +254,7 @@ public class IndividualHelpActivity extends AppCompatActivity {
         else if (requestCode == 2 && resultCode == RESULT_OK && null != data)
         {
 
-            progress.setVisibility(View.VISIBLE);
+            progress.show();
             yuri = data.getData();
             String ypath = getPath(IndividualHelpActivity.this, yuri);
             File yfile = new File(ypath);
@@ -309,12 +312,12 @@ public class IndividualHelpActivity extends AppCompatActivity {
                         //   Toast.makeText(EditProfile.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
-                    progress.setVisibility(View.GONE);
+                    progress.dismiss();
                 }
 
                 @Override
                 public void onFailure(Call<verifyBean> call, Throwable t) {
-                    progress.setVisibility(View.GONE);
+                    progress.dismiss();
                 }
             });
 
@@ -427,42 +430,72 @@ public class IndividualHelpActivity extends AppCompatActivity {
         return null;
     }
 
-    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-
-        float bitmapRatio = (float) width / (float) height;
-        if (bitmapRatio > 1) {
-            width = maxSize;
-            height = (int) (width / bitmapRatio);
-        } else {
-            height = maxSize;
-            width = (int) (height * bitmapRatio);
-        }
-        return Bitmap.createScaledBitmap(image, width, height, true);
-    }
-
 
     void loadData()
     {
 
-        name.setText(SharePreferenceUtils.getInstance().getString("name"));
-        phone.setText(SharePreferenceUtils.getInstance().getString(Constant.USER_mobile));
-        wphone.setText(SharePreferenceUtils.getInstance().getString("wphone"));
-        gname.setText(SharePreferenceUtils.getInstance().getString("g_name"));
-        gphone.setText(SharePreferenceUtils.getInstance().getString("gphone"));
-        aadhar.setText(SharePreferenceUtils.getInstance().getString("aadhar"));
-        dob.setText(SharePreferenceUtils.getInstance().getString("dob"));
-        profession.setText(SharePreferenceUtils.getInstance().getString("profession"));
-        address.setText(SharePreferenceUtils.getInstance().getString("address"));
+
+        progress.show();
 
 
-        DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
-        ImageLoader loader = ImageLoader.getInstance();
-        loader.displayImage(SharePreferenceUtils.getInstance().getString("gimage") , gimage , options);
-        loader.displayImage(SharePreferenceUtils.getInstance().getString("afront") , afront , options);
-        loader.displayImage(SharePreferenceUtils.getInstance().getString("aback") , aback , options);
-        loader.displayImage(SharePreferenceUtils.getInstance().getString("eimage") , eimage , options);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.BASE_URL)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ServiceInterface serviceInterface = retrofit.create(ServiceInterface.class);
+
+        Log.d("asdasasd" , getIntent().getStringExtra("user_id"));
+
+        Call<verifyBean> call = serviceInterface.getProfile(getIntent().getStringExtra("user_id"));
+
+        call.enqueue(new Callback<verifyBean>() {
+            @Override
+            public void onResponse(Call<verifyBean> call, Response<verifyBean> response) {
+
+                if (response.body().getStatus().equals("1"))
+                {
+                    Data item = response.body().getData();
+
+                    name.setText(item.getName());
+                    phone.setText(item.getMobile());
+                    wphone.setText(item.getWphone());
+                    gname.setText(item.getGName());
+                    gphone.setText(item.getGphone());
+                    aadhar.setText(item.getAadhar());
+                    dob.setText(item.getDob());
+                    profession.setText(item.getProfession());
+                    address.setText(item.getAddress());
+
+                    RequestOptions requestOptions = new RequestOptions();
+                    requestOptions.placeholder(R.drawable.noimage);
+                    requestOptions.error(R.drawable.noimage);
+
+                    Glide.with(IndividualHelpActivity.this).setDefaultRequestOptions(requestOptions).load(item.getYimage()).into(image);
+
+
+
+                    DisplayImageOptions options = new DisplayImageOptions.Builder().cacheInMemory(true).cacheOnDisk(true).resetViewBeforeLoading(false).build();
+                    ImageLoader loader = ImageLoader.getInstance();
+                    loader.displayImage(item.getGimage() , gimage , options);
+                    loader.displayImage(item.getAfront() , afront , options);
+                    loader.displayImage(item.getAback() , aback , options);
+                    loader.displayImage(item.getEimage() , eimage , options);
+
+                }
+
+                progress.dismiss();
+
+            }
+
+            @Override
+            public void onFailure(Call<verifyBean> call, Throwable t) {
+
+                progress.dismiss();
+            }
+        });
+
 
 
     }
