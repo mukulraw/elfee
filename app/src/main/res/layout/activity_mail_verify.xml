@@ -62,7 +62,7 @@
         android:backgroundTint="#ffffff"
         android:ems="10"
         android:hint="tap to enter"
-        android:inputType="textEmailAddress"
+        android:inputType="number"
         android:textColor="#ffffff"
         android:textColorHint="#cdcdcd"
         android:typeface="monospace"

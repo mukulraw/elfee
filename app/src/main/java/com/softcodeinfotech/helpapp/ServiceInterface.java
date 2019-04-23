@@ -150,7 +150,8 @@ public interface ServiceInterface {
     @Multipart
     @POST("elfee/api/mobile_login.php")
     Call<SigninResponse> userlogin(
-            @Part("phone") RequestBody mobile
+            @Part("phone") RequestBody mobile,
+            @Part("token") RequestBody token
     );
 
 
@@ -220,7 +221,8 @@ public interface ServiceInterface {
     @Multipart
     @POST("elfee/api/social_login.php")
     Call<verifyBean> socialLogin(
-            @Part("pid") String pid
+            @Part("pid") String pid,
+            @Part("token") String token
     );
 
     @Multipart

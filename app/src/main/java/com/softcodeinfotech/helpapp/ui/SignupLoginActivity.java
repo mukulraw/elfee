@@ -109,12 +109,132 @@ public class SignupLoginActivity extends AppCompatActivity {
 
                                             final String name = object.getString("name");
                                             final String id = object.getString("id");
-                                            final String email = object.getString("email");
+
+
+                                            ProgressDialog pBar = new ProgressDialog(SignupLoginActivity.this);
+
+                                            pBar.setMessage("Please wait...");
+                                            pBar.setCancelable(false);
+                                            pBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                                            pBar.setIndeterminate(false);
+
+                                            pBar.show();
+
+                                            OkHttpClient okHttpClient = new OkHttpClient.Builder().connectTimeout(60, TimeUnit.SECONDS)
+                                                    .writeTimeout(60, TimeUnit.SECONDS)
+                                                    .readTimeout(60, TimeUnit.SECONDS)
+                                                    .build();
+
+                                            Retrofit retrofit = new Retrofit.Builder()
+                                                    .baseUrl(Constant.BASE_URL)
+                                                    .addConverterFactory(ScalarsConverterFactory.create())
+                                                    .addConverterFactory(GsonConverterFactory.create())
+                                                    .client(okHttpClient)
+                                                    .build();
+
+                                            final ServiceInterface serviceInterface = retrofit.create(ServiceInterface.class);
+
+                                            Call<verifyBean> call = serviceInterface.socialLogin(id , SharePreferenceUtils.getInstance().getString("token"));
+
+                                            call.enqueue(new Callback<verifyBean>() {
+                                                @Override
+                                                public void onResponse(final Call<verifyBean> call, final Response<verifyBean> response) {
+
+                                                    if (response.body().getData().getMobile().length() > 0) {
+                                                        SharePreferenceUtils.getInstance().saveString(Constant.USER_mobile, response.body().getData().getMobile());
+                                                        SharePreferenceUtils.getInstance().saveString("userId", response.body().getData().getUserId());
+                                                        SharePreferenceUtils.getInstance().saveString("name", response.body().getData().getName());
+                                                        SharePreferenceUtils.getInstance().saveString("dob", response.body().getData().getDob());
+                                                        SharePreferenceUtils.getInstance().saveString("aadhar", response.body().getData().getAadhar());
+                                                        SharePreferenceUtils.getInstance().saveString("address", response.body().getData().getAddress());
+                                                        SharePreferenceUtils.getInstance().saveString("kyc_status", response.body().getData().getKycStatus());
+                                                        SharePreferenceUtils.getInstance().saveString("wphone", response.body().getData().getWphone());
+                                                        SharePreferenceUtils.getInstance().saveString("g_name", response.body().getData().getGName());
+                                                        SharePreferenceUtils.getInstance().saveString("gphone", response.body().getData().getGphone());
+                                                        SharePreferenceUtils.getInstance().saveString("profession", response.body().getData().getProfession());
+                                                        SharePreferenceUtils.getInstance().saveString("yimage", response.body().getData().getYimage());
+                                                        SharePreferenceUtils.getInstance().saveString("gimage", response.body().getData().getGimage());
+                                                        SharePreferenceUtils.getInstance().saveString("afront", response.body().getData().getAfront());
+                                                        SharePreferenceUtils.getInstance().saveString("aback", response.body().getData().getAback());
+                                                        SharePreferenceUtils.getInstance().saveString("eimage", response.body().getData().getEimage());
+
+                                                        Intent intent = new Intent(SignupLoginActivity.this, MainActivity.class);
+                                                        startActivity(intent);
+                                                        finishAffinity();
+                                                    } else {
+                                                        //SharePreferenceUtils.getInstance().saveString("userId" , response.body().getData().getUserId());
+
+                                                        final Dialog dialog = new Dialog(SignupLoginActivity.this);
+                                                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                                        dialog.setCancelable(false);
+                                                        dialog.setContentView(R.layout.enter_phone_dialog);
+                                                        dialog.show();
+
+                                                        EditText ph = dialog.findViewById(R.id.editText);
+                                                        final CountryCodePicker code = dialog.findViewById(R.id.spinner3);
+                                                        Button submit = dialog.findViewById(R.id.button19);
+
+                                                        code.registerPhoneNumberTextView(ph);
+
+                                                        submit.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+
+                                                                final String p = code.getFullNumber();
+
+                                                                if (DataValidation.isValidPhoneNumber(p)) {
+                                                                    Toast.makeText(SignupLoginActivity.this, "Fill Valid Mobile Number", Toast.LENGTH_SHORT).show();
+                                                                } else {
+
+                                                                    dialog.show();
+
+                                                                    Call<SigninResponse> call1 = serviceInterface.updatePhone(p, response.body().getData().getUserId());
+                                                                    call1.enqueue(new Callback<SigninResponse>() {
+                                                                        @Override
+                                                                        public void onResponse(Call<SigninResponse> call, Response<SigninResponse> response) {
+
+                                                                            dialog.dismiss();
+
+                                                                            SharePreferenceUtils.getInstance().saveString(Constant.USER_mobile, p);
+
+                                                                            Toast.makeText(SignupLoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+
+                                                                            Intent homeIntent = new Intent(SignupLoginActivity.this, MailVerifyActivity.class);
+                                                                            startActivity(homeIntent);
+                                                                            finishAffinity();
+
+
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onFailure(Call<SigninResponse> call, Throwable t) {
+                                                                            dialog.dismiss();
+                                                                        }
+                                                                    });
+
+                                                                    // Toast.makeText(LoginActivity.this, "" + mMobile + " " + mPassword, Toast.LENGTH_SHORT).show();
+
+                                                                }
+
+
+                                                            }
+                                                        });
+
+                                                    }
+
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<verifyBean> call, Throwable t) {
+
+                                                }
+                                            });
 
 
                                             Log.d("name", object.getString("name"));
                                             Log.d("id", object.getString("id"));
-                                            Log.d("email", object.getString("email"));
+
 
                                             //socialSignin(name , id , email);
 
@@ -290,7 +410,7 @@ public class SignupLoginActivity extends AppCompatActivity {
 
             final ServiceInterface serviceInterface = retrofit.create(ServiceInterface.class);
 
-            Call<verifyBean> call = serviceInterface.socialLogin(id);
+            Call<verifyBean> call = serviceInterface.socialLogin(id , SharePreferenceUtils.getInstance().getString("token"));
 
             call.enqueue(new Callback<verifyBean>() {
                 @Override

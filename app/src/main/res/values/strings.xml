@@ -9,8 +9,9 @@
 
     </string-array>
 
-    <string name="facebook_app_id">384633842353590</string>
-    <string name="fb_login_protocol_scheme">fb384633842353590</string>
+    <string name="facebook_app_id">471685326903296</string>
+    <string name="fb_login_protocol_scheme">fb471685326903296</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -113,6 +114,7 @@
     <string name="donor_s_phone">Donor\'s phone</string>
     <string name="active">ACTIVE</string>
     <string name="completed">COMPLETED</string>
+    <string name="default_notification_channel_id">123</string>
 
 
 </resources>

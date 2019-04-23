@@ -115,9 +115,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signinReq() {
 
-        Log.d("mobile" , mMobile);
+        Log.d("mobile" , SharePreferenceUtils.getInstance().getString("token"));
 
-        Call<SigninResponse> call = serviceInterface.userlogin(convertPlainString(mMobile));
+        Call<SigninResponse> call = serviceInterface.userlogin(convertPlainString(mMobile) , convertPlainString(SharePreferenceUtils.getInstance().getString("token")));
         call.enqueue(new Callback<SigninResponse>() {
             @Override
             public void onResponse(@NonNull Call<SigninResponse> call, @NonNull Response<SigninResponse> response) {
