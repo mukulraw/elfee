@@ -114,7 +114,7 @@
     <string name="donor_s_phone">Donor\'s phone</string>
     <string name="active">ACTIVE</string>
     <string name="completed">COMPLETED</string>
-    <string name="default_notification_channel_id">123</string>
+    <string name="default_notification_channel_id" translatable="false">123</string>
 
 
 </resources>
