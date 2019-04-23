@@ -677,11 +677,36 @@ public class MainActivity extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SharePreferenceUtils.getInstance().deletePref();
-                SharePreferenceUtils.getInstance().saveString(Constant.USER_profilestatus, "1");
-                Intent signuploginIntent = new Intent(MainActivity.this, SignupLoginActivity.class);
-                startActivity(signuploginIntent);
-                finishAffinity();
+
+                final Dialog dialog = new Dialog(MainActivity.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(false);
+                dialog.setContentView(R.layout.quit_dialog_layout);
+                dialog.show();
+
+                Button ookk = dialog.findViewById(R.id.button2);
+                Button canc = dialog.findViewById(R.id.button4);
+
+                canc.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                ookk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        SharePreferenceUtils.getInstance().deletePref();
+                        SharePreferenceUtils.getInstance().saveString(Constant.USER_profilestatus, "1");
+                        Intent signuploginIntent = new Intent(MainActivity.this, SignupLoginActivity.class);
+                        startActivity(signuploginIntent);
+                        finishAffinity();
+                    }
+                });
+
+
             }
         });
 
